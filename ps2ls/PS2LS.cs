@@ -34,17 +34,38 @@ namespace ps2ls
             PackOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
             PackOpenFileDialog.Multiselect = true;
 
+            _GetGameDirectory();
+        }
+
+        private void _GetGameDirectory()
+        {
             RegistryKey key = null;
 
+            // non-steam install
             key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\App Paths\LaunchPad.exe");
 
             if (key != null && key.GetValue("") != null)
             {
                 GameDirectory = key.GetValue("").ToString();
                 GameDirectory = Path.GetDirectoryName(GameDirectory) + @"\Resources\Assets";
+
+                PackOpenFileDialog.InitialDirectory = GameDirectory;
+
+                return;
             }
 
-            PackOpenFileDialog.InitialDirectory = GameDirectory;
+            // steam install
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 218230");
+
+            if (key != null && key.GetValue("InstallLocation") != null)
+            {
+                GameDirectory = key.GetValue("InstallLocation").ToString();
+                GameDirectory += @"\Resources\Assets";
+
+                PackOpenFileDialog.InitialDirectory = GameDirectory;
+
+                return;
+            }
         }
 
         public Boolean ShowFullPath { get; set; }
