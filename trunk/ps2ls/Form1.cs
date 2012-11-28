@@ -35,7 +35,7 @@ namespace ps2ls
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(ps2ls.Properties.Resources.box);
-            treeView1.ImageList = imageList;
+            //listBox1.ImageList = imageList;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,7 +45,7 @@ namespace ps2ls
 
         public void RefreshTreeView()
         {
-            treeView1.Nodes.Clear();
+            listBox1.Items.Clear();
 
             foreach (KeyValuePair<string, Pack> pack in PackManager.Instance.Packs)
             {
@@ -56,30 +56,19 @@ namespace ps2ls
                     packNodeString = Path.GetFileNameWithoutExtension(packNodeString);
                 }
 
-                TreeNode packNode = new TreeNode(packNodeString);
-                packNode.Tag = pack.Value;
-                packNode.ImageIndex = 0;
-                packNode.SelectedImageIndex = 0;
+                Int32 count = 0;
 
-                //foreach (KeyValuePair<String, PackFile> file in pack.Value.Files)
-                //{
-                //    if (file.Key.Contains(searchFilesTextBox.Text) == false)
-                //    {
-                //        continue;
-                //    }
+                foreach (KeyValuePair<String, PackFile> file in pack.Value.Files)
+                {
+                    if (file.Key.Contains(searchFilesTextBox.Text) == false)
+                    {
+                        continue;
+                    }
 
-                //    TreeNode fileNode = new TreeNode(file.Key);
-                //    fileNode.Tag = file.Value;
-                //    fileNode.ImageIndex = 1;
-                //    fileNode.SelectedImageIndex = 1;
+                    ++count;
+                }
 
-                //    packNode.Nodes.Add(fileNode);
-                //}
-
-                //if (packNode.Nodes.Count > 0)
-                //{
-                treeView1.Nodes.Add(packNode);
-                //}
+                listBox1.Items.Add(pack.Value);
             }
         }
 
@@ -87,34 +76,44 @@ namespace ps2ls
         {
             dataGridView1.Rows.Clear();
 
-            if (treeView1.SelectedNode == null)
+            if (listBox1.SelectedItem == null)
             {
                 return;
             }
 
-            Pack pack = null;
+            ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
 
-            try
-            {
-                pack = (Pack)treeView1.SelectedNode.Tag;
-            }
-            catch (InvalidCastException) { return; }
+            Int32 fileCount = 0;
 
-            foreach (PackFile file in pack.Files.Values)
+            foreach (object item in packs)
             {
-                if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
+                Pack pack = null;
+
+                try
                 {
-                    continue;
+                    pack = (Pack)item;
                 }
+                catch (InvalidCastException) { continue; }
 
-                DataGridViewRow row = new DataGridViewRow();
-                row.Tag = file;
-                row.CreateCells(dataGridView1, new object[] { file.Name, file.Extension, file.Length / 1024 });
+                foreach (PackFile file in pack.Files.Values)
+                {
+                    ++fileCount;
 
-                dataGridView1.Rows.Add(row);
+                    if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
+                    {
+                        continue;
+                    }
+
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.Tag = file;
+                    row.CreateCells(dataGridView1, new object[] { file.Name, file.Extension, file.Length / 1024 });
+
+                    dataGridView1.Rows.Add(row);
+                }
             }
 
-            fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + pack.FileCount;
+            fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
+            packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
         }
 
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
@@ -150,9 +149,6 @@ namespace ps2ls
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            propertyGrid1.SelectedObject = treeView1.SelectedNode.Tag;
-
-            RefreshDataGridView();
         }
 
         private void importFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -218,18 +214,48 @@ namespace ps2ls
             if (searchFilesTextBox.Text.Length > 0)
             {
                 searchFilesTextBox.BackColor = Color.Yellow;
+                toolStripButton1.Enabled = true;
             }
             else
             {
                 searchFilesTextBox.BackColor = Color.White;
+                toolStripButton1.Enabled = false;
             }
 
+            //RefreshTreeView();
             RefreshDataGridView();
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             extractSelectedFiles.Enabled = dataGridView1.SelectedRows.Count > 0;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            propertyGrid1.SelectedObject = listBox1.SelectedItem;
+
+            listBox1.Invalidate();
+
+            RefreshDataGridView();
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0)
+                return;
+
+            e.DrawBackground();
+
+            String text = ((ListBox)sender).Items[e.Index].ToString();
+            Image icon = Properties.Resources.box_small;
+            Point point = new Point(0, e.Bounds.Y);
+
+            e.Graphics.DrawImage(icon, point);
+
+            point.X += icon.Width;
+
+            e.Graphics.DrawString(text, e.Font, new SolidBrush(Color.Black), point);
         }
     }
 }
