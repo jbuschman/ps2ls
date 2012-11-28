@@ -203,5 +203,10 @@ namespace ps2ls
                 return false;
             }
         }
+
+        public override string ToString()
+        {
+            return Path;
+        }
     }
 }

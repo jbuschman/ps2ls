@@ -33,11 +33,9 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -49,6 +47,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.showFullPathButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -56,7 +55,9 @@
             this.fileCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.importFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.packCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -107,14 +108,6 @@
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
-            // extractToolStripMenuItem
-            // 
-            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__arrow;
-            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
-            this.extractToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.extractToolStripMenuItem.Text = "Extract All Files...";
-            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -152,7 +145,7 @@
             // 
             // splitContainer3.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer3.Panel1.Controls.Add(this.listBox1);
             // 
             // splitContainer3.Panel2
             // 
@@ -160,18 +153,6 @@
             this.splitContainer3.Size = new System.Drawing.Size(193, 513);
             this.splitContainer3.SplitterDistance = 359;
             this.splitContainer3.TabIndex = 4;
-            // 
-            // treeView1
-            // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.ShowLines = false;
-            this.treeView1.ShowRootLines = false;
-            this.treeView1.Size = new System.Drawing.Size(193, 359);
-            this.treeView1.TabIndex = 1;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
             // 
             // propertyGrid1
             // 
@@ -265,12 +246,26 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.packCountStatusLabel,
             this.fileCountStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 516);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(587, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBox1.Size = new System.Drawing.Size(193, 359);
+            this.listBox1.TabIndex = 0;
+            this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // showFullPathButton
             // 
@@ -295,6 +290,7 @@
             // toolStripButton1
             // 
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Enabled = false;
             this.toolStripButton1.Image = global::ps2ls.Properties.Resources.ui_text_field_clear_button;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
@@ -317,7 +313,7 @@
             // 
             this.fileCountStatusLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
             this.fileCountStatusLabel.Name = "fileCountStatusLabel";
-            this.fileCountStatusLabel.Size = new System.Drawing.Size(40, 16);
+            this.fileCountStatusLabel.Size = new System.Drawing.Size(40, 17);
             this.fileCountStatusLabel.Text = "0/0";
             // 
             // importFilesToolStripMenuItem
@@ -338,6 +334,14 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__arrow;
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.extractToolStripMenuItem.Text = "Extract All Files...";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Image = global::ps2ls.Properties.Resources.question;
@@ -346,6 +350,13 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // packCountStatusLabel
+            // 
+            this.packCountStatusLabel.Image = global::ps2ls.Properties.Resources.box_search_result;
+            this.packCountStatusLabel.Name = "packCountStatusLabel";
+            this.packCountStatusLabel.Size = new System.Drawing.Size(40, 17);
+            this.packCountStatusLabel.Text = "0/0";
             // 
             // Form1
             // 
@@ -394,7 +405,6 @@
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton showFullPathButton;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.ToolStripMenuItem importFilesToolStripMenuItem;
         private System.Windows.Forms.DataGridView dataGridView1;
@@ -411,6 +421,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripStatusLabel fileCountStatusLabel;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripStatusLabel packCountStatusLabel;
     }
 }
 
