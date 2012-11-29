@@ -29,13 +29,38 @@ namespace ps2ls
         public static Form1 Instance { get { return _Instance; } }
         #endregion
 
+        private List<DataGridViewRow> _RowPool;
+
+        private DataGridViewRow _GetRowFromPool()
+        {
+            DataGridViewRow row = null;
+
+            if (_RowPool.Count == 0)
+            {
+                for (Int32 i = 0; i < 1024; ++i)
+                {
+                    row = new DataGridViewRow();
+                    row.CreateCells(dataGridView1, new object[] { "", "", "" });
+
+                    _RowPool.Add(row);
+                }
+            }
+
+            row = _RowPool.ElementAt(0);
+
+            _RowPool.RemoveAt(0);
+
+            return row;
+        }
+
         private Form1()
         {
             InitializeComponent();
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(ps2ls.Properties.Resources.box);
-            //listBox1.ImageList = imageList;
+
+            _RowPool = new List<DataGridViewRow>();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,48 +97,82 @@ namespace ps2ls
             }
         }
 
-        public void RefreshDataGridView()
+        private void _RefreshFiles()
         {
-            dataGridView1.Rows.Clear();
-
-            if (listBox1.SelectedItem == null)
+            this.Invoke(new MethodInvoker(delegate()
             {
-                return;
-            }
-
-            ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
-
-            Int32 fileCount = 0;
-
-            foreach (object item in packs)
-            {
-                Pack pack = null;
-
-                try
+                if (listBox1.SelectedItem == null)
                 {
-                    pack = (Pack)item;
-                }
-                catch (InvalidCastException) { continue; }
-
-                foreach (PackFile file in pack.Files.Values)
-                {
-                    ++fileCount;
-
-                    if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
+                    for (Int32 i = 0; i < dataGridView1.Rows.Count; ++i)
                     {
-                        continue;
+                        _RowPool.Add(dataGridView1.Rows[i]);
                     }
 
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.Tag = file;
-                    row.CreateCells(dataGridView1, new object[] { file.Name, file.Extension, file.Length / 1024 });
+                    // move this to the pool
+                    dataGridView1.Rows.Clear();
 
-                    dataGridView1.Rows.Add(row);
+                    return;
                 }
-            }
 
-            fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
-            packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
+                ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
+
+                Int32 fileCount = 0;
+                Int32 rowCount = 0;
+
+                for(Int32 j = 0; j < packs.Count; ++j)
+                {
+                    Pack pack = null;
+
+                    try
+                    {
+                        pack = (Pack)packs[j];
+                    }
+                    catch (InvalidCastException) { continue; }
+
+                    for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
+                    {
+                        PackFile file = pack.Files.Values.ElementAt(i);
+
+                        ++fileCount;
+
+                        if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
+                        {
+                            continue;
+                        }
+
+                        DataGridViewRow row = null;
+
+                        if (dataGridView1.RowCount > rowCount)
+                        {
+                            row = dataGridView1.Rows[rowCount];
+                        }
+                        else
+                        {
+                            row = _GetRowFromPool();
+
+                            dataGridView1.Rows.Add(row);
+                        }
+
+                        row.Tag = file;
+                        row.Cells[0].Value = file.Name;
+                        row.Cells[1].Value = file.Extension;
+                        row.Cells[2].Value = file.Length / 1024;
+
+                        ++rowCount;
+                    }
+                }
+
+                while (dataGridView1.Rows.Count > rowCount)
+                {
+                    DataGridViewRow row = dataGridView1.Rows[dataGridView1.Rows.Count - 1];
+                    _RowPool.Add(row);
+
+                    dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
+                }
+
+                fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
+                packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
+            }));
         }
 
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
@@ -147,10 +206,6 @@ namespace ps2ls
             catch (InvalidCastException) { }
         }
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-        }
-
         private void importFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = PS2LS.Instance.PackOpenFileDialog.ShowDialog();
@@ -161,16 +216,11 @@ namespace ps2ls
             }
         }
 
-        private void searchFilesTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                RefreshDataGridView();
-            }
-        }
-
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0)
+                return;
+
             PackFile file = (PackFile)(dataGridView1.Rows[e.RowIndex].Tag);
 
             file.Pack.CreateTemporaryFileAndOpen(file.Name);
@@ -211,19 +261,8 @@ namespace ps2ls
 
         private void searchFilesTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (searchFilesTextBox.Text.Length > 0)
-            {
-                searchFilesTextBox.BackColor = Color.Yellow;
-                toolStripButton1.Enabled = true;
-            }
-            else
-            {
-                searchFilesTextBox.BackColor = Color.White;
-                toolStripButton1.Enabled = false;
-            }
-
-            //RefreshTreeView();
-            RefreshDataGridView();
+            searchFilesTimer.Stop();
+            searchFilesTimer.Start();
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -235,9 +274,7 @@ namespace ps2ls
         {
             propertyGrid1.SelectedObject = listBox1.SelectedItem;
 
-            listBox1.Invalidate();
-
-            RefreshDataGridView();
+            _RefreshFiles();
         }
 
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
@@ -256,6 +293,41 @@ namespace ps2ls
             point.X += icon.Width;
 
             e.Graphics.DrawString(text, e.Font, new SolidBrush(Color.Black), point);
+        }
+
+        private void searchFilesTimer_Tick(object sender, EventArgs e)
+        {
+            if (searchFilesTextBox.Text.Length > 0)
+            {
+                searchFilesTextBox.BackColor = Color.Yellow;
+                toolStripButton1.Enabled = true;
+            }
+            else
+            {
+                searchFilesTextBox.BackColor = Color.White;
+                toolStripButton1.Enabled = false;
+            }
+
+            dataGridView1.Enabled = false;
+
+            _RefreshFiles();
+
+            searchFilesTimer.Stop();
+        }
+
+        private void _RefreshFilesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _RefreshFiles();
+        }
+
+        private void _RefreshFilesBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Value = e.ProgressPercentage;
+        }
+
+        private void _RefreshFilesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            dataGridView1.Enabled = true;
         }
     }
 }

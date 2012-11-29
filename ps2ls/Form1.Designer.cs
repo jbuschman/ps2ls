@@ -28,36 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.importFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.showFullPathButton = new System.Windows.Forms.ToolStripButton();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Extension = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LengthInKilobytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
-            this.searchFilesTextBox = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.showFullPathButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.searchFilesTextBox = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.extractSelectedFiles = new System.Windows.Forms.ToolStripButton();
-            this.fileCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.importFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.packCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.fileCountStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.searchFilesTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -95,10 +98,28 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
             this.toolStripMenuItem1.Text = "File";
             // 
+            // importFilesToolStripMenuItem
+            // 
+            this.importFilesToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__plus;
+            this.importFilesToolStripMenuItem.Name = "importFilesToolStripMenuItem";
+            this.importFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.importFilesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.importFilesToolStripMenuItem.Text = "Import Files...";
+            this.importFilesToolStripMenuItem.Click += new System.EventHandler(this.importFilesToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = global::ps2ls.Properties.Resources.door_open;
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -108,6 +129,14 @@
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__arrow;
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.extractToolStripMenuItem.Text = "Extract All Files...";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -115,6 +144,15 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Image = global::ps2ls.Properties.Resources.question;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -154,6 +192,19 @@
             this.splitContainer3.SplitterDistance = 359;
             this.splitContainer3.TabIndex = 4;
             // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBox1.Size = new System.Drawing.Size(193, 359);
+            this.listBox1.TabIndex = 0;
+            this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -174,6 +225,17 @@
             this.toolStrip2.Size = new System.Drawing.Size(193, 25);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
+            // 
+            // showFullPathButton
+            // 
+            this.showFullPathButton.CheckOnClick = true;
+            this.showFullPathButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showFullPathButton.Image = global::ps2ls.Properties.Resources.direction;
+            this.showFullPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showFullPathButton.Name = "showFullPathButton";
+            this.showFullPathButton.Size = new System.Drawing.Size(23, 22);
+            this.showFullPathButton.Text = "Show Full Path";
+            this.showFullPathButton.Click += new System.EventHandler(this.showFullPathButton_Click);
             // 
             // dataGridView1
             // 
@@ -230,54 +292,6 @@
             this.toolStrip3.TabIndex = 2;
             this.toolStrip3.Text = "toolStrip3";
             // 
-            // searchFilesTextBox
-            // 
-            this.searchFilesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.searchFilesTextBox.Name = "searchFilesTextBox";
-            this.searchFilesTextBox.Size = new System.Drawing.Size(150, 25);
-            this.searchFilesTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchFilesTextBox_KeyDown);
-            this.searchFilesTextBox.TextChanged += new System.EventHandler(this.searchFilesTextBox_TextChanged);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.packCountStatusLabel,
-            this.fileCountStatusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 516);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(587, 22);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // listBox1
-            // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(193, 359);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listBox1_DrawItem);
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            // 
-            // showFullPathButton
-            // 
-            this.showFullPathButton.CheckOnClick = true;
-            this.showFullPathButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showFullPathButton.Image = global::ps2ls.Properties.Resources.direction;
-            this.showFullPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showFullPathButton.Name = "showFullPathButton";
-            this.showFullPathButton.Size = new System.Drawing.Size(23, 22);
-            this.showFullPathButton.Text = "Show Full Path";
-            this.showFullPathButton.Click += new System.EventHandler(this.showFullPathButton_Click);
-            // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -286,6 +300,13 @@
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(16, 22);
             this.toolStripLabel1.Text = "toolStripLabel1";
+            // 
+            // searchFilesTextBox
+            // 
+            this.searchFilesTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.searchFilesTextBox.Name = "searchFilesTextBox";
+            this.searchFilesTextBox.Size = new System.Drawing.Size(150, 25);
+            this.searchFilesTextBox.TextChanged += new System.EventHandler(this.searchFilesTextBox_TextChanged);
             // 
             // toolStripButton1
             // 
@@ -298,6 +319,11 @@
             this.toolStripButton1.Text = "Clear Search Text";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // extractSelectedFiles
             // 
             this.extractSelectedFiles.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -309,47 +335,17 @@
             this.extractSelectedFiles.Text = "Extract Selected Files...";
             this.extractSelectedFiles.Click += new System.EventHandler(this.extractSelectedFiles_Click);
             // 
-            // fileCountStatusLabel
+            // statusStrip1
             // 
-            this.fileCountStatusLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
-            this.fileCountStatusLabel.Name = "fileCountStatusLabel";
-            this.fileCountStatusLabel.Size = new System.Drawing.Size(40, 17);
-            this.fileCountStatusLabel.Text = "0/0";
-            // 
-            // importFilesToolStripMenuItem
-            // 
-            this.importFilesToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__plus;
-            this.importFilesToolStripMenuItem.Name = "importFilesToolStripMenuItem";
-            this.importFilesToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.importFilesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.importFilesToolStripMenuItem.Text = "Import Files...";
-            this.importFilesToolStripMenuItem.Click += new System.EventHandler(this.importFilesToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Image = global::ps2ls.Properties.Resources.door_open;
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // extractToolStripMenuItem
-            // 
-            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__arrow;
-            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
-            this.extractToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.extractToolStripMenuItem.Text = "Extract All Files...";
-            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Image = global::ps2ls.Properties.Resources.question;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
-            this.aboutToolStripMenuItem.Text = "About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.packCountStatusLabel,
+            this.fileCountStatusLabel,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 516);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(587, 22);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // packCountStatusLabel
             // 
@@ -357,6 +353,23 @@
             this.packCountStatusLabel.Name = "packCountStatusLabel";
             this.packCountStatusLabel.Size = new System.Drawing.Size(40, 17);
             this.packCountStatusLabel.Text = "0/0";
+            // 
+            // fileCountStatusLabel
+            // 
+            this.fileCountStatusLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
+            this.fileCountStatusLabel.Name = "fileCountStatusLabel";
+            this.fileCountStatusLabel.Size = new System.Drawing.Size(40, 17);
+            this.fileCountStatusLabel.Text = "0/0";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            // 
+            // searchFilesTimer
+            // 
+            this.searchFilesTimer.Interval = 500;
+            this.searchFilesTimer.Tick += new System.EventHandler(this.searchFilesTimer_Tick);
             // 
             // Form1
             // 
@@ -423,6 +436,8 @@
         private System.Windows.Forms.ToolStripStatusLabel fileCountStatusLabel;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ToolStripStatusLabel packCountStatusLabel;
+        private System.Windows.Forms.Timer searchFilesTimer;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
 
