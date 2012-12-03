@@ -83,6 +83,16 @@ namespace ps2ls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap box__minus {
+            get {
+                object obj = ResourceManager.GetObject("box--minus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap box__plus {
             get {
                 object obj = ResourceManager.GetObject("box--plus", resourceCulture);
@@ -126,6 +136,16 @@ namespace ps2ls.Properties {
         internal static System.Drawing.Bitmap box_zipper {
             get {
                 object obj = ResourceManager.GetObject("box_zipper", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap counter {
+            get {
+                object obj = ResourceManager.GetObject("counter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

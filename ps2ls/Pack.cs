@@ -39,6 +39,12 @@ namespace ps2ls
             }
         }
 
+        [BrowsableAttribute(false)]
+        public String Name
+        {
+            get { return System.IO.Path.GetFileName(Path); }
+        }
+
         private Pack(String path)
         {
             Path = path;
@@ -206,7 +212,7 @@ namespace ps2ls
 
         public override string ToString()
         {
-            return Path;
+            return Name;
         }
     }
 }
