@@ -28,8 +28,6 @@ namespace ps2ls
 
         private PS2LS()
         {
-            ShowFullPath = false;
-
             PackOpenFileDialog = new OpenFileDialog();
             PackOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
             PackOpenFileDialog.Multiselect = true;
@@ -68,7 +66,6 @@ namespace ps2ls
             }
         }
 
-        public Boolean ShowFullPath { get; set; }
         public OpenFileDialog PackOpenFileDialog { get; private set; }
         public String GameDirectory { get; private set; }
     }

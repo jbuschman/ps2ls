@@ -172,6 +172,9 @@
   <data name="box--plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box--plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="document-arrow-drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\document-arrow-drive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="document_export" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-export.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -181,7 +184,7 @@
   <data name="box-search-result" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box-search-result.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="document-arrow-drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\document-arrow-drive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
