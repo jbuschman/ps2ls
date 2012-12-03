@@ -116,6 +116,17 @@ namespace ps2ls
 
                 ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
 
+                Int32 rowMax = 0;
+
+                try
+                {
+                    rowMax = Int32.Parse(fileCountMaxComboBox.Items[fileCountMaxComboBox.SelectedIndex].ToString());
+                }
+                catch (FormatException)
+                {
+                    rowMax = Int32.MaxValue;
+                }
+
                 Int32 fileCount = 0;
                 Int32 rowCount = 0;
 
@@ -131,9 +142,14 @@ namespace ps2ls
 
                     for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
                     {
-                        PackFile file = pack.Files.Values.ElementAt(i);
-
                         ++fileCount;
+
+                        if (rowCount >= rowMax)
+                        {
+                            continue;
+                        }
+
+                        PackFile file = pack.Files.Values.ElementAt(i);
 
                         if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
                         {
@@ -183,13 +199,6 @@ namespace ps2ls
 
                 PackManager.Instance.ExtractAllToDirectory(directory);
             }
-        }
-
-        private void showFullPathButton_Click(object sender, EventArgs e)
-        {
-            PS2LS.Instance.ShowFullPath = showFullPathButton.Checked;
-
-            RefreshTreeView();
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -293,6 +302,7 @@ namespace ps2ls
             point.X += icon.Width;
 
             e.Graphics.DrawString(text, e.Font, new SolidBrush(Color.Black), point);
+            e.DrawFocusRectangle();
         }
 
         private void searchFilesTimer_Tick(object sender, EventArgs e)
@@ -308,26 +318,19 @@ namespace ps2ls
                 toolStripButton1.Enabled = false;
             }
 
-            dataGridView1.Enabled = false;
-
             _RefreshFiles();
 
             searchFilesTimer.Stop();
         }
 
-        private void _RefreshFilesBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            fileCountMaxComboBox.SelectedIndex = 0;
+        }
+
+        private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             _RefreshFiles();
-        }
-
-        private void _RefreshFilesBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void _RefreshFilesBackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            dataGridView1.Enabled = true;
         }
     }
 }
