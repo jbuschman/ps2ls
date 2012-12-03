@@ -70,135 +70,106 @@ namespace ps2ls
 
         public void RefreshTreeView()
         {
+            listBox1.ClearSelected();
             listBox1.Items.Clear();
 
             foreach (KeyValuePair<string, Pack> pack in PackManager.Instance.Packs)
             {
-                String packNodeString = pack.Key;
-
-                if (PS2LS.Instance.ShowFullPath == false)
-                {
-                    packNodeString = Path.GetFileNameWithoutExtension(packNodeString);
-                }
-
-                Int32 count = 0;
-
-                foreach (KeyValuePair<String, PackFile> file in pack.Value.Files)
-                {
-                    if (file.Key.Contains(searchFilesTextBox.Text) == false)
-                    {
-                        continue;
-                    }
-
-                    ++count;
-                }
-
                 listBox1.Items.Add(pack.Value);
             }
         }
 
         private void _RefreshFiles()
         {
-            this.Invoke(new MethodInvoker(delegate()
+            if (listBox1.SelectedItem == null)
             {
-                if (listBox1.SelectedItem == null)
+                for (Int32 i = 0; i < dataGridView1.Rows.Count; ++i)
                 {
-                    for (Int32 i = 0; i < dataGridView1.Rows.Count; ++i)
-                    {
-                        _RowPool.Add(dataGridView1.Rows[i]);
-                    }
-
-                    // move this to the pool
-                    dataGridView1.Rows.Clear();
-
-                    return;
+                    _RowPool.Add(dataGridView1.Rows[i]);
                 }
 
-                ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
+                // move this to the pool
+                dataGridView1.Rows.Clear();
+            }
 
-                Int32 rowMax = 0;
+            ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
+
+            Int32 rowMax = 0;
+
+            try
+            {
+                rowMax = Int32.Parse(fileCountMaxComboBox.Items[fileCountMaxComboBox.SelectedIndex].ToString());
+            }
+            catch (FormatException)
+            {
+                rowMax = Int32.MaxValue;
+            }
+
+            Int32 fileCount = 0;
+            Int32 rowCount = 0;
+
+            for(Int32 j = 0; j < packs.Count; ++j)
+            {
+                Pack pack = null;
 
                 try
                 {
-                    rowMax = Int32.Parse(fileCountMaxComboBox.Items[fileCountMaxComboBox.SelectedIndex].ToString());
+                    pack = (Pack)packs[j];
                 }
-                catch (FormatException)
+                catch (InvalidCastException) { continue; }
+
+                for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
                 {
-                    rowMax = Int32.MaxValue;
-                }
+                    ++fileCount;
 
-                Int32 fileCount = 0;
-                Int32 rowCount = 0;
-
-                for(Int32 j = 0; j < packs.Count; ++j)
-                {
-                    Pack pack = null;
-
-                    try
+                    if (rowCount >= rowMax)
                     {
-                        pack = (Pack)packs[j];
+                        continue;
                     }
-                    catch (InvalidCastException) { continue; }
 
-                    for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
+                    PackFile file = pack.Files.Values.ElementAt(i);
+
+                    if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
                     {
-                        ++fileCount;
-
-                        if (rowCount >= rowMax)
-                        {
-                            continue;
-                        }
-
-                        PackFile file = pack.Files.Values.ElementAt(i);
-
-                        if (file.Name.ToLower().Contains(searchFilesTextBox.Text.ToLower()) == false)
-                        {
-                            continue;
-                        }
-
-                        DataGridViewRow row = null;
-
-                        if (dataGridView1.RowCount > rowCount)
-                        {
-                            row = dataGridView1.Rows[rowCount];
-                        }
-                        else
-                        {
-                            row = _GetRowFromPool();
-
-                            dataGridView1.Rows.Add(row);
-                        }
-
-                        row.Tag = file;
-                        row.Cells[0].Value = file.Name;
-                        row.Cells[1].Value = file.Extension;
-                        row.Cells[2].Value = file.Length / 1024;
-
-                        ++rowCount;
+                        continue;
                     }
+
+                    DataGridViewRow row = null;
+
+                    if (dataGridView1.RowCount > rowCount)
+                    {
+                        row = dataGridView1.Rows[rowCount];
+                    }
+                    else
+                    {
+                        row = _GetRowFromPool();
+
+                        dataGridView1.Rows.Add(row);
+                    }
+
+                    row.Tag = file;
+                    row.Cells[0].Value = file.Name;
+                    row.Cells[1].Value = file.Extension;
+                    row.Cells[2].Value = file.Length / 1024;
+
+                    ++rowCount;
                 }
+            }
 
-                while (dataGridView1.Rows.Count > rowCount)
-                {
-                    DataGridViewRow row = dataGridView1.Rows[dataGridView1.Rows.Count - 1];
-                    _RowPool.Add(row);
+            while (dataGridView1.Rows.Count > rowCount)
+            {
+                DataGridViewRow row = dataGridView1.Rows[dataGridView1.Rows.Count - 1];
+                _RowPool.Add(row);
 
-                    dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
-                }
+                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
+            }
 
-                fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
-                packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
-            }));
+            fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
+            packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
         }
 
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {
-                String directory = folderBrowserDialog1.SelectedPath;
-
-                PackManager.Instance.ExtractAllToDirectory(directory);
-            }
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -217,12 +188,6 @@ namespace ps2ls
 
         private void importFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = PS2LS.Instance.PackOpenFileDialog.ShowDialog();
-
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                PackManager.Instance.LoadBinaryFromPaths(PS2LS.Instance.PackOpenFileDialog.FileNames);
-            }
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -276,12 +241,15 @@ namespace ps2ls
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            extractSelectedFiles.Enabled = dataGridView1.SelectedRows.Count > 0;
+            extractSelectedFilesButton.Enabled = dataGridView1.SelectedRows.Count > 0;
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             propertyGrid1.SelectedObject = listBox1.SelectedItem;
+
+            removePacksButton.Enabled = listBox1.SelectedItems.Count > 0;
+            extractSelectedPacksButton.Enabled = listBox1.SelectedItems.Count > 0;
 
             _RefreshFiles();
         }
@@ -331,6 +299,71 @@ namespace ps2ls
         private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             _RefreshFiles();
+        }
+
+        private void removePacksButton_Click(object sender, EventArgs e)
+        {
+            foreach (object item in listBox1.SelectedItems)
+            {
+                Pack pack = null;
+
+                try
+                {
+                    pack = (Pack)item;
+                }
+                catch (Exception) { continue; }
+
+                PackManager.Instance.Packs.Remove(pack.Path);
+            }
+
+            RefreshTreeView();
+            _RefreshFiles();
+        }
+
+        private void addPacksButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = PS2LS.Instance.PackOpenFileDialog.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                PackManager.Instance.LoadBinaryFromPaths(PS2LS.Instance.PackOpenFileDialog.FileNames);
+            }
+        }
+
+        private void extractSelectedPacksButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                List<PackFile> files = new List<PackFile>();
+
+                foreach (object item in listBox1.SelectedItems)
+                {
+                    Pack pack = null;
+
+                    try
+                    {
+                        pack = (Pack)item;
+                    }
+                    catch (Exception) { continue; }
+
+                    foreach (PackFile file in pack.Files.Values)
+                    {
+                        files.Add(file);
+                    }
+                }
+
+                PackManager.Instance.ExtractByPackFilesToDirectory(files, folderBrowserDialog1.SelectedPath);
+            }
+        }
+
+        private void extractAllPacksButton_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                String directory = folderBrowserDialog1.SelectedPath;
+
+                PackManager.Instance.ExtractAllToDirectory(directory);
+            }
         }
     }
 }
