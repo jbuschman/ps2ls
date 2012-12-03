@@ -30,5 +30,10 @@ namespace ps2ls
         {
             label1.Text = text;
         }
+
+        private void GenericLoadingForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
     }
 }

@@ -293,7 +293,7 @@ namespace ps2ls
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            fileCountMaxComboBox.SelectedIndex = 0;
+            fileCountMaxComboBox.SelectedIndex = 1;
         }
 
         private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
