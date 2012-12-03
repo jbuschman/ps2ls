@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using ps2ls.Properties;
+using OpenTK.Graphics.OpenGL;
 
 namespace ps2ls
 {
@@ -73,7 +74,7 @@ namespace ps2ls
             listBox1.ClearSelected();
             listBox1.Items.Clear();
 
-            foreach (KeyValuePair<string, Pack> pack in PackManager.Instance.Packs)
+            foreach (KeyValuePair<Int32, Pack> pack in PackManager.Instance.Packs)
             {
                 listBox1.Items.Add(pack.Value);
             }
@@ -313,7 +314,7 @@ namespace ps2ls
                 }
                 catch (Exception) { continue; }
 
-                PackManager.Instance.Packs.Remove(pack.Path);
+                PackManager.Instance.Packs.Remove(pack.Path.GetHashCode());
             }
 
             RefreshTreeView();
@@ -364,6 +365,48 @@ namespace ps2ls
 
                 PackManager.Instance.ExtractAllToDirectory(directory);
             }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            Application.Idle += applicationIdle;
+
+
+        }
+
+        private void applicationIdle(object sender, EventArgs e)
+        {
+            while (glControl1.Context != null && glControl1.IsIdle)
+            {
+                render();
+            }
+        }
+
+        private void render()
+        {
+            glControl1.MakeCurrent();
+
+            GL.ClearColor(Color.CornflowerBlue);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            glControl1.SwapBuffers();
+        }
+
+        private void glControl1_Paint(object sender, PaintEventArgs e)
+        {
+            render();
+        }
+
+        private void glControl1_Resize(object sender, EventArgs e)
+        {
+            OpenTK.GLControl glControl = sender as OpenTK.GLControl;
+
+            if (glControl.Height == 0)
+                glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
+
+            GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
         }
     }
 }

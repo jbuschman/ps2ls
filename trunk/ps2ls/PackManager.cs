@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace ps2ls
 {
@@ -26,7 +27,7 @@ namespace ps2ls
         public static PackManager Instance { get { return _Instance; } }
         #endregion
 
-        public Dictionary<String, Pack> Packs { get; private set; }
+        public Dictionary<Int32, Pack> Packs { get; private set; }
 
         private GenericLoadingForm _LoadingForm;
         private BackgroundWorker _LoadBackgroundWorker;
@@ -35,7 +36,7 @@ namespace ps2ls
 
         private PackManager()
         {
-            Packs = new Dictionary<String, Pack>();
+            Packs = new Dictionary<Int32, Pack>();
 
             _LoadBackgroundWorker = new BackgroundWorker();
             _LoadBackgroundWorker.WorkerReportsProgress = true;
@@ -92,13 +93,13 @@ namespace ps2ls
                 String path = paths.ElementAt(i);
                 Pack pack = null;
 
-                if (Packs.TryGetValue(path, out pack) == false)
+                if (Packs.TryGetValue(path.GetHashCode(), out pack) == false)
                 {
                     pack = Pack.LoadBinary(path);
 
                     if (pack != null)
                     {
-                        Packs.Add(path, pack);
+                        Packs.Add(path.GetHashCode(), pack);
                     }
                 }
 
