@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels dds,file,format
+#labels dds,file
 
 = DDS =
 
