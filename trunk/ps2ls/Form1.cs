@@ -30,38 +30,12 @@ namespace ps2ls
         public static Form1 Instance { get { return _Instance; } }
         #endregion
 
-        private List<DataGridViewRow> _RowPool;
-
-        private DataGridViewRow _GetRowFromPool()
-        {
-            DataGridViewRow row = null;
-
-            if (_RowPool.Count == 0)
-            {
-                for (Int32 i = 0; i < 1024; ++i)
-                {
-                    row = new DataGridViewRow();
-                    row.CreateCells(dataGridView1, new object[] { "", "", "" });
-
-                    _RowPool.Add(row);
-                }
-            }
-
-            row = _RowPool.ElementAt(0);
-
-            _RowPool.RemoveAt(0);
-
-            return row;
-        }
-
         private Form1()
         {
             InitializeComponent();
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(ps2ls.Properties.Resources.box);
-
-            _RowPool = new List<DataGridViewRow>();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -82,16 +56,9 @@ namespace ps2ls
 
         private void _RefreshFiles()
         {
-            if (listBox1.SelectedItem == null)
-            {
-                for (Int32 i = 0; i < dataGridView1.Rows.Count; ++i)
-                {
-                    _RowPool.Add(dataGridView1.Rows[i]);
-                }
+            dataGridView1.SuspendLayout();
 
-                // move this to the pool
-                dataGridView1.Rows.Clear();
-            }
+            dataGridView1.Rows.Clear();
 
             ListBox.SelectedObjectCollection packs = listBox1.SelectedItems;
 
@@ -135,35 +102,16 @@ namespace ps2ls
                         continue;
                     }
 
-                    DataGridViewRow row = null;
-
-                    if (dataGridView1.RowCount > rowCount)
-                    {
-                        row = dataGridView1.Rows[rowCount];
-                    }
-                    else
-                    {
-                        row = _GetRowFromPool();
-
-                        dataGridView1.Rows.Add(row);
-                    }
-
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dataGridView1, new object[] { file.Name, file.Extension, file.Length / 1024 });
                     row.Tag = file;
-                    row.Cells[0].Value = file.Name;
-                    row.Cells[1].Value = file.Extension;
-                    row.Cells[2].Value = file.Length / 1024;
+                    dataGridView1.Rows.Add(row);
 
                     ++rowCount;
                 }
             }
 
-            while (dataGridView1.Rows.Count > rowCount)
-            {
-                DataGridViewRow row = dataGridView1.Rows[dataGridView1.Rows.Count - 1];
-                _RowPool.Add(row);
-
-                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
-            }
+            dataGridView1.ResumeLayout();
 
             fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
             packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
