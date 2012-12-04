@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels dma,file,format
+#labels dma,file
 
 = DMA =
 
