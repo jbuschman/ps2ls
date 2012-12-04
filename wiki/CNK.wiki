@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels cnk,file,format
+#labels cnk,file
 
 = CNK =
 
