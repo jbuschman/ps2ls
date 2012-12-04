@@ -146,7 +146,6 @@ def main(argv=None):
 
             mesh = mesh_t()
 
-            buffer = list()
             index_count = 0
             vertex_count = 0
             bytes_per_vertex = 0
