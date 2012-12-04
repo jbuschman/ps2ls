@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels zone,file,format
+#labels zone,file
 
 = ZONE =
 
