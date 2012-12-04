@@ -1,5 +1,5 @@
 #summary One-sentence summary of this page.
-#labels fsb,file,format
+#labels fsb,file
 
 = FSB =
 
