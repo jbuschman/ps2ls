@@ -22,23 +22,13 @@ class mesh_t:
     def write(self, path):
         out = open(path, "w+")
 
-        out.write("ply\n")
-        out.write("format ascii 1.0\n")
-        out.write("element vertex " + str(len(self.vertices)) + "\n")
-        out.write("property float x\n")
-        out.write("property float y\n")
-        out.write("property float z\n")
-        out.write("element face " + str(len(self.faces)) + "\n")
-        out.write("property list uchar int vertex_index\n")
-        out.write("end_header\n")
-
         for j in range(0, len(self.vertices)):
             vertex = self.vertices[j]
-            out.write(str(vertex.position.x) + " " + str(vertex.position.y) + " " + str(vertex.position.z) + "\n")
+            out.write("v " + str(vertex.position.x) + " " + str(vertex.position.y) + " " + str(vertex.position.z) + "\n")
 
         for j in range(0, len(self.faces)):
             face = self.faces[j]
-            out.write("3 " + str(face.indices[2]) + " " + str(face.indices[1]) + " " + str(face.indices[0]) + "\n")
+            out.write("f " + str(face.indices[2] + 1) + " " + str(face.indices[1] + 1) + " " + str(face.indices[0] + 1) + "\n")
 
         out.close()
 
@@ -217,7 +207,7 @@ def main(argv=None):
 
             model.meshes.append(mesh)
 
-            mesh.write("./export/" + model.name + "_" + str(i) + ".ply")
+            mesh.write("./export/" + model.name + "_" + str(i) + ".obj")
 
         f.close()
 

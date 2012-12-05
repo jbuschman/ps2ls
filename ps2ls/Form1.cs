@@ -74,7 +74,6 @@ namespace ps2ls
             }
 
             Int32 fileCount = 0;
-            Int32 rowCount = 0;
 
             for(Int32 j = 0; j < packs.Count; ++j)
             {
@@ -88,9 +87,7 @@ namespace ps2ls
 
                 for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
                 {
-                    ++fileCount;
-
-                    if (rowCount >= rowMax)
+                    if (fileCount >= rowMax)
                     {
                         continue;
                     }
@@ -107,7 +104,7 @@ namespace ps2ls
                     row.Tag = file;
                     dataGridView1.Rows.Add(row);
 
-                    ++rowCount;
+                    ++fileCount;
                 }
             }
 
