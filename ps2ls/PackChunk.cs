@@ -26,7 +26,7 @@ namespace ps2ls
             for (Int32 i = 0; i < chunk.FileCount; ++i)
             {
                 PackFile file = PackFile.LoadBinary(pack, stream);
-                pack.Files.Add(file.Name, file);
+                pack.Files.Add(file.Name.GetHashCode(), file);
             }
 
             return chunk;

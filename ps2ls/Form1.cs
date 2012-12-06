@@ -54,7 +54,7 @@ namespace ps2ls
             }
         }
 
-        private void _RefreshFiles()
+        private void refreshFiles()
         {
             dataGridView1.SuspendLayout();
 
@@ -197,7 +197,7 @@ namespace ps2ls
             removePacksButton.Enabled = listBox1.SelectedItems.Count > 0;
             extractSelectedPacksButton.Enabled = listBox1.SelectedItems.Count > 0;
 
-            _RefreshFiles();
+            refreshFiles();
         }
 
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
@@ -232,7 +232,7 @@ namespace ps2ls
                 toolStripButton1.Enabled = false;
             }
 
-            _RefreshFiles();
+            refreshFiles();
 
             searchFilesTimer.Stop();
         }
@@ -244,7 +244,7 @@ namespace ps2ls
 
         private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _RefreshFiles();
+            refreshFiles();
         }
 
         private void removePacksButton_Click(object sender, EventArgs e)
@@ -263,7 +263,7 @@ namespace ps2ls
             }
 
             RefreshTreeView();
-            _RefreshFiles();
+            refreshFiles();
         }
 
         private void addPacksButton_Click(object sender, EventArgs e)
