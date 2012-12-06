@@ -11,19 +11,19 @@ namespace ps2ls
     class PS2LS
     {
         #region Singleton
-        private static PS2LS _Instance = null;
+        private static PS2LS instance = null;
 
         public static void CreateInstance()
         {
-            _Instance = new PS2LS();
+            instance = new PS2LS();
         }
 
         public static void DeleteInstance()
         {
-            _Instance = null;
+            instance = null;
         }
 
-        public static PS2LS Instance { get { return _Instance; } }
+        public static PS2LS Instance { get { return instance; } }
         #endregion
 
         private PS2LS()

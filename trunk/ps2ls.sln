@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ps2ls", "ps2ls\ps2ls.csproj", "{EA8DD307-8B70-4B76-A3E4-140D2A5ECB89}"
 EndProject
 Global

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using ps2ls.Properties;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace ps2ls
@@ -15,19 +16,19 @@ namespace ps2ls
     public partial class Form1 : Form
     {
         #region Singleton
-        private static Form1 _Instance = null;
+        private static Form1 instance = null;
 
         public static void CreateInstance()
         {
-            _Instance = new Form1();
+            instance = new Form1();
         }
 
         public static void DeleteInstance()
         {
-            _Instance = null;
+            instance = null;
         }
 
-        public static Form1 Instance { get { return _Instance; } }
+        public static Form1 Instance { get { return instance; } }
         #endregion
 
         private Form1()
@@ -239,7 +240,8 @@ namespace ps2ls
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            fileCountMaxComboBox.SelectedIndex = 1;
+            fileCountMaxComboBox.SelectedIndex = 3;
+            backgroundColorToolStripButton.BackColor = ModelBrowser.Instance.BackgroundColor;
         }
 
         private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -333,8 +335,34 @@ namespace ps2ls
         {
             glControl1.MakeCurrent();
 
-            GL.ClearColor(Color.CornflowerBlue);
+            ModelBrowser.Instance.Camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
+            ModelBrowser.Instance.Camera.Update();
+
+            //clear
+            GL.ClearColor(ModelBrowser.Instance.BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            //projection matrix
+            GL.MatrixMode(MatrixMode.Projection);
+            Matrix4 projectionMatrix = ModelBrowser.Instance.Camera.ProjectionMatrix;
+            GL.LoadMatrix(ref projectionMatrix);
+
+            //view matrix
+            Matrix4 viewMatrix = ModelBrowser.Instance.Camera.ViewMatrix;
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref viewMatrix);
+
+            GL.Begin(BeginMode.Lines);
+            GL.Color3(Color.Red);
+            GL.Vertex3(Vector3.Zero);
+            GL.Vertex3(Vector3.UnitX);
+            GL.Color3(Color.Green);
+            GL.Vertex3(Vector3.Zero);
+            GL.Vertex3(Vector3.UnitY);
+            GL.Color3(Color.Blue);
+            GL.Vertex3(Vector3.Zero);
+            GL.Vertex3(Vector3.UnitZ);
+            GL.End();
 
             glControl1.SwapBuffers();
         }
@@ -352,6 +380,13 @@ namespace ps2ls
                 glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
 
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
+        }
+
+        private void backgroundColorToolStripButton_Click(object sender, EventArgs e)
+        {
+            Color color = ModelBrowser.Instance.ShowBackgroundColorDialog();
+
+            backgroundColorToolStripButton.BackColor = color;
         }
     }
 }

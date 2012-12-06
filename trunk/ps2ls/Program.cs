@@ -16,10 +16,12 @@ namespace ps2ls
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Form1.CreateInstance();
             PS2LS.CreateInstance();
             AboutBox.CreateInstance();
             PackManager.CreateInstance();
+            ModelBrowser.CreateInstance();
+
+            Form1.CreateInstance();
 
             Application.Run(Form1.Instance);
         }
