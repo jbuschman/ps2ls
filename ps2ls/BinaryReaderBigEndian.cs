@@ -60,14 +60,14 @@ namespace ps2ls
             return BitConverter.ToUInt64(bytes, 0);
         }
 
-        public override float ReadSingle()
+        public override Single ReadSingle()
         {
             byte[] bytes = base.ReadBytes(4);
             Array.Reverse(bytes);
             return BitConverter.ToSingle(bytes, 0);
         }
 
-        public override double ReadDouble()
+        public override Double ReadDouble()
         {
             byte[] bytes = base.ReadBytes(8);
             Array.Reverse(bytes);

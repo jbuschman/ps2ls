@@ -78,6 +78,10 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="BinaryReaderBigEndian.cs" />
+    <Compile Include="Dme\AABB.cs" />
+    <Compile Include="Dme\ArcBallCamera.cs" />
+    <Compile Include="Dme\Camera.cs" />
+    <Compile Include="Dme\FreeCamera.cs" />
     <Compile Include="Dme\Mesh.cs" />
     <Compile Include="Dme\Model.cs" />
     <Compile Include="Dme\Vertex.cs" />
@@ -93,6 +97,7 @@
     <Compile Include="GenericLoadingForm.Designer.cs">
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModelBrowser.cs" />
     <Compile Include="Pack.cs" />
     <Compile Include="PackFile.cs" />
     <Compile Include="PackManager.cs" />
@@ -215,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\grid.png" />
     <None Include="Resources\gear.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
