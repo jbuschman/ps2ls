@@ -16,7 +16,7 @@ namespace ps2ls
         public string Path { get; private set; }
 
         [BrowsableAttribute(false)]
-        public SortedDictionary<String, PackFile> Files { get; private set; }
+        public Dictionary<Int32, PackFile> Files { get; private set; }
 
         [DescriptionAttribute("The number of files contained in this pack file.")]
         [ReadOnlyAttribute(true)]
@@ -66,7 +66,7 @@ namespace ps2ls
                 return null;
             }
 
-            pack.Files = new SortedDictionary<String, PackFile>();
+            pack.Files = new Dictionary<Int32, PackFile>();
 
             while(true)
             {
@@ -98,7 +98,7 @@ namespace ps2ls
                 return false;
             }
 
-            foreach (KeyValuePair<String, PackFile> packFile in Files)
+            foreach (KeyValuePair<Int32, PackFile> packFile in Files)
             {
                 byte[] buffer = new byte[(int)packFile.Value.Length];
 
@@ -135,7 +135,7 @@ namespace ps2ls
             {
                 PackFile packFile = null;
                 
-                if(false == Files.TryGetValue(name, out packFile))
+                if(false == Files.TryGetValue(name.GetHashCode(), out packFile))
                 {
                     // could not find file, skip.
                     continue;
@@ -173,7 +173,7 @@ namespace ps2ls
 
             PackFile packFile = null;
 
-            if (false == Files.TryGetValue(name, out packFile))
+            if (false == Files.TryGetValue(name.GetHashCode(), out packFile))
             {
                 fileStream.Close();
 
