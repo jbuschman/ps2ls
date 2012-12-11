@@ -194,6 +194,38 @@ namespace ps2ls
             return true;
         }
 
+        public MemoryStream CreateMemoryStreamByName(String name)
+        {
+            PackFile packFile = null;
+
+            if (false == Files.TryGetValue(name.GetHashCode(), out packFile))
+            {
+                return null;
+            }
+
+            FileStream file = null;
+
+            try
+            {
+                file = File.Open(packFile.Pack.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+
+                return null;
+            }
+
+            byte[] buffer = new byte[packFile.Length];
+
+            file.Seek(packFile.AbsoluteOffset, SeekOrigin.Begin);
+            file.Read(buffer, 0, (Int32)packFile.Length);
+
+            MemoryStream memoryStream = new MemoryStream(buffer);
+
+            return memoryStream;
+        }
+
         public Boolean CreateTemporaryFileAndOpen(String name)
         {
             String tempPath = System.IO.Path.GetTempPath();

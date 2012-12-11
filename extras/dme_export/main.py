@@ -26,9 +26,16 @@ class mesh_t:
             vertex = self.vertices[j]
             out.write("v " + str(vertex.position.x) + " " + str(vertex.position.y) + " " + str(vertex.position.z) + "\n")
 
+        for j in range(0, len(self.vertices)):
+            vertex = self.vertices[j]
+            out.write("vt " + str(self.vertices[j].uvs[0].x) + " " + str(self.vertices[j].uvs[0].y) + "\n")
+
         for j in range(0, len(self.faces)):
             face = self.faces[j]
-            out.write("f " + str(face.indices[2] + 1) + " " + str(face.indices[1] + 1) + " " + str(face.indices[0] + 1) + "\n")
+            v1 = str(face.indices[2] + 1)
+            v2 = str(face.indices[1] + 1)
+            v3 = str(face.indices[0] + 1)
+            out.write("f " + v1  + "/" + v1 + " " + v2 + "/" + v2 + " " + v3 + "/" + v3 + "\n")
 
         out.close()
 
@@ -73,7 +80,7 @@ class face3_t:
     def __str__(self):
         return "(" + str(self.indices[0]) + ", " + str(self.indices[1]) + ", " + str(self.indices[2]) + ")"
 
-def main(argv=None):
+def main():
     files = glob.glob("./import/*.dme")
 
     for file in files:
@@ -178,7 +185,7 @@ def main(argv=None):
 
             # dmod version 4 stores additional (non-position) data vertex data in a separate block immediately after
             # indices block.
-            # this *possibly* compressed UV coordinates for each texture channel in the mesh.
+            # this is *possibly* compressed UV coordinates for each texture channel in the mesh.
             if dmod_version == 4:
                 buffer = f.read(4)
                 bytes_per_vertex = struct.unpack("i", buffer[0:4])[0]
@@ -187,13 +194,18 @@ def main(argv=None):
 
                 print f.tell()
 
-                buffer = f.read(vertex_count * bytes_per_vertex)
-
                 for j in range(0, len(mesh.vertices)):
-                    # uv-coordinates components (x,y) are compressed to 2 16-byte integers
-                    # representing a ratio of
-                    mesh.vertices[j].uvs.append(float(struct.unpack("H", buffer[12:14])[0]) / 65535.0)
-                    mesh.vertices[j].uvs.append(float(struct.unpack("H", buffer[14:16])[0]) / 65535.0)
+                    buffer = f.read(bytes_per_vertex)
+
+                    k = 4
+                    uv = vec2_t()
+                    uv.x = (float(struct.unpack("H", buffer[k + 0:k + 2])[0])) / 65535.0
+                    uv.y = (float(struct.unpack("H", buffer[k + 2:k + 4])[0])) / 65535.0
+
+                    print str(uv.x) + " " + str(uv.y)
+
+                    mesh.vertices[j].uvs.append(list())
+                    mesh.vertices[j].uvs[0] = uv
 
             for j in range(0, index_count / 3):
                 buffer = f.read(6)
