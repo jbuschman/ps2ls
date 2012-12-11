@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using OpenTK.Math;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace ps2ls.Dme
 {
@@ -11,7 +12,7 @@ namespace ps2ls.Dme
     {
         public static Model LoadFromStream(Stream stream)
         {
-            BinaryReaderBigEndian binaryReader = new BinaryReaderBigEndian(stream);
+            BinaryReader binaryReader = new BinaryReader(stream);
 
             byte[] magic = binaryReader.ReadBytes(4);
 
@@ -23,7 +24,7 @@ namespace ps2ls.Dme
                 return null;
             }
 
-            Int32 dmodVersion = binaryReader.ReadInt32();
+            UInt32 dmodVersion = binaryReader.ReadUInt32();
 
             // only handle version 4 for now
             if (dmodVersion != 3 && dmodVersion != 4)
@@ -31,7 +32,7 @@ namespace ps2ls.Dme
                 return null;
             }
 
-            Int32 modelHeaderOffset = binaryReader.ReadInt32();
+            UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
 
             magic = binaryReader.ReadBytes(4);
 
@@ -43,12 +44,12 @@ namespace ps2ls.Dme
                 return null;
             }
 
-            Int32 dmatVersion = binaryReader.ReadInt32();
-            Int32 dmatLength = binaryReader.ReadInt32();
+            UInt32 dmatVersion = binaryReader.ReadUInt32();
+            UInt32 dmatLength = binaryReader.ReadUInt32();
 
             Model model = new Model();
 
-            char[] buffer = binaryReader.ReadChars(dmatLength);
+            char[] buffer = binaryReader.ReadChars((Int32)dmatLength);
             List<String> materialNames = new List<string>();
             Int32 startIndex = 0;
 
@@ -57,6 +58,7 @@ namespace ps2ls.Dme
                 if (buffer[i] == '\0')
                 {
                     Int32 length = i - startIndex;
+
                     String materialName = new String(buffer, startIndex, length);
                     startIndex = i + 1;
 
@@ -64,49 +66,53 @@ namespace ps2ls.Dme
                 }
             }
 
-            Int32 unknown0 = binaryReader.ReadInt32();
-            Int32 unknown1 = binaryReader.ReadInt32();
-            Int32 unknownBlockLength = binaryReader.ReadInt32();
+            UInt32 unknown0 = binaryReader.ReadUInt32();
+            UInt32 unknown1 = binaryReader.ReadUInt32();
+            UInt32 unknownBlockLength = binaryReader.ReadUInt32();
 
             binaryReader.BaseStream.Seek(modelHeaderOffset, SeekOrigin.Begin);
             binaryReader.BaseStream.Seek(12, SeekOrigin.Current);   //unknown
 
             //bounding box
-            model.AABB.Min.X = binaryReader.ReadSingle();
-            model.AABB.Min.Y = binaryReader.ReadSingle();
-            model.AABB.Min.Z = binaryReader.ReadSingle();
+            model.Min.X = binaryReader.ReadSingle();
+            model.Min.Y = binaryReader.ReadSingle();
+            model.Min.Z = binaryReader.ReadSingle();
 
-            model.AABB.Max.X = binaryReader.ReadSingle();
-            model.AABB.Max.Y = binaryReader.ReadSingle();
-            model.AABB.Max.Z = binaryReader.ReadSingle();
+            model.Max.X = binaryReader.ReadSingle();
+            model.Max.Y = binaryReader.ReadSingle();
+            model.Max.Z = binaryReader.ReadSingle();
 
-            Int32 meshCount = binaryReader.ReadInt32();
+            UInt32 meshCount = binaryReader.ReadUInt32();
 
             model.Meshes = new Mesh[meshCount];
 
             for (Int32 i = 0; i < meshCount; ++i)
             {
-                Int32 indexCount = 0;
-                Int32 vertexCount = 0;
-                Int32 bytesPerVertex = 0;
+                UInt32 indexCount = 0;
+                UInt32 vertexCount = 0;
+                UInt32 bytesPerVertex = 0;
 
                 //mesh header
                 if (dmodVersion == 3)
                 {
                     binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
-                    bytesPerVertex = binaryReader.ReadInt32();
-                    vertexCount = binaryReader.ReadInt32();
+                    bytesPerVertex = binaryReader.ReadUInt32();
+                    vertexCount = binaryReader.ReadUInt32();
                     binaryReader.BaseStream.Seek(4, SeekOrigin.Current);    //unknown
                 }
-                else if(dmodVersion == 4)
+                else if (dmodVersion == 4)
                 {
                     binaryReader.BaseStream.Seek(24, SeekOrigin.Current);   //unknown
-                    indexCount = binaryReader.ReadInt32();
-                    vertexCount = binaryReader.ReadInt32();
-                    bytesPerVertex = binaryReader.ReadInt32();
+                    indexCount = binaryReader.ReadUInt32();
+                    vertexCount = binaryReader.ReadUInt32();
+                    bytesPerVertex = binaryReader.ReadUInt32();
+                }
+                else
+                {
+                    return null;
                 }
 
-                Mesh mesh = new Mesh(vertexCount, indexCount);
+                Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
 
                 //primary vertex block
                 for (Int32 j = 0; j < vertexCount; ++j)
@@ -116,16 +122,21 @@ namespace ps2ls.Dme
                     vertex.Position.Y = binaryReader.ReadSingle();
                     vertex.Position.Z = binaryReader.ReadSingle();
 
-                    if (vertexCount > 12)
+                    if (bytesPerVertex > 12)
                     {
-                        binaryReader.BaseStream.Seek(vertexCount - 12, SeekOrigin.Current); //unknown
+                        binaryReader.BaseStream.Seek(bytesPerVertex - 12, SeekOrigin.Current); //unknown
                     }
+
+                    mesh.Vertices[j] = vertex;
                 }
+
+                //NOTE: some version 4 files do not contain this block.
+                //need to figure out where this is indicated.
 
                 //secondary vertex block
                 if (dmodVersion == 4)
                 {
-                    bytesPerVertex = binaryReader.ReadInt32();
+                    bytesPerVertex = binaryReader.ReadUInt32();
 
                     for (Int32 j = 0; j < vertexCount; ++j)
                     {
@@ -141,13 +152,24 @@ namespace ps2ls.Dme
                     mesh.Indices[j] = index;
                 }
 
+                mesh.CreateBuffers();
+
                 model.Meshes[i] = mesh;
             }
 
             return model;
         }
 
+        public void Draw()
+        {
+
+        }
+
         public Mesh[] Meshes { get; private set; }
-        public AABB AABB { get; private set; }
+        public Vector3 Min;
+        public Vector3 Max;
+
+        private Int32 vertexBufferHandle;
+        private Int32 indexBufferHandle;
     }
 }

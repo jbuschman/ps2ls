@@ -10,6 +10,7 @@ using System.IO;
 using ps2ls.Properties;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using ps2ls.Dme;
 
 namespace ps2ls
 {
@@ -145,6 +146,12 @@ namespace ps2ls
             PackFile file = (PackFile)(dataGridView1.Rows[e.RowIndex].Tag);
 
             file.Pack.CreateTemporaryFileAndOpen(file.Name);
+
+            MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
+
+            Model model = Model.LoadFromStream(memoryStream);
+
+            ModelBrowser.Instance.CurrentModel = model;
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -343,8 +350,8 @@ namespace ps2ls
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //projection matrix
-            GL.MatrixMode(MatrixMode.Projection);
             Matrix4 projectionMatrix = ModelBrowser.Instance.Camera.ProjectionMatrix;
+            GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projectionMatrix);
 
             //view matrix
@@ -352,6 +359,7 @@ namespace ps2ls
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref viewMatrix);
 
+            // debug axes
             GL.Begin(BeginMode.Lines);
             GL.Color3(Color.Red);
             GL.Vertex3(Vector3.Zero);
@@ -363,6 +371,36 @@ namespace ps2ls
             GL.Vertex3(Vector3.Zero);
             GL.Vertex3(Vector3.UnitZ);
             GL.End();
+
+            Model model = ModelBrowser.Instance.CurrentModel;
+
+            GL.PushAttrib(AttribMask.PolygonBit);
+
+            if (model != null)
+            {
+                for (Int32 i = 0; i < model.Meshes.Length; ++i)
+                {
+                    Mesh mesh = model.Meshes[i];
+
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                    GL.Color3(Color.White);
+
+                    //GL.BindBuffer(BufferTarget.ArrayBuffer, mesh.VertexBufferHandle);
+                    //GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh.IndexBufferHandle);
+                    //GL.DrawElements(BeginMode.Triangles, mesh.Indices.Length, DrawElementsType.UnsignedShort, 0);
+                    //GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+                    //GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+
+                    GL.Begin(BeginMode.Triangles);
+                    for (Int32 j = 0; i < mesh.Indices.Length; ++i)
+                    {
+                        GL.Vertex3(mesh.Vertices[mesh.Indices[i]].Position);
+                    }
+                    GL.End();
+                }
+            }
+
+            GL.PopAttrib();
 
             glControl1.SwapBuffers();
         }
@@ -387,6 +425,21 @@ namespace ps2ls
             Color color = ModelBrowser.Instance.ShowBackgroundColorDialog();
 
             backgroundColorToolStripButton.BackColor = color;
+        }
+
+        private void glControl1_KeyUp(object sender, KeyEventArgs e)
+        {
+            ArcBallCamera camera = (ArcBallCamera)ModelBrowser.Instance.Camera;
+
+            switch (e.KeyCode)
+            {
+                case Keys.W:
+                    camera.Distance -= 1.0f;
+                    break;
+                case Keys.S:
+                    camera.Distance += 1.0f;
+                    break;
+            }
         }
     }
 }
