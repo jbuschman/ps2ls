@@ -169,7 +169,7 @@ namespace ps2ls.Dme
         public Vector3 Min;
         public Vector3 Max;
 
-        private Int32 vertexBufferHandle;
-        private Int32 indexBufferHandle;
+        //private Int32 vertexBufferHandle;
+        //private Int32 indexBufferHandle;
     }
 }

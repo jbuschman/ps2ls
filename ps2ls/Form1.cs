@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using ps2ls.Properties;
 using OpenTK;
+using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using ps2ls.Dme;
 
@@ -350,14 +351,14 @@ namespace ps2ls
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //projection matrix
-            Matrix4 projectionMatrix = ModelBrowser.Instance.Camera.ProjectionMatrix;
+            Matrix4 projection = ModelBrowser.Instance.Camera.Projection;
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref projectionMatrix);
+            GL.LoadMatrix(ref projection);
 
             //view matrix
-            Matrix4 viewMatrix = ModelBrowser.Instance.Camera.ViewMatrix;
+            Matrix4 view = ModelBrowser.Instance.Camera.View;
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref viewMatrix);
+            GL.LoadMatrix(ref view);
 
             // debug axes
             GL.Begin(BeginMode.Lines);
@@ -392,9 +393,9 @@ namespace ps2ls
                     //GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
                     GL.Begin(BeginMode.Triangles);
-                    for (Int32 j = 0; i < mesh.Indices.Length; ++i)
+                    for (Int32 j = 0; j < mesh.Indices.Length; ++j)
                     {
-                        GL.Vertex3(mesh.Vertices[mesh.Indices[i]].Position);
+                        GL.Vertex3(mesh.Vertices[mesh.Indices[j]].Position);
                     }
                     GL.End();
                 }
