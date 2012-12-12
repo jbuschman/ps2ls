@@ -80,7 +80,6 @@
     <Compile Include="BinaryReaderBigEndian.cs" />
     <Compile Include="Dme\ArcBallCamera.cs" />
     <Compile Include="Dme\Camera.cs" />
-    <Compile Include="Dme\FreeCamera.cs" />
     <Compile Include="Dme\Mesh.cs" />
     <Compile Include="Dme\Model.cs" />
     <Compile Include="Dme\Vertex.cs" />
