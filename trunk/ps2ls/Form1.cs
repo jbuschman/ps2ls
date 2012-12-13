@@ -33,6 +33,10 @@ namespace ps2ls
         public static Form1 Instance { get { return instance; } }
         #endregion
 
+        Point locationOld;
+        bool rotating = false;
+        bool zooming = false;
+
         private Form1()
         {
             InitializeComponent();
@@ -146,13 +150,19 @@ namespace ps2ls
 
             PackFile file = (PackFile)(dataGridView1.Rows[e.RowIndex].Tag);
 
-            file.Pack.CreateTemporaryFileAndOpen(file.Name);
-
             MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
-
             Model model = Model.LoadFromStream(memoryStream);
 
-            ModelBrowser.Instance.CurrentModel = model;
+            if (model != null)
+            {
+                ModelBrowser.Instance.CurrentModel = model;
+
+                tabControl1.SelectedIndex = 1;
+            }
+            else
+            {
+                file.Pack.CreateTemporaryFileAndOpen(file.Name);
+            }
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -327,8 +337,6 @@ namespace ps2ls
             base.OnLoad(e);
 
             Application.Idle += applicationIdle;
-
-
         }
 
         private void applicationIdle(object sender, EventArgs e)
@@ -337,6 +345,10 @@ namespace ps2ls
             {
                 render();
             }
+        }
+
+        private void update()
+        {
         }
 
         private void render()
@@ -440,6 +452,53 @@ namespace ps2ls
                 case Keys.S:
                     camera.Distance += 1.0f;
                     break;
+            }
+        }
+
+        private void glControl1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                rotating = true;
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                zooming = true;
+            }
+        }
+
+        private void glControl1_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (locationOld.X == 0 && locationOld.Y == 0)
+            {
+                locationOld = e.Location;
+            }
+
+            Int32 deltaX = e.Location.X - locationOld.X;
+            Int32 deltaY = e.Location.Y - locationOld.Y;
+
+            locationOld = e.Location;
+
+            if (rotating)
+            {
+                ModelBrowser.Instance.Camera.Yaw += MathHelper.DegreesToRadians(deltaX * 0.5f);
+                ModelBrowser.Instance.Camera.Pitch -= MathHelper.DegreesToRadians(deltaY * 0.5f);
+            }
+            else if (zooming)
+            {
+                ((ArcBallCamera)ModelBrowser.Instance.Camera).Distance += deltaY * 0.1f;
+            }
+        }
+
+        private void glControl1_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                rotating = false;
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                zooming = false;
             }
         }
     }
