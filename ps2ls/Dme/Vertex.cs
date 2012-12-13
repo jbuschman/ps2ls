@@ -9,5 +9,6 @@ namespace ps2ls.Dme
     public struct Vertex
     {
         public Vector3 Position;
+        public Vector3 Normal;
     }
 }

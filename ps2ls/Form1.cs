@@ -38,6 +38,11 @@ namespace ps2ls
         bool zooming = false;
         bool panning = false;
 
+        Int32 shaderProgram = 0;
+
+        Vector4 lightDirection = -Vector4.UnitY;
+        Color lightDiffuse = Color.White;
+
         private Form1()
         {
             InitializeComponent();
@@ -107,8 +112,12 @@ namespace ps2ls
                         continue;
                     }
 
+                    String extension = Path.GetExtension(file.Name);
+
+                    Image icon = getIconFromFileExtension(extension);
+
                     DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(dataGridView1, new object[] { file.Name, file.Extension, file.Length / 1024 });
+                    row.CreateCells(dataGridView1, new object[] { icon, file.Name, file.Type, file.Length / 1024 });
                     row.Tag = file;
                     dataGridView1.Rows.Add(row);
 
@@ -120,6 +129,32 @@ namespace ps2ls
 
             fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
             packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
+        }
+
+        private Image getIconFromFileExtension(String extension)
+        {
+            if (extension == ".dme")
+            {
+                return Properties.Resources.tree;
+            }
+            else if (extension == ".dds")
+            {
+                return Properties.Resources.image;
+            }
+            else if (extension == ".txt")
+            {
+                return Properties.Resources.document_tex;
+            }
+            else if (extension == ".xml")
+            {
+                return Properties.Resources.document_xaml;
+            }
+            else if (extension == ".fsb")
+            {
+                return Properties.Resources.music;
+            }
+
+            return Properties.Resources.question;
         }
 
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
@@ -151,19 +186,22 @@ namespace ps2ls
 
             PackFile file = (PackFile)(dataGridView1.Rows[e.RowIndex].Tag);
 
-            MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
-            Model model = Model.LoadFromStream(memoryStream);
-
-            if (model != null)
+            if (file.Type == PackFile.Types.DME)
             {
-                ModelBrowser.Instance.CurrentModel = model;
+                MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
+                Model model = Model.LoadFromStream(memoryStream);
 
-                tabControl1.SelectedIndex = 1;
+                if (model != null)
+                {
+                    ModelBrowser.Instance.CurrentModel = model;
+
+                    tabControl1.SelectedIndex = 1;
+
+                    return;
+                }
             }
-            else
-            {
-                file.Pack.CreateTemporaryFileAndOpen(file.Name);
-            }
+            
+            file.Pack.CreateTemporaryFileAndOpen(file.Name);
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -259,8 +297,87 @@ namespace ps2ls
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //createShaderProgram();
+
             fileCountMaxComboBox.SelectedIndex = 3;
             backgroundColorToolStripButton.BackColor = ModelBrowser.Instance.BackgroundColor;
+        }
+
+        private void createShaderProgram()
+        {
+            ErrorCode e;
+
+            GL.GetError(); //clear error
+
+            shaderProgram = GL.CreateProgram();
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+
+            Int32 vertexShader = GL.CreateShader(ShaderType.VertexShader);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            Int32 fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+
+            //using this shader as a test for now, will make selectable ones later.
+            //http://www.lighthouse3d.com/tutorials/glsl-tutorial/directional-light-per-pixel/
+
+
+
+            String vertexShaderSource = @"
+varying vec3 normal;
+varying vec3 lightDirection;
+
+void main() 
+{ 
+    gl_Position = ftransform();
+
+    normal = gl_Normal;
+
+    lightDirection = vec3(0, -1, 0);
+}
+";
+            String fragmentShaderSource = @"
+varying vec3 normal; 
+varying vec3 lightDirection;
+
+void main()
+{
+    const vec4 ambientColor = vec4(0.25, 0.25, 0.25, 1.0);
+    const vec4 diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+    vec3 normalizedNormal = normalize(normal);
+    vec3 noralizedLightDirection = normalize(lightDirection);
+
+    float diffuseTerm = clamp(dot(normalizedNormal, noralizedLightDirection), 0.0, 1.0);
+
+    gl_FragColor = ambientColor + (diffuseColor * diffuseTerm);
+}
+";
+
+            compileShader(vertexShader, vertexShaderSource);
+            compileShader(fragmentShader, fragmentShaderSource);
+
+            GL.AttachShader(shaderProgram, fragmentShader);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            GL.AttachShader(shaderProgram, vertexShader);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            GL.LinkProgram(shaderProgram);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+
+            String info;
+            GL.GetProgramInfoLog(shaderProgram, out info);
+            Console.WriteLine(info);
+
+            if (fragmentShader != 0)
+            {
+                GL.DeleteShader(fragmentShader);
+                if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            }
+
+            if (vertexShader != 0)
+            {
+                GL.DeleteShader(vertexShader);
+                if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            }
         }
 
         private void fileCountMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -337,6 +454,10 @@ namespace ps2ls
         {
             base.OnLoad(e);
 
+            glControl1.CreateGraphics();    // initialize the GL context right up front.
+
+            createShaderProgram();
+
             Application.Idle += applicationIdle;
         }
 
@@ -348,10 +469,6 @@ namespace ps2ls
             }
         }
 
-        private void update()
-        {
-        }
-
         private void render()
         {
             glControl1.MakeCurrent();
@@ -361,7 +478,7 @@ namespace ps2ls
 
             //clear
             GL.ClearColor(ModelBrowser.Instance.BackgroundColor);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             //projection matrix
             Matrix4 projection = ModelBrowser.Instance.Camera.Projection;
@@ -386,35 +503,68 @@ namespace ps2ls
             GL.Vertex3(Vector3.UnitZ);
             GL.End();
 
-            Model model = ModelBrowser.Instance.CurrentModel;
 
-            GL.PushAttrib(AttribMask.PolygonBit);
+            Model model = ModelBrowser.Instance.CurrentModel;
 
             if (model != null)
             {
+                GL.PushAttrib(AttribMask.PolygonBit | AttribMask.EnableBit | AttribMask.LightingBit);
+
+                GL.UseProgram(shaderProgram);
+
+                GL.Enable(EnableCap.DepthTest);
+                GL.Enable(EnableCap.Lighting);
+                GL.Enable(EnableCap.Light0);
+
+                GL.Light(LightName.Light0, LightParameter.Position, lightDirection);
+
                 for (Int32 i = 0; i < model.Meshes.Length; ++i)
                 {
                     Mesh mesh = model.Meshes[i];
 
-                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                     GL.Color3(Color.White);
-
-                    //GL.BindBuffer(BufferTarget.ArrayBuffer, mesh.VertexBufferHandle);
-                    //GL.BindBuffer(BufferTarget.ElementArrayBuffer, mesh.IndexBufferHandle);
-                    //GL.DrawElements(BeginMode.Triangles, mesh.Indices.Length, DrawElementsType.UnsignedShort, 0);
-                    //GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-                    //GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
                     GL.Begin(BeginMode.Triangles);
                     for (Int32 j = 0; j < mesh.Indices.Length; ++j)
                     {
+                        GL.Normal3(mesh.Vertices[mesh.Indices[j]].Normal);
                         GL.Vertex3(mesh.Vertices[mesh.Indices[j]].Position);
                     }
                     GL.End();
                 }
-            }
 
-            GL.PopAttrib();
+                GL.UseProgram(0);
+
+                GL.PopAttrib();
+
+                //bounding box
+                GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+
+                GL.Enable(EnableCap.DepthTest);
+
+                GL.Color3(Color.Red);
+
+                Vector3 min = model.Min;
+                Vector3 max = model.Max;
+                Vector3[] vertices = new Vector3[8];
+                UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+
+                vertices[0] = min;
+                vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                vertices[6] = max;
+                vertices[7] = new Vector3(min.X, max.Y, max.Z);
+
+                GL.EnableClientState(ArrayCap.VertexArray);
+                GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+
+                GL.PopAttrib();
+            }
 
             glControl1.SwapBuffers();
         }
@@ -461,10 +611,10 @@ namespace ps2ls
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Left:
-                    panning = true;
+                    zooming = true;
                     break;
                 case System.Windows.Forms.MouseButtons.Middle:
-                    zooming = true;
+                    panning = true;
                     break;
                 case System.Windows.Forms.MouseButtons.Right:
                     rotating = true;
@@ -488,14 +638,14 @@ namespace ps2ls
 
             if (rotating)
             {
-                ModelBrowser.Instance.Camera.Yaw += MathHelper.DegreesToRadians(deltaX * 0.25f);
+                ModelBrowser.Instance.Camera.Yaw -= MathHelper.DegreesToRadians(deltaX * 0.25f);
                 ModelBrowser.Instance.Camera.Pitch += MathHelper.DegreesToRadians(deltaY * 0.25f);
             }
             else if (zooming)
             {
                 ArcBallCamera arcBallCamera = (ArcBallCamera)ModelBrowser.Instance.Camera;
 
-                arcBallCamera.Distance += deltaY * 0.1f;
+                arcBallCamera.Distance += deltaY * 0.0625f;
             }
             else if (panning)
             {
@@ -505,8 +655,8 @@ namespace ps2ls
                 Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
                 Vector3 right = Vector3.Cross(Vector3.UnitY, forward);
 
-                arcBallCamera.Target += right * deltaX * 0.0625f;
-                arcBallCamera.Target += Vector3.UnitY * deltaY * 0.0625f;
+                arcBallCamera.Target += right * deltaX * 0.03125f;
+                arcBallCamera.Target += Vector3.UnitY * deltaY * 0.03125f;
             }
         }
 
@@ -515,16 +665,40 @@ namespace ps2ls
             switch (e.Button)
             {
                 case System.Windows.Forms.MouseButtons.Left:
-                    panning = false;
+                    zooming = false;
                     break;
                 case System.Windows.Forms.MouseButtons.Middle:
-                    zooming = false;
+                    panning = false;
                     break;
                 case System.Windows.Forms.MouseButtons.Right:
                     rotating = false;
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void compileShader(Int32 shader, String source)
+        {
+            ErrorCode e;
+
+            GL.ShaderSource(shader, source);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+            GL.CompileShader(shader);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+
+            String info = String.Empty;
+            GL.GetShaderInfoLog(shader, out info);
+            Console.WriteLine(info);
+
+            Int32 compileResult;
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out compileResult);
+            if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
+
+            if (compileResult != 1)
+            {
+                Console.WriteLine("CompileError!");
+                Console.WriteLine(source);
             }
         }
     }
