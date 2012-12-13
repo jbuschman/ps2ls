@@ -50,9 +50,6 @@
             this.extractSelectedPacksButton = new System.Windows.Forms.ToolStripButton();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Extension = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LengthInKilobytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.searchFilesTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -75,7 +72,6 @@
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.glControl1 = new OpenTK.GLControl();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -86,6 +82,11 @@
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.glControl1 = new ps2ls.CustomGLControl();
+            this.FileIcon = new System.Windows.Forms.DataGridViewImageColumn();
+            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LengthInKilobytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -310,10 +311,12 @@
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.FileIcon,
             this.FileName,
-            this.Extension,
+            this.FileType,
             this.LengthInKilobytes});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 25);
@@ -325,24 +328,6 @@
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
-            // 
-            // FileName
-            // 
-            this.FileName.HeaderText = "File Name";
-            this.FileName.Name = "FileName";
-            this.FileName.ReadOnly = true;
-            // 
-            // Extension
-            // 
-            this.Extension.HeaderText = "Extension";
-            this.Extension.Name = "Extension";
-            this.Extension.ReadOnly = true;
-            // 
-            // LengthInKilobytes
-            // 
-            this.LengthInKilobytes.HeaderText = "Length (kb)";
-            this.LengthInKilobytes.Name = "LengthInKilobytes";
-            this.LengthInKilobytes.ReadOnly = true;
             // 
             // toolStrip3
             // 
@@ -571,22 +556,6 @@
             this.splitContainer4.SplitterDistance = 426;
             this.splitContainer4.TabIndex = 0;
             // 
-            // glControl1
-            // 
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl1.Location = new System.Drawing.Point(0, 25);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(426, 481);
-            this.glControl1.TabIndex = 0;
-            this.glControl1.VSync = false;
-            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl1_Paint);
-            this.glControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.glControl1_KeyUp);
-            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDown);
-            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
-            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
-            this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
-            // 
             // toolStrip4
             // 
             this.toolStrip4.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -681,6 +650,54 @@
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // glControl1
+            // 
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl1.Location = new System.Drawing.Point(0, 25);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(426, 481);
+            this.glControl1.TabIndex = 0;
+            this.glControl1.VSync = false;
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl1_Paint);
+            this.glControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.glControl1_KeyUp);
+            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDown);
+            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
+            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
+            this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
+            // 
+            // FileIcon
+            // 
+            this.FileIcon.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.FileIcon.FillWeight = 20F;
+            this.FileIcon.HeaderText = "";
+            this.FileIcon.Name = "FileIcon";
+            this.FileIcon.ReadOnly = true;
+            this.FileIcon.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.FileIcon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.FileIcon.Width = 20;
+            // 
+            // FileName
+            // 
+            this.FileName.FillWeight = 96.01353F;
+            this.FileName.HeaderText = "File Name";
+            this.FileName.Name = "FileName";
+            this.FileName.ReadOnly = true;
+            // 
+            // FileType
+            // 
+            this.FileType.FillWeight = 96.01353F;
+            this.FileType.HeaderText = "Type";
+            this.FileType.Name = "FileType";
+            this.FileType.ReadOnly = true;
+            // 
+            // LengthInKilobytes
+            // 
+            this.LengthInKilobytes.FillWeight = 96.01353F;
+            this.LengthInKilobytes.HeaderText = "Length (kb)";
+            this.LengthInKilobytes.Name = "LengthInKilobytes";
+            this.LengthInKilobytes.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -750,9 +767,6 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Extension;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LengthInKilobytes;
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox searchFilesTextBox;
@@ -776,7 +790,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private OpenTK.GLControl glControl1;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStrip toolStrip2;
@@ -793,6 +806,11 @@
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton backgroundColorToolStripButton;
+        private CustomGLControl glControl1;
+        private System.Windows.Forms.DataGridViewImageColumn FileIcon;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LengthInKilobytes;
     }
 }
 

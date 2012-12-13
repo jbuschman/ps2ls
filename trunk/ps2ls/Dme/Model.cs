@@ -10,6 +10,17 @@ namespace ps2ls.Dme
 {
     public class Model
     {
+        public struct ExportOptions
+        {
+            public bool InvertX;
+            public bool InvertY;
+            public bool InvertZ;
+            public bool SwapXY;
+            public bool SwapXZ;
+            public bool SwapYZ;
+            public bool ExportNormals;
+        }
+
         public static Model LoadFromStream(Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
@@ -98,7 +109,8 @@ namespace ps2ls.Dme
                     binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
                     bytesPerVertex = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
-                    binaryReader.BaseStream.Seek(4, SeekOrigin.Current);    //unknown
+                    binaryReader.BaseStream.Seek(4, SeekOrigin.Current);   //unknown
+                    indexCount = binaryReader.ReadUInt32();
                 }
                 else if (dmodVersion == 4)
                 {
@@ -121,6 +133,7 @@ namespace ps2ls.Dme
                     vertex.Position.X = binaryReader.ReadSingle();
                     vertex.Position.Y = binaryReader.ReadSingle();
                     vertex.Position.Z = binaryReader.ReadSingle();
+                    vertex.Normal = Vector3.Zero;
 
                     if (bytesPerVertex > 12)
                     {
@@ -152,6 +165,28 @@ namespace ps2ls.Dme
                     mesh.Indices[j] = index;
                 }
 
+                //normals
+                for (Int32 j = 0; j < indexCount;)
+                {
+                    UInt16[] faceIndices = { mesh.Indices[j++], mesh.Indices[j++], mesh.Indices[j++] };
+
+                    Vector3 vertex0 = mesh.Vertices[faceIndices[0]].Position;
+                    Vector3 vertex1 = mesh.Vertices[faceIndices[1]].Position;
+                    Vector3 vertex2 = mesh.Vertices[faceIndices[2]].Position;
+
+                    Vector3 normal = Vector3.Cross((vertex1 - vertex0), (vertex2 - vertex0));
+
+                    mesh.Vertices[faceIndices[0]].Normal += normal;
+                    mesh.Vertices[faceIndices[1]].Normal += normal;
+                    mesh.Vertices[faceIndices[2]].Normal += normal;
+                }
+
+                // go through and normalize all the normals
+                for (Int32 j = 0; j < vertexCount; ++j)
+                {
+                    mesh.Vertices[j].Normal.Normalize();
+                }
+
                 mesh.CreateBuffers();
 
                 model.Meshes[i] = mesh;
@@ -160,14 +195,19 @@ namespace ps2ls.Dme
             return model;
         }
 
-        public void Draw()
+        public void ExportOBJToDirectoryWithOptions(string directory, ExportOptions options)
         {
-
         }
+
+        public void ExportPLYToDirectoryWithOptions(string directory, ExportOptions options)
+        {
+        }
+
 
         public Mesh[] Meshes { get; private set; }
         public Vector3 Min;
         public Vector3 Max;
+        public String Name;
 
         //private Int32 vertexBufferHandle;
         //private Int32 indexBufferHandle;
