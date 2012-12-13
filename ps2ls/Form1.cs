@@ -36,6 +36,7 @@ namespace ps2ls
         Point locationOld;
         bool rotating = false;
         bool zooming = false;
+        bool panning = false;
 
         private Form1()
         {
@@ -457,13 +458,19 @@ namespace ps2ls
 
         private void glControl1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            switch (e.Button)
             {
-                rotating = true;
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-            {
-                zooming = true;
+                case System.Windows.Forms.MouseButtons.Left:
+                    panning = true;
+                    break;
+                case System.Windows.Forms.MouseButtons.Middle:
+                    zooming = true;
+                    break;
+                case System.Windows.Forms.MouseButtons.Right:
+                    rotating = true;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -481,24 +488,43 @@ namespace ps2ls
 
             if (rotating)
             {
-                ModelBrowser.Instance.Camera.Yaw += MathHelper.DegreesToRadians(deltaX * 0.5f);
-                ModelBrowser.Instance.Camera.Pitch -= MathHelper.DegreesToRadians(deltaY * 0.5f);
+                ModelBrowser.Instance.Camera.Yaw += MathHelper.DegreesToRadians(deltaX * 0.25f);
+                ModelBrowser.Instance.Camera.Pitch += MathHelper.DegreesToRadians(deltaY * 0.25f);
             }
             else if (zooming)
             {
-                ((ArcBallCamera)ModelBrowser.Instance.Camera).Distance += deltaY * 0.1f;
+                ArcBallCamera arcBallCamera = (ArcBallCamera)ModelBrowser.Instance.Camera;
+
+                arcBallCamera.Distance += deltaY * 0.1f;
+            }
+            else if (panning)
+            {
+                ArcBallCamera arcBallCamera = (ArcBallCamera)ModelBrowser.Instance.Camera;
+
+                Matrix4 world = Matrix4.CreateRotationX(arcBallCamera.Pitch) * Matrix4.CreateRotationY(arcBallCamera.Yaw);
+                Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
+                Vector3 right = Vector3.Cross(Vector3.UnitY, forward);
+
+                arcBallCamera.Target += right * deltaX * 0.0625f;
+                arcBallCamera.Target += Vector3.UnitY * deltaY * 0.0625f;
             }
         }
 
         private void glControl1_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            switch (e.Button)
             {
-                rotating = false;
-            }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-            {
-                zooming = false;
+                case System.Windows.Forms.MouseButtons.Left:
+                    panning = false;
+                    break;
+                case System.Windows.Forms.MouseButtons.Middle:
+                    zooming = false;
+                    break;
+                case System.Windows.Forms.MouseButtons.Right:
+                    rotating = false;
+                    break;
+                default:
+                    break;
             }
         }
     }
