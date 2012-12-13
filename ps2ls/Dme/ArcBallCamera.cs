@@ -20,6 +20,15 @@ namespace ps2ls.Dme
 
         public override void Update()
         {
+            if (Pitch > MathHelper.DegreesToRadians(89.9f))
+            {
+                Pitch = MathHelper.DegreesToRadians(89.9f);
+            }
+            else if (Pitch < -MathHelper.DegreesToRadians(89.9f))
+            {
+                Pitch = -MathHelper.DegreesToRadians(89.9f);
+            }
+
             Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
             Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
 
