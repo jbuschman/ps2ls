@@ -140,9 +140,9 @@ struct mesh_t
 
 `vertices_0` is the first contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex_0 * vertex_count`.  For each vertex, the first 12 bytes define a `vector3_t` struct defining the location of the vertex.
 
-`bytes_per_vertex_1` defines the number of bytes per vertex for the first block of vertices.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+`bytes_per_vertex_1` defines the number of bytes per vertex for the second block of vertices.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
 
-`vertices_1` is the first contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex_1 * vertex_count`.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+`vertices_1` is the second contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex_1 * vertex_count`.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
 
 `indices` is a block of contiguous indices of length `mesh_t::index_count * sizeof(unsigned short)` that index into the vertex array.  Each sequential set of 3 indices define a triangle of the mesh in a clockwise winding order.
 ----
