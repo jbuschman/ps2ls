@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OpenTK;
+
+namespace ps2ls
+{
+    public class CustomGLControl : GLControl
+    {
+        public CustomGLControl()
+            : base(new OpenTK.Graphics.GraphicsMode(32, 24, 8, 4), 2, 0, OpenTK.Graphics.GraphicsContextFlags.ForwardCompatible)
+        {
+        }
+    }
+}
