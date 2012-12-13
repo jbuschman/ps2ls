@@ -3,12 +3,148 @@
 
 = DME =
 
-Add your content here.
+`DME` files contain model mesh data.
 
+== Format ==
 
-= Details =
+`DME` files are binary files written in big-endian byte order.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+{{{
+struct vector3_t
+{
+    float x;
+    float y;
+    float z;
+};
+
+struct aabb_t
+{
+    vector3_t min;
+    vector3_t max;
+};
+}}}
+
+=== DMOD ===
+The first block in the file is the `DMOD` block.
+
+{{{
+struct dmod_t
+{
+    char magic[4];
+    unsigned int version;
+    unsigned int model_header_offset;
+};
+}}}
+
+`magic` is a 4-character code that is always `"DMOD"`.
+
+`version` defines the version of the `DME` file.  At the time of this writing, the only values encountered have been `3` and `4`.
+
+`model_header_offset` defines the absolute file offset to the beginning of the `MODEL` block.
+
+----
+=== DMAT ===
+Immediately following the `DMOD` block is the `DMAT` block, which has information about the materials used for this model.
+
+{{{
+struct dmat_t
+{
+    char magic[4];
+    unsigned int version;
+    unsigned int length;
+    char* materials;
+};
+}}}
+
+`magic` is a 4-character code that is always `"DMAT"`.
+
+`version` defines the version of the `DMAT` block.  At the time of this writing, the only value encountered has been `1`.
+
+`length` defines the length in bytes of `dmat_t::materials`.
+
+`materials` is a contiguous block of null-terminated strings of size `dmat_t::length`.
+----
+=== UNKNOWN0 ===
+Immediately following the `DMAT` block is a block of unknown data we will call `UNKNOWN0`.
+
+{{{
+struct unknown0_t
+{
+    unsigned int version;
+    unsigned int unknown_1;
+    unsigned int length;
+};
+}}}
+
+`version` defines the version of the `UNKNOWN0` block.  At the time of this writing, the only value encountered has been `1`.
+
+`length` defines the length of the `UNKNOWN0` block relative to the start of the `UNKNOWN0` block.
+----
+=== MODEL ===
+The `MODEL` block begins at the absolute file offset defined by `dmod_t::model_header_offset`.
+{{{
+struct model_t
+{
+    char unknown_0[12];
+    aabb_t aabb;
+    unsigned int mesh_count;
+};
+}}}
+
+`aabb` defines an [http://en.wikipedia.org/wiki/Minimum_bounding_box#Axis-aligned_minimum_bounding_box axis-aligned bounding box] that encompasses the model.
+
+`mesh_count` is the number of `MESH` blocks that immediately follow the `MODEL` block.
+
+----
+=== MESH ===
+Immediately following the `MODEL` block, there are `model_t::mesh_count`  `MESH` entries.
+
+The structure of the `MESH` block is dependent on the value of `dmod_t::version`.
+
+===== Version 3 ======
+
+{{{
+struct mesh_t
+{
+    byte_t unknown_0[16];
+    unsigned int bytes_per_vertex_0;
+    unsigned int vertex_count;
+    unsigned int unknown_1;
+    unsigned int index_count;
+    float* vertices_0;
+    unsigned short* indices;
+};
+}}}
+
+===== Version 4 =====
+
+{{{
+struct mesh_t
+{
+    byte_t unknown_0[24];
+    unsigned int index_count;
+    unsigned int vertex_count;
+    unsigned int bytes_per_vertex_0;
+    float* vertices_0;
+    unsigned int bytes_per_vertex_1; //not always present
+    float* vertices_1; //not always present
+    unsigned short* indices;
+};
+}}}
+
+`index_count` defines the number of indices in this mesh.
+
+`vertex_count` defines the number of vertices in this mesh.
+
+`bytes_per_vertex_0` defines the number of bytes per vertex for the first block of vertices.
+
+`vertices_0` is the first contiguous block of vertex data.  The length of this block is `mesh_t::bytes_per_vertex_0 * vertex_count`.  For each vertex, the first 12 bytes define a `vector3_t` struct defining the location of the vertex.
+
+`bytes_per_vertex_1` defines the number of bytes per vertex for the first block of vertices.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+
+`vertices_1` is the first contiguous block of vertex data.  The length of this block is `mesh_t::bytes_per_vertex_1 * vertex_count`.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+
+`indices` is a block of contiguous indices of length `mesh_t::index_count` that index into the vertex array.  Each sequential set of 3 indices define a triangle of the mesh in a clockwise winding order.
+
+==UNKNOWN1==
+Immediately following the `MESH` entries, there is a block of unknown data of a variable length we will call `UNKNOWN1`.
