@@ -35,7 +35,7 @@ namespace ps2ls
         private ModelBrowser()
         {
             Camera = new ArcBallCamera();
-            BackgroundColor = Color.DarkGray;
+            BackgroundColor = Color.FromArgb(32, 32, 32);
             colorDialog = new ColorDialog();
         }
 

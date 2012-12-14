@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace ps2ls.Dme
 {
@@ -12,16 +11,17 @@ namespace ps2ls.Dme
     {
         public struct ExportOptions
         {
-            public bool InvertX;
-            public bool InvertY;
-            public bool InvertZ;
-            public bool SwapXY;
-            public bool SwapXZ;
-            public bool SwapYZ;
-            public bool ExportNormals;
+            public Boolean InvertX;
+            public Boolean InvertY;
+            public Boolean InvertZ;
+            public Boolean SwapXY;
+            public Boolean SwapXZ;
+            public Boolean SwapYZ;
+            public Boolean ExportNormals;
+            public Single Scale;
         }
 
-        public static Model LoadFromStream(Stream stream)
+        public static Model LoadFromStream(String name, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
@@ -59,6 +59,8 @@ namespace ps2ls.Dme
             UInt32 dmatLength = binaryReader.ReadUInt32();
 
             Model model = new Model();
+
+            model.Name = name;
 
             char[] buffer = binaryReader.ReadChars((Int32)dmatLength);
             List<String> materialNames = new List<string>();

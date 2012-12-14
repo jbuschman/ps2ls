@@ -33,6 +33,7 @@ namespace ps2ls
         public static Form1 Instance { get { return instance; } }
         #endregion
 
+        //input handling variables
         Point locationOld;
         bool rotating = false;
         bool zooming = false;
@@ -189,7 +190,10 @@ namespace ps2ls
             if (file.Type == PackFile.Types.DME)
             {
                 MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
-                Model model = Model.LoadFromStream(memoryStream);
+
+                String name = Path.GetFileNameWithoutExtension(file.Name);
+
+                Model model = Model.LoadFromStream(name, memoryStream);
 
                 if (model != null)
                 {
@@ -502,7 +506,6 @@ void main()
             GL.Vertex3(Vector3.Zero);
             GL.Vertex3(Vector3.UnitZ);
             GL.End();
-
 
             Model model = ModelBrowser.Instance.CurrentModel;
 
