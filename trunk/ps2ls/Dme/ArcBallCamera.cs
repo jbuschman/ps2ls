@@ -12,6 +12,7 @@ namespace ps2ls.Dme
         public Vector3 Target { get; set; }
 
         public ArcBallCamera()
+            : base(Camera.Type.ArcBallCamera)
         {
             Yaw = MathHelper.DegreesToRadians(45.0f);
             Pitch = MathHelper.DegreesToRadians(45.0f);

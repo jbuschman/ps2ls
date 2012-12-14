@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using ps2ls.Dme;
+using OpenTK;
 
 namespace ps2ls
 {
@@ -27,7 +28,7 @@ namespace ps2ls
         #endregion
 
         public Camera Camera { get; set; }
-        public Model CurrentModel { get; set; }
+        public Model CurrentModel { get; private set; }
         public Color BackgroundColor { get; private set; }
 
         private ColorDialog colorDialog;
@@ -47,6 +48,33 @@ namespace ps2ls
             }
 
             return BackgroundColor;
+        }
+
+        public void SetModel(Model model, bool resetCamera)
+        {
+            CurrentModel = model;
+
+            if (model != null)
+            {
+                Vector3 extents = model.Max - model.Min;
+                Vector3 target = (model.Min + model.Max) * 0.5f;
+
+                switch (Camera.CameraType)
+                {
+                    case Dme.Camera.Type.ArcBallCamera:
+                        {
+                            ArcBallCamera arcBallCamera = (ArcBallCamera)Camera;
+
+                            arcBallCamera.Target = target;
+                            arcBallCamera.Distance = extents.Length * 1.5f;
+                        }
+                        break;
+                    case Dme.Camera.Type.FreeCamera:
+                        {
+                        }
+                        break;
+                }
+            }
         }
     }
 }
