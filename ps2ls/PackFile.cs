@@ -17,6 +17,7 @@ namespace ps2ls
             ".cnk0",
             ".cnk1",
             ".cnk2",
+            ".cnk3",
             ".crc",
             ".dds",
             ".dma",
@@ -29,6 +30,8 @@ namespace ps2ls
             ".gfx",
             ".lst",
             ".nsa",
+            ".txt",
+            ".xml",
             ".zone"
         };
 
@@ -40,6 +43,7 @@ namespace ps2ls
             CNK0,
             CNK1,
             CNK2,
+            CNK3,
             CRC,
             DDS,
             DMA,
@@ -52,6 +56,8 @@ namespace ps2ls
             GFX,
             LST,
             NSA,
+            TXT,
+            XML,
             ZONE,
             Unknown
         };
@@ -63,6 +69,7 @@ namespace ps2ls
             Length = 0;
             AbsoluteOffset = 0;
             Extension = String.Empty;
+            Type = Types.Unknown;
         }
 
         public static PackFile LoadBinary(Pack pack, Stream stream)
@@ -84,12 +91,18 @@ namespace ps2ls
                 if (extension.ToLower() == typeStrings[i])
                 {
                     fileInfo.Type = (PackFile.Types)(i);
+                    break;
                 }
             }
 
             fileInfo.Extension = Path.GetExtension(fileInfo.Name).Trim(new char[] { '.' }).ToUpper();
 
             return fileInfo;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
 
         [BrowsableAttribute(false)]

@@ -8,6 +8,12 @@ namespace ps2ls.Dme
 {
     public class Camera
     {
+        public enum Type
+        {
+            ArcBallCamera,
+            FreeCamera
+        };
+
         public Matrix4 View { get; set; }
         public Matrix4 Projection { get; set; }
         public Single AspectRatio { get; set; }
@@ -18,11 +24,14 @@ namespace ps2ls.Dme
         public Single Pitch { get; set; }
         public Single Yaw { get; set; }
 
-        protected Camera()
+        public Camera.Type CameraType { get; private set; }
+
+        protected Camera(Camera.Type type)
         {
-            FieldOfView = MathHelper.DegreesToRadians(75.0f);
+            CameraType = type;
+            FieldOfView = MathHelper.DegreesToRadians(74.0f);
             NearPlaneDistance = (Single)Math.Pow(2, -8);
-            FarPlaneDistance = (Single)Math.Pow(2, 8);
+            FarPlaneDistance = (Single)Math.Pow(2, 16);
         }
 
         public virtual void Update()

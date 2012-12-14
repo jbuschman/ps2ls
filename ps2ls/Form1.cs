@@ -115,7 +115,7 @@ namespace ps2ls
 
                     String extension = Path.GetExtension(file.Name);
 
-                    Image icon = getIconFromFileExtension(extension);
+                    Image icon = getIconFromPackFileType(file.Type);
 
                     DataGridViewRow row = new DataGridViewRow();
                     row.CreateCells(dataGridView1, new object[] { icon, file.Name, file.Type, file.Length / 1024 });
@@ -128,31 +128,46 @@ namespace ps2ls
 
             dataGridView1.ResumeLayout();
 
+            refreshModels();
+
             fileCountStatusLabel.Text = dataGridView1.Rows.Count + "/" + fileCount;
             packCountStatusLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
         }
 
-        private Image getIconFromFileExtension(String extension)
+        private void refreshModels()
         {
-            if (extension == ".dme")
+            listBox2.Items.Clear();
+
+            List<PackFile> models = null;
+            PackManager.Instance.FilesByType.TryGetValue(PackFile.Types.DME, out models);
+
+            if (models != null)
             {
-                return Properties.Resources.tree;
+                foreach (PackFile packFile in models)
+                {
+                    if(packFile.Name.IndexOf(searchModelsText.Text, StringComparison.OrdinalIgnoreCase) != -1)
+                    {
+                        listBox2.Items.Add(packFile);
+                    }
+
+                }
             }
-            else if (extension == ".dds")
+        }
+
+        private Image getIconFromPackFileType(PackFile.Types type)
+        {
+            switch (type)
             {
-                return Properties.Resources.image;
-            }
-            else if (extension == ".txt")
-            {
-                return Properties.Resources.document_tex;
-            }
-            else if (extension == ".xml")
-            {
-                return Properties.Resources.document_xaml;
-            }
-            else if (extension == ".fsb")
-            {
-                return Properties.Resources.music;
+                case PackFile.Types.DME:
+                    return Properties.Resources.tree;
+                case PackFile.Types.DDS:
+                    return Properties.Resources.image;
+                case PackFile.Types.TXT:
+                    return Properties.Resources.document_tex;
+                case PackFile.Types.XML:
+                    return Properties.Resources.document_xaml;
+                case PackFile.Types.FSB:
+                    return Properties.Resources.music;
             }
 
             return Properties.Resources.question;
@@ -197,7 +212,7 @@ namespace ps2ls
 
                 if (model != null)
                 {
-                    ModelBrowser.Instance.CurrentModel = model;
+                    ModelBrowser.Instance.SetModel(model, true);
 
                     tabControl1.SelectedIndex = 1;
 
@@ -336,7 +351,7 @@ void main()
 
     normal = gl_Normal;
 
-    lightDirection = vec3(0, -1, 0);
+    lightDirection = vec3(1, -1, 1);
 }
 ";
             String fragmentShaderSource = @"
@@ -518,6 +533,9 @@ void main()
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.Lighting);
                 GL.Enable(EnableCap.Light0);
+                GL.Enable(EnableCap.CullFace);
+                GL.CullFace(CullFaceMode.Back);
+                GL.FrontFace(FrontFaceDirection.Cw);
 
                 GL.Light(LightName.Light0, LightParameter.Position, lightDirection);
 
@@ -703,6 +721,66 @@ void main()
                 Console.WriteLine("CompileError!");
                 Console.WriteLine(source);
             }
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PackFile file = null;
+
+            if (listBox2.SelectedItem == null)
+            {
+                ModelBrowser.Instance.SetModel(null, true);
+                return;
+            }
+
+            try
+            {
+                file = (PackFile)listBox2.SelectedItem;
+            }
+            catch (InvalidCastException)
+            {
+                ModelBrowser.Instance.SetModel(null, true);
+                return;
+            }
+
+            
+            MemoryStream memoryStream = file.Pack.CreateMemoryStreamByName(file.Name);
+
+            String name = Path.GetFileNameWithoutExtension(file.Name);
+
+            Model model = Model.LoadFromStream(name, memoryStream);
+
+            if (model != null)
+            {
+                ModelBrowser.Instance.SetModel(model, true);
+            }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            searchModelsTimer.Stop();
+            searchModelsTimer.Start();
+        }
+
+        private void searchModelsTimer_Tick(object sender, EventArgs e)
+        {
+            refreshModels();
+
+            if (searchModelsText.Text.Length > 0)
+            {
+                searchModelsText.BackColor = Color.Yellow;
+            }
+            else
+            {
+                searchModelsText.BackColor = Color.White;
+            }
+
+            searchModelsTimer.Stop();
         }
     }
 }

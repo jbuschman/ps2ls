@@ -29,6 +29,8 @@ namespace ps2ls
 
         public Dictionary<Int32, Pack> Packs { get; private set; }
 
+        public Dictionary<PackFile.Types, List<PackFile>> FilesByType { get; private set; }
+
         private GenericLoadingForm loadingForm;
         private BackgroundWorker loadBackgroundWorker;
         private BackgroundWorker extractAllBackgroundWorker;
@@ -37,6 +39,7 @@ namespace ps2ls
         private PackManager()
         {
             Packs = new Dictionary<Int32, Pack>();
+            FilesByType = new Dictionary<PackFile.Types, List<PackFile>>();
 
             loadBackgroundWorker = new BackgroundWorker();
             loadBackgroundWorker.WorkerReportsProgress = true;
@@ -100,6 +103,16 @@ namespace ps2ls
                     if (pack != null)
                     {
                         Packs.Add(path.GetHashCode(), pack);
+
+                        foreach (PackFile packFile in pack.Files.Values)
+                        {
+                            if (false == FilesByType.ContainsKey(packFile.Type))
+                            {
+                                FilesByType.Add(packFile.Type, new List<PackFile>());
+                            }
+
+                            FilesByType[packFile.Type].Add(packFile);
+                        }
                     }
                 }
 

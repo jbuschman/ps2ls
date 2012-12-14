@@ -48,6 +48,7 @@ namespace ps2ls
         private Pack(String path)
         {
             Path = path;
+            Files = new Dictionary<Int32, PackFile>();
         }
 
         public static Pack LoadBinary(string path)
@@ -65,8 +66,6 @@ namespace ps2ls
 
                 return null;
             }
-
-            pack.Files = new Dictionary<Int32, PackFile>();
 
             while(true)
             {
