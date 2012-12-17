@@ -18,9 +18,6 @@ namespace ps2ls
 
             PS2LS.CreateInstance();
             AboutBox.CreateInstance();
-            PackManager.CreateInstance();
-            ModelBrowser.CreateInstance();
-
             Form1.CreateInstance();
 
             Application.Run(Form1.Instance);

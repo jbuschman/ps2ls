@@ -74,49 +74,71 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="CustomListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
+    <Compile Include="Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="BinaryReaderBigEndian.cs" />
     <Compile Include="CustomGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Dme\ArcBallCamera.cs" />
-    <Compile Include="Dme\Camera.cs" />
+    <Compile Include="Cameras\ArcBallCamera.cs" />
+    <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Dme\Mesh.cs" />
     <Compile Include="Dme\Model.cs" />
     <Compile Include="Dme\Vertex.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GenericLoadingForm.cs">
+    <Compile Include="Forms\GenericLoadingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GenericLoadingForm.Designer.cs">
+    <Compile Include="Forms\GenericLoadingForm.Designer.cs">
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModelBrowser.cs" />
-    <Compile Include="Pack.cs" />
-    <Compile Include="PackFile.cs" />
-    <Compile Include="PackManager.cs" />
+    <Compile Include="Forms\ModelBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ModelBrowser.Designer.cs">
+      <DependentUpon>ModelBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Packs\Pack.cs" />
+    <Compile Include="Packs\PackFile.cs" />
+    <Compile Include="Forms\PackBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PackBrowser.Designer.cs">
+      <DependentUpon>PackBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PackChunk.cs" />
+    <Compile Include="Packs\PackChunk.cs" />
     <Compile Include="PS2LS.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
+    <EmbeddedResource Include="CustomListBox.resx">
+      <DependentUpon>CustomListBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GenericLoadingForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GenericLoadingForm.resx">
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModelBrowser.resx">
+      <DependentUpon>ModelBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PackBrowser.resx">
+      <DependentUpon>PackBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -226,6 +248,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\tree-magnifier.png" />
+    <None Include="Resources\terminal.gif" />
+    <None Include="Resources\tree-small.png" />
     <None Include="Resources\music.png" />
     <None Include="Resources\document-xaml.png" />
     <None Include="Resources\document-tex.png" />
@@ -235,6 +260,7 @@
     <None Include="Resources\grid.png" />
     <None Include="Resources\gear.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

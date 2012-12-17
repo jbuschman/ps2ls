@@ -104,6 +104,7 @@ namespace ps2ls.Dme
                 UInt32 indexCount = 0;
                 UInt32 vertexCount = 0;
                 UInt32 bytesPerVertex = 0;
+                UInt32 vertexBlockCount = 1;
 
                 //mesh header
                 if (dmodVersion == 3)
@@ -116,7 +117,12 @@ namespace ps2ls.Dme
                 }
                 else if (dmodVersion == 4)
                 {
-                    binaryReader.BaseStream.Seek(24, SeekOrigin.Current);   //unknown
+                    binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
+
+                    vertexBlockCount = binaryReader.ReadUInt32();
+
+                    binaryReader.BaseStream.Seek(4, SeekOrigin.Current);    //unknown
+
                     indexCount = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
                     bytesPerVertex = binaryReader.ReadUInt32();
@@ -149,7 +155,7 @@ namespace ps2ls.Dme
                 //need to figure out where this is indicated.
 
                 //secondary vertex block
-                if (dmodVersion == 4)
+                if (dmodVersion == 4 && vertexBlockCount == 2)
                 {
                     bytesPerVertex = binaryReader.ReadUInt32();
 

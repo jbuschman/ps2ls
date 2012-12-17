@@ -105,6 +105,25 @@ namespace ps2ls
             return Name;
         }
 
+        public static System.Drawing.Image GetImageFromType(PackFile.Types type)
+        {
+            switch (type)
+            {
+                case PackFile.Types.DME:
+                    return Properties.Resources.tree;
+                case PackFile.Types.DDS:
+                    return Properties.Resources.image;
+                case PackFile.Types.TXT:
+                    return Properties.Resources.document_tex;
+                case PackFile.Types.XML:
+                    return Properties.Resources.document_xaml;
+                case PackFile.Types.FSB:
+                    return Properties.Resources.music;
+            }
+
+            return Properties.Resources.question;
+        }
+
         [BrowsableAttribute(false)]
         public Pack Pack { get; private set; }
 

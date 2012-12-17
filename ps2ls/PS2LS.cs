@@ -28,14 +28,10 @@ namespace ps2ls
 
         private PS2LS()
         {
-            PackOpenFileDialog = new OpenFileDialog();
-            PackOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
-            PackOpenFileDialog.Multiselect = true;
-
-            _GetGameDirectory();
+            getGameDirectory();
         }
 
-        private void _GetGameDirectory()
+        private void getGameDirectory()
         {
             RegistryKey key = null;
 
@@ -46,8 +42,6 @@ namespace ps2ls
             {
                 GameDirectory = key.GetValue("").ToString();
                 GameDirectory = Path.GetDirectoryName(GameDirectory) + @"\Resources\Assets";
-
-                PackOpenFileDialog.InitialDirectory = GameDirectory;
 
                 return;
             }
@@ -60,13 +54,9 @@ namespace ps2ls
                 GameDirectory = key.GetValue("InstallLocation").ToString();
                 GameDirectory += @"\Resources\Assets";
 
-                PackOpenFileDialog.InitialDirectory = GameDirectory;
-
                 return;
             }
         }
-
-        public OpenFileDialog PackOpenFileDialog { get; private set; }
         public String GameDirectory { get; private set; }
     }
 }
