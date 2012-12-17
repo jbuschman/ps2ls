@@ -106,6 +106,8 @@ namespace ps2ls.Dme
                 UInt32 bytesPerVertex = 0;
                 UInt32 vertexBlockCount = 1;
 
+                UInt32 unknown2 = 0;
+
                 //mesh header
                 if (dmodVersion == 3)
                 {
@@ -121,11 +123,10 @@ namespace ps2ls.Dme
 
                     vertexBlockCount = binaryReader.ReadUInt32();
 
-                    binaryReader.BaseStream.Seek(4, SeekOrigin.Current);    //unknown
+                    unknown2 = binaryReader.ReadUInt32();
 
                     indexCount = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
-                    bytesPerVertex = binaryReader.ReadUInt32();
                 }
                 else
                 {
@@ -134,38 +135,32 @@ namespace ps2ls.Dme
 
                 Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
 
-                //primary vertex block
+                // read vertex data
+                for (Int32 j = 0; j < vertexBlockCount; ++j)
+                {
+                    if (dmodVersion == 4)
+                    {
+                        bytesPerVertex = binaryReader.ReadUInt32();
+                    }
+
+                    for (Int32 k = 0; k < vertexCount; ++k)
+                    {
+                        mesh.Vertices[k].Data.AddRange(binaryReader.ReadBytes((Int32)bytesPerVertex));
+                    }
+                }
+
+                // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
                 {
-                    Vertex vertex;
-                    vertex.Position.X = binaryReader.ReadSingle();
-                    vertex.Position.Y = binaryReader.ReadSingle();
-                    vertex.Position.Z = binaryReader.ReadSingle();
-                    vertex.Normal = Vector3.Zero;
+                    Vertex vertex = mesh.Vertices[j];
+                    byte[] data = vertex.Data.ToArray();
 
-                    if (bytesPerVertex > 12)
-                    {
-                        binaryReader.BaseStream.Seek(bytesPerVertex - 12, SeekOrigin.Current); //unknown
-                    }
-
-                    mesh.Vertices[j] = vertex;
+                    vertex.Position.X = BitConverter.ToSingle(data, 0);
+                    vertex.Position.Y = BitConverter.ToSingle(data, 4);
+                    vertex.Position.Z = BitConverter.ToSingle(data, 8);
                 }
 
-                //NOTE: some version 4 files do not contain this block.
-                //need to figure out where this is indicated.
-
-                //secondary vertex block
-                if (dmodVersion == 4 && vertexBlockCount == 2)
-                {
-                    bytesPerVertex = binaryReader.ReadUInt32();
-
-                    for (Int32 j = 0; j < vertexCount; ++j)
-                    {
-                        binaryReader.BaseStream.Seek(bytesPerVertex, SeekOrigin.Current);
-                    }
-                }
-
-                //indices
+                // read indices
                 for (Int32 j = 0; j < indexCount; ++j)
                 {
                     UInt16 index = binaryReader.ReadUInt16();
@@ -173,7 +168,7 @@ namespace ps2ls.Dme
                     mesh.Indices[j] = index;
                 }
 
-                //normals
+                // calculate normals
                 for (Int32 j = 0; j < indexCount;)
                 {
                     UInt16[] faceIndices = { mesh.Indices[j++], mesh.Indices[j++], mesh.Indices[j++] };
@@ -189,13 +184,13 @@ namespace ps2ls.Dme
                     mesh.Vertices[faceIndices[2]].Normal += normal;
                 }
 
-                // go through and normalize all the normals
+                // normalize normals
                 for (Int32 j = 0; j < vertexCount; ++j)
                 {
                     mesh.Vertices[j].Normal.Normalize();
                 }
 
-                mesh.CreateBuffers();
+                //mesh.CreateBuffers();
 
                 model.Meshes[i] = mesh;
             }
@@ -211,13 +206,9 @@ namespace ps2ls.Dme
         {
         }
 
-
         public Mesh[] Meshes { get; private set; }
         public Vector3 Min;
         public Vector3 Max;
         public String Name;
-
-        //private Int32 vertexBufferHandle;
-        //private Int32 indexBufferHandle;
     }
 }
