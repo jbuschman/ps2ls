@@ -10,6 +10,8 @@
 `DME` files are binary files written in big-endian byte order.
 
 {{{
+typedef unsigned char byte_t;
+
 struct vector3_t
 {
     float x;
@@ -101,9 +103,14 @@ Immediately following the `MODEL` block, there are `model_t::mesh_count`  `MESH`
 
 The structure of the `MESH` block is dependent on the value of `dmod_t::version`.
 
+==== Header ====
+
+The first part of the `MESH` block is the header.  The structure of the header differs depending on the value of `dmod_t::version`.
+
 ===== Version 3 ======
 
 {{{
+// use when dmod_t::version is 3
 struct mesh_t
 {
     byte_t unknown_0[16];
@@ -111,38 +118,52 @@ struct mesh_t
     unsigned int vertex_count;
     unsigned int unknown_1;
     unsigned int index_count;
-    float* vertices_0;
-    unsigned short* indices;
 };
 }}}
 
 ===== Version 4 =====
 
 {{{
+// use when dmod_t::version is 4
 struct mesh_t
 {
-    byte_t unknown_0[24];
+    byte_t unknown_0[16];
+    unsigned int vertex_block_count;
+    unsigned int unknown_1;
     unsigned int index_count;
     unsigned int vertex_count;
-    unsigned int bytes_per_vertex_0;
-    float* vertices_0;
-    unsigned int bytes_per_vertex_1; //not always present
-    float* vertices_1; //not always present
-    unsigned short* indices;
 };
 }}}
+
+`vertex_block_count` defines the number of vertex data blocks in this mesh.  When `dmod_t::version` is `3`, this value is assumed to be `1`.
 
 `index_count` defines the number of indices in this mesh.
 
 `vertex_count` defines the number of vertices in this mesh.
 
-`bytes_per_vertex_0` defines the number of bytes per vertex for the first block of vertices.
+==== Vertex Block(s) ====
 
-`vertices_0` is the first contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex_0 * vertex_count`.  For each vertex, the first 12 bytes define a `vector3_t` struct defining the location of the vertex.
+Immediately following the header are`mesh_t::vertex_block_count` vertex blocks.
 
-`bytes_per_vertex_1` defines the number of bytes per vertex for the second block of vertices.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+{{{
+struct vertex_block_t
+{
+    unsigned int bytes_per_vertex;
+    byte_t* vertices;
+};
+}}}
 
-`vertices_1` is the second contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex_1 * vertex_count`.  <font color="red">Note that in some files this value does not exist.  It is not yet known what determines the presence of this value.</font>
+`bytes_per_vertex` defines the number of bytes per vertex for the vertex block.
+
+`vertices` is a contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex * mesh_t::vertex_count`.  In the first vertex block, the first 12 bytes for each vertex define a `vector3_t` struct defining its location.
+
+==== Index Block ====
+
+Immediately following the vertex block(s) is the index block.
+
+{{{
+unsigned short* indices;
+}}}
 
 `indices` is a block of contiguous indices of length `mesh_t::index_count * sizeof(unsigned short)` that index into the vertex array.  Each sequential set of 3 indices define a triangle of the mesh in a clockwise winding order.
 ----
