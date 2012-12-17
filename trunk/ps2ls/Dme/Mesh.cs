@@ -12,6 +12,11 @@ namespace ps2ls.Dme
         {
             Vertices = new Vertex[vertexCount];
             Indices = new UInt16[indexCount];
+
+            for (Int32 i = 0; i < vertexCount; ++i)
+            {
+                Vertices[i] = new Vertex();
+            }
         }
 
         public void CreateBuffers()
