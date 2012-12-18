@@ -38,6 +38,7 @@ namespace ps2ls.Forms
         Int32 shaderProgram = 0;
 
         #region Mesh Colors
+        // a series of nice pastel colors we'll use to color meshes
         Color[] meshColors = {
                                  Color.FromArgb(162, 206, 250),
                                  Color.FromArgb(244, 228, 139),
@@ -242,7 +243,7 @@ void main()
                     ps2ls.Dme.Mesh mesh = model.Meshes[i];
 
                     GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                    GL.Color3(meshColors[i]);
+                    GL.Color3(meshColors[i % meshColors.Length]);
 
                     GL.Begin(BeginMode.Triangles);
                     for (Int32 j = 0; j < mesh.Indices.Length; ++j)
@@ -415,6 +416,21 @@ void main()
 
             ModelExportForm.Instance.FileNames = fileNames;
             ModelExportForm.Instance.ShowDialog();
+        }
+
+        private void glControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void glControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void glControl1_MouseDown(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }
