@@ -173,6 +173,9 @@
             this.glControl1.Size = new System.Drawing.Size(546, 600);
             this.glControl1.TabIndex = 1;
             this.glControl1.VSync = false;
+            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDown);
+            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
+            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
             this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
             // 
             // ModelBrowser
