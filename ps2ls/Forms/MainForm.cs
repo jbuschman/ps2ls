@@ -61,7 +61,14 @@ namespace ps2ls
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedIndex == 1)
+            {
                 ModelBrowser.Instance.Refresh();
+            }
+        }
+
+        private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(PS2LS.Instance.ProjectNewIssueURL);
         }
     }
 }

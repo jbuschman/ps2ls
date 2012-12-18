@@ -28,10 +28,15 @@ namespace ps2ls
 
         private PS2LS()
         {
-            getGameDirectory();
+            ProjectHomeURL = @"http://code.google.com/p/ps2ls/";
+            ProjectSourceURL = @"http://code.google.com/p/ps2ls/source/checkout";
+            ProjectWikiURL = @"http://code.google.com/p/ps2ls/w/list";
+            ProjectNewIssueURL = @"http://code.google.com/p/ps2ls/issues/entry";
+
+            setGameDirectory();
         }
 
-        private void getGameDirectory()
+        private void setGameDirectory()
         {
             RegistryKey key = null;
 
@@ -57,6 +62,11 @@ namespace ps2ls
                 return;
             }
         }
+
         public String GameDirectory { get; private set; }
+        public String ProjectHomeURL { get; private set; }
+        public String ProjectSourceURL { get; private set; }
+        public String ProjectWikiURL { get; private set; }
+        public String ProjectNewIssueURL { get; private set; }
     }
 }

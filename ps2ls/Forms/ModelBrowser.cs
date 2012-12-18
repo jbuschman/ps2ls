@@ -37,15 +37,54 @@ namespace ps2ls.Forms
 
         Int32 shaderProgram = 0;
 
+        #region Mesh Colors
+        Color[] meshColors = {
+                                 Color.FromArgb(162, 206, 250),
+                                 Color.FromArgb(244, 228, 139),
+                                 Color.FromArgb(206, 128, 236),
+                                 Color.FromArgb(212, 201, 158),
+                                 Color.FromArgb(252, 247, 158),
+                                 Color.FromArgb(162, 140, 166),
+                                 Color.FromArgb(224, 166, 157),
+                                 Color.FromArgb(199, 188, 183),
+                                 Color.FromArgb(226, 247, 150),
+                                 Color.FromArgb(128, 197, 167),
+                                 Color.FromArgb(219, 152, 223),
+                                 Color.FromArgb(241, 167, 249),
+                                 Color.FromArgb(131, 179, 175),
+                                 Color.FromArgb(167, 167, 151),
+                                 Color.FromArgb(230, 163, 139),
+                                 Color.FromArgb(176, 165, 128),
+                                 Color.FromArgb(168, 199, 185),
+                                 Color.FromArgb(231, 166, 254),
+                                 Color.FromArgb(153, 177, 250),
+                                 Color.FromArgb(163, 251, 178),
+                                 Color.FromArgb(246, 198, 243),
+                                 Color.FromArgb(198, 220, 216),
+                                 Color.FromArgb(242, 235, 193),
+                                 Color.FromArgb(145, 195, 137),
+                                 Color.FromArgb(135, 186, 207),
+                                 Color.FromArgb(254, 187, 169),
+                                 Color.FromArgb(238, 207, 158),
+                                 Color.FromArgb(166, 178, 208),
+                                 Color.FromArgb(165, 137, 128),
+                                 Color.FromArgb(250, 218, 178),
+                                 Color.FromArgb(144, 223, 183),
+                                 Color.FromArgb(252, 175, 224)
+                             };
+        #endregion
+
         private ModelBrowser()
         {
             InitializeComponent();
+
+            ModelExportForm.CreateInstance();
 
             Dock = DockStyle.Fill;
 
             backgroundColorDialog.Color = Color.FromArgb(32, 32, 32);
 
-            backgroundColorToolStripButton.BackColor = backgroundColorDialog.Color;
+            return;
         }
 
         private void compileShader(Int32 shader, String source)
@@ -99,6 +138,8 @@ void main()
 { 
     gl_Position = ftransform();
 
+    gl_FrontColor = gl_Color;
+
     normal = gl_Normal;
 
     lightDirection = vec3(1, -1, 1);
@@ -118,7 +159,7 @@ void main()
 
     float diffuseTerm = clamp(dot(normalizedNormal, noralizedLightDirection), 0.0, 1.0);
 
-    gl_FragColor = ambientColor + (diffuseColor * diffuseTerm);
+    gl_FragColor = gl_Color * (ambientColor + (diffuseColor * diffuseTerm));
 }
 ";
 
@@ -185,7 +226,7 @@ void main()
 
             if (model != null)
             {
-                GL.PushAttrib(AttribMask.PolygonBit | AttribMask.EnableBit | AttribMask.LightingBit);
+                GL.PushAttrib(AttribMask.PolygonBit | AttribMask.EnableBit | AttribMask.LightingBit | AttribMask.CurrentBit);
 
                 GL.UseProgram(shaderProgram);
 
@@ -201,7 +242,7 @@ void main()
                     ps2ls.Dme.Mesh mesh = model.Meshes[i];
 
                     GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                    GL.Color3(Color.White);
+                    GL.Color3(meshColors[i]);
 
                     GL.Begin(BeginMode.Triangles);
                     for (Int32 j = 0; j < mesh.Indices.Length; ++j)
@@ -283,26 +324,32 @@ void main()
         {
             base.Refresh();
 
-            refreshModelsTreeView();
+            refreshModelsListBox();
         }
 
-        private void refreshModelsTreeView()
+        private void refreshModelsListBox()
         {
             modelsListBox.Items.Clear();
 
-            foreach (Pack pack in PackBrowser.Instance.Packs.Values)
+            List<PackFile> dmeFiles = null;
+
+            PackBrowser.Instance.PacksByType.TryGetValue(PackFile.Types.DME, out dmeFiles);
+
+            if (dmeFiles != null)
             {
-                foreach (PackFile packFile in pack.Files.Values)
+                foreach (PackFile packFile in PackBrowser.Instance.PacksByType[PackFile.Types.DME])
                 {
-                    if (packFile.Type == PackFile.Types.DME)
+                    if (packFile.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        if(packFile.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            modelsListBox.Items.Add(packFile);
-                        }
+                        modelsListBox.Items.Add(packFile);
                     }
                 }
             }
+
+            Int32 count = modelsListBox.Items.Count;
+            Int32 max = dmeFiles != null ? dmeFiles.Count : 0;
+
+            modelsCountToolStripStatusLabel.Text = count + "/" + max;
         }
 
         private void searchModelsText_TextChanged(object sender, EventArgs e)
@@ -326,23 +373,12 @@ void main()
 
             searchModelsTimer.Stop();
 
-            refreshModelsTreeView();
+            refreshModelsListBox();
         }
 
         private void clearSearchModelsText_Click(object sender, EventArgs e)
         {
             searchModelsText.Clear();
-        }
-
-        private void backgroundColorToolStripButton_Click(object sender, EventArgs e)
-        {
-            backgroundColorDialog.ShowDialog();
-
-            backgroundColorToolStripButton.BackColor = backgroundColorDialog.Color;
-        }
-
-        private void modelsListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
         }
 
         private void modelsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -358,6 +394,27 @@ void main()
             System.IO.MemoryStream memoryStream = packFile.Pack.CreateMemoryStreamByName(packFile.Name);
 
             model = Model.LoadFromStream(packFile.Name, memoryStream);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            List<String> fileNames = new List<string>();
+
+            foreach (object selectedItem in modelsListBox.SelectedItems)
+            {
+                PackFile packFile = null;
+
+                try
+                {
+                    packFile = (PackFile)selectedItem;
+                }
+                catch (InvalidCastException) { continue; }
+
+                fileNames.Add(packFile.Name);
+            }
+
+            ModelExportForm.Instance.FileNames = fileNames;
+            ModelExportForm.Instance.ShowDialog();
         }
     }
 }

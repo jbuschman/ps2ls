@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ps2ls.Forms
 {
@@ -29,7 +30,7 @@ namespace ps2ls.Forms
 
         public Dictionary<Int32, Pack> Packs { get; private set; }
 
-        public Dictionary<PackFile.Types, List<PackFile>> packFilesByType { get; private set; }
+        public Dictionary<PackFile.Types, List<PackFile>> PacksByType { get; private set; }
 
         private GenericLoadingForm loadingForm;
         private BackgroundWorker loadBackgroundWorker;
@@ -41,7 +42,7 @@ namespace ps2ls.Forms
             InitializeComponent();
 
             Packs = new Dictionary<Int32, Pack>();
-            packFilesByType = new Dictionary<PackFile.Types, List<PackFile>>();
+            PacksByType = new Dictionary<PackFile.Types, List<PackFile>>();
 
             loadBackgroundWorker = new BackgroundWorker();
             loadBackgroundWorker.WorkerReportsProgress = true;
@@ -352,12 +353,12 @@ namespace ps2ls.Forms
 
                         foreach (PackFile packFile in pack.Files.Values)
                         {
-                            if (false == packFilesByType.ContainsKey(packFile.Type))
+                            if (false == PacksByType.ContainsKey(packFile.Type))
                             {
-                                packFilesByType.Add(packFile.Type, new List<PackFile>());
+                                PacksByType.Add(packFile.Type, new List<PackFile>());
                             }
 
-                            packFilesByType[packFile.Type].Add(packFile);
+                            PacksByType[packFile.Type].Add(packFile);
                         }
                     }
                 }
@@ -471,6 +472,23 @@ namespace ps2ls.Forms
         private void removePacksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             removeSelectedPacks();
+        }
+
+        public MemoryStream CreateMemoryStreamByName(String name)
+        {
+            MemoryStream memoryStream = null;
+
+            foreach (Pack pack in Packs.Values)
+            {
+                memoryStream = pack.CreateMemoryStreamByName(name);
+
+                if (memoryStream != null)
+                {
+                    break;
+                }
+            }
+
+            return memoryStream;
         }
     }
 }

@@ -9,16 +9,30 @@ namespace ps2ls.Dme
 {
     public class Model
     {
+        public enum ExportFormat
+        {
+            OBJ,
+            PLY
+        }
+
+        public enum Axes
+        {
+            X,
+            Y,
+            Z
+        }
+
         public struct ExportOptions
         {
-            public Boolean InvertX;
-            public Boolean InvertY;
-            public Boolean InvertZ;
-            public Boolean SwapXY;
-            public Boolean SwapXZ;
-            public Boolean SwapYZ;
-            public Boolean ExportNormals;
-            public Single Scale;
+            public ExportFormat Format;
+            public Axes UpAxis;
+            public Axes LeftAxis;
+            public Boolean FlipX;
+            public Boolean FlipY;
+            public Boolean FlipZ;
+            public Boolean Normals;
+            public Boolean TextureCoordinates;
+            public Vector3 Scale;
         }
 
         public static Model LoadFromStream(String name, Stream stream)
@@ -190,17 +204,28 @@ namespace ps2ls.Dme
                     mesh.Vertices[j].Normal.Normalize();
                 }
 
-                //mesh.CreateBuffers();
-
                 model.Meshes[i] = mesh;
             }
 
             return model;
         }
 
-        public void ExportOBJToDirectoryWithOptions(string directory, ExportOptions options)
+        public void ExportToDirectory(string directory, ExportOptions options)
         {
-            String path = directory + @"\" + Name;
+            switch (options.Format)
+            {
+                case ExportFormat.OBJ:
+                    exportAsOBJToDirectory(directory, options);
+                    break;
+                case ExportFormat.PLY:
+                    exportAsPLYToDirectory(directory, options);
+                    break;
+            }
+        }
+
+        public void exportAsOBJToDirectory(string directory, ExportOptions options)
+        {
+            String path = directory + @"\" + Path.GetFileNameWithoutExtension(Name) + ".obj";
 
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
             StreamWriter streamWriter = new StreamWriter(fileStream);
@@ -209,28 +234,51 @@ namespace ps2ls.Dme
             {
                 Mesh mesh = Meshes[i];
 
-                streamWriter.WriteLine("o " + i);
-
                 for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
                 {
                     Vertex vertex = mesh.Vertices[j];
 
                     streamWriter.WriteLine("v " + vertex.Position.X + " " + vertex.Position.Y + " " + vertex.Position.Z);
+                }
 
-                    if (options.ExportNormals)
+                if (options.Normals)
+                {
+                    for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
                     {
+                        Vertex vertex = mesh.Vertices[j];
+
                         streamWriter.WriteLine("vn " + vertex.Normal.X + " " + vertex.Normal.Y + " " + vertex.Normal.Z);
                     }
                 }
-
-                for (Int32 j = 0; j < mesh.Indices.Length; )
-                {
-                    streamWriter.WriteLine("f " + mesh.Indices[j++] + " " + mesh.Indices[j++] + " " + mesh.Indices[j++]);
-                }
             }
+
+            Int32 vertexCount = 0;
+
+            for(Int32 i = 0; i < Meshes.Length; ++i)
+            {
+                Mesh mesh = Meshes[i];
+
+                streamWriter.WriteLine("g Mesh" + i);
+
+                for (Int32 j = 0; j < mesh.Indices.Length; j += 3 )
+                {
+                    if (options.Normals)
+                    {
+                        streamWriter.WriteLine("f " + (vertexCount + mesh.Indices[j + 2] + 1) + "//" + (vertexCount + mesh.Indices[j + 2] + 1) + " " + (vertexCount + mesh.Indices[j + 1] + 1) + "//" + (vertexCount + mesh.Indices[j + 1] + 1) + " " + (vertexCount + mesh.Indices[j + 0] + 1) + "//" + (vertexCount + mesh.Indices[j + 0] + 1));
+                    }
+                    else
+                    {
+                        streamWriter.WriteLine("f " + (vertexCount + mesh.Indices[j + 2] + 1) + " " + (vertexCount + mesh.Indices[j + 1] + 1) + " " + (vertexCount + mesh.Indices[j + 0] + 1));
+                    }
+                }
+
+                vertexCount += mesh.Vertices.Length;
+            }
+
+            streamWriter.Close();
         }
 
-        public void ExportPLYToDirectoryWithOptions(string directory, ExportOptions options)
+        public void exportAsPLYToDirectory(string directory, ExportOptions options)
         {
         }
 
