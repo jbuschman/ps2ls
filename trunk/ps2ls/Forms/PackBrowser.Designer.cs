@@ -386,7 +386,7 @@
             // 
             this.extractSelectedPacksButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.extractSelectedPacksButton.Enabled = false;
-            this.extractSelectedPacksButton.Image = global::ps2ls.Properties.Resources.box_arrow_drive;
+            this.extractSelectedPacksButton.Image = global::ps2ls.Properties.Resources.drive_download;
             this.extractSelectedPacksButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.extractSelectedPacksButton.Name = "extractSelectedPacksButton";
             this.extractSelectedPacksButton.Size = new System.Drawing.Size(23, 22);
@@ -426,7 +426,7 @@
             // 
             this.extractSelectedFilesButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.extractSelectedFilesButton.Enabled = false;
-            this.extractSelectedFilesButton.Image = global::ps2ls.Properties.Resources.document_arrow_drive;
+            this.extractSelectedFilesButton.Image = global::ps2ls.Properties.Resources.drive_download;
             this.extractSelectedFilesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.extractSelectedFilesButton.Name = "extractSelectedFilesButton";
             this.extractSelectedFilesButton.Size = new System.Drawing.Size(23, 22);
@@ -437,14 +437,14 @@
             // 
             this.packCountLabel.Image = global::ps2ls.Properties.Resources.box_search_result;
             this.packCountLabel.Name = "packCountLabel";
-            this.packCountLabel.Size = new System.Drawing.Size(40, 17);
+            this.packCountLabel.Size = new System.Drawing.Size(40, 16);
             this.packCountLabel.Text = "0/0";
             // 
             // fileCountLabel
             // 
             this.fileCountLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
             this.fileCountLabel.Name = "fileCountLabel";
-            this.fileCountLabel.Size = new System.Drawing.Size(40, 17);
+            this.fileCountLabel.Size = new System.Drawing.Size(40, 16);
             this.fileCountLabel.Text = "0/0";
             // 
             // extractToolStripMenuItem
