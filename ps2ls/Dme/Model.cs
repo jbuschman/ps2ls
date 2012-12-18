@@ -200,6 +200,34 @@ namespace ps2ls.Dme
 
         public void ExportOBJToDirectoryWithOptions(string directory, ExportOptions options)
         {
+            String path = directory + @"\" + Name;
+
+            FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+
+            for(Int32 i = 0; i < Meshes.Length; ++i)
+            {
+                Mesh mesh = Meshes[i];
+
+                streamWriter.WriteLine("o " + i);
+
+                for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
+                {
+                    Vertex vertex = mesh.Vertices[j];
+
+                    streamWriter.WriteLine("v " + vertex.Position.X + " " + vertex.Position.Y + " " + vertex.Position.Z);
+
+                    if (options.ExportNormals)
+                    {
+                        streamWriter.WriteLine("vn " + vertex.Normal.X + " " + vertex.Normal.Y + " " + vertex.Normal.Z);
+                    }
+                }
+
+                for (Int32 j = 0; j < mesh.Indices.Length; )
+                {
+                    streamWriter.WriteLine("f " + mesh.Indices[j++] + " " + mesh.Indices[j++] + " " + mesh.Indices[j++]);
+                }
+            }
         }
 
         public void ExportPLYToDirectoryWithOptions(string directory, ExportOptions options)
