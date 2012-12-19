@@ -10,8 +10,7 @@ namespace ps2ls.Cameras
     {
         public enum Type
         {
-            ArcBallCamera,
-            FreeCamera
+            ArcBallCamera
         };
 
         public Matrix4 View { get; set; }
