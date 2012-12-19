@@ -34,6 +34,8 @@ namespace ps2ls.Forms
         Camera camera = new ArcBallCamera();
         Model model = null;
         ColorDialog backgroundColorDialog = new ColorDialog();
+        bool rotate = true;
+        Single rotation = 0;
 
         Int32 shaderProgram = 0;
 
@@ -227,6 +229,10 @@ void main()
 
             if (model != null)
             {
+                GL.PushMatrix();
+
+                GL.Rotate(rotation, Vector3.UnitY);
+
                 GL.PushAttrib(AttribMask.PolygonBit | AttribMask.EnableBit | AttribMask.LightingBit | AttribMask.CurrentBit);
 
                 GL.UseProgram(shaderProgram);
@@ -284,6 +290,8 @@ void main()
                 GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
 
                 GL.PopAttrib();
+
+                GL.PushMatrix();
             }
 
             glControl1.SwapBuffers();
@@ -302,6 +310,8 @@ void main()
         {
             while (glControl1.Context != null && glControl1.IsIdle)
             {
+                rotation += MathHelper.DegreesToRadians(8.0f);
+
                 render();
             }
         }
