@@ -110,6 +110,12 @@
     <Compile Include="Forms\ModelBrowser.Designer.cs">
       <DependentUpon>ModelBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ModelBrowserGLControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ModelBrowserGLControl.Designer.cs">
+      <DependentUpon>ModelBrowserGLControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ModelExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +149,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelBrowser.resx">
       <DependentUpon>ModelBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModelBrowserGLControl.resx">
+      <DependentUpon>ModelBrowserGLControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelExportForm.resx">
       <DependentUpon>ModelExportForm.cs</DependentUpon>

@@ -40,7 +40,7 @@
             this.exportSelectedModelsToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
             this.modelsListBox = new ps2ls.CustomListBox();
-            this.glControl1 = new ps2ls.CustomGLControl();
+            this.glControl1 = new ps2ls.Forms.ModelBrowserGLControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -173,9 +173,6 @@
             this.glControl1.Size = new System.Drawing.Size(546, 600);
             this.glControl1.TabIndex = 1;
             this.glControl1.VSync = false;
-            this.glControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseDown);
-            this.glControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseMove);
-            this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
             this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
             // 
             // ModelBrowser
@@ -212,6 +209,6 @@
         private System.Windows.Forms.ToolStripStatusLabel modelsCountToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton exportSelectedModelsToolStripButton;
-        private CustomGLControl glControl1;
+        private ModelBrowserGLControl glControl1;
     }
 }
