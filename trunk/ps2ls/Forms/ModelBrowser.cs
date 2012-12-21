@@ -31,10 +31,8 @@ namespace ps2ls.Forms
         public static ModelBrowser Instance { get { return instance; } }
         #endregion
 
-        Camera camera = new ArcBallCamera();
         Model model = null;
         ColorDialog backgroundColorDialog = new ColorDialog();
-        bool rotate = true;
         Single rotation = 0;
 
         Int32 shaderProgram = 0;
@@ -197,20 +195,20 @@ void main()
         {
             glControl1.MakeCurrent();
 
-            camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
-            camera.Update();
+            glControl1.Camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
+            glControl1.Camera.Update();
 
             //clear
             GL.ClearColor(backgroundColorDialog.Color);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             //projection matrix
-            Matrix4 projection = camera.Projection;
+            Matrix4 projection = glControl1.Camera.Projection;
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
 
             //view matrix
-            Matrix4 view = camera.View;
+            Matrix4 view = glControl1.Camera.View;
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref view);
 
@@ -426,21 +424,6 @@ void main()
 
             ModelExportForm.Instance.FileNames = fileNames;
             ModelExportForm.Instance.ShowDialog();
-        }
-
-        private void glControl1_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void glControl1_MouseUp(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void glControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-
         }
     }
 }
