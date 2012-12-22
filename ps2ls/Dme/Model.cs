@@ -237,8 +237,18 @@ namespace ps2ls.Dme
                 for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
                 {
                     Vertex vertex = mesh.Vertices[j];
+                    Vector3 position = vertex.Position;
 
-                    streamWriter.WriteLine("v " + vertex.Position.X + " " + vertex.Position.Y + " " + vertex.Position.Z);
+                    if (options.FlipX)
+                        position.X *= -1;
+
+                    if (options.FlipY)
+                        position.Y *= -1;
+
+                    if (options.FlipZ)
+                        position.Z *= -1;
+
+                    streamWriter.WriteLine("v " + position.X + " " + position.Y + " " + position.Z);
                 }
 
                 if (options.Normals)
@@ -246,8 +256,18 @@ namespace ps2ls.Dme
                     for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
                     {
                         Vertex vertex = mesh.Vertices[j];
+                        Vector3 normal = vertex.Normal;
 
-                        streamWriter.WriteLine("vn " + vertex.Normal.X + " " + vertex.Normal.Y + " " + vertex.Normal.Z);
+                        if (options.FlipX)
+                            normal.X *= -1;
+
+                        if (options.FlipY)
+                            normal.Y *= -1;
+
+                        if (options.FlipZ)
+                            normal.Z *= -1;
+
+                        streamWriter.WriteLine("vn " + normal.X + " " + normal.Y + " " + normal.Z);
                     }
                 }
             }

@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using ps2ls.Cameras;
 using ps2ls.Dme;
+using System.Diagnostics;
 
 namespace ps2ls.Forms
 {
@@ -33,9 +34,10 @@ namespace ps2ls.Forms
 
         Model model = null;
         ColorDialog backgroundColorDialog = new ColorDialog();
-        Single rotation = 0;
 
         Int32 shaderProgram = 0;
+
+        Stopwatch updateStopwatch = new Stopwatch();
 
         #region Mesh Colors
         // a series of nice pastel colors we'll use to color meshes
@@ -191,12 +193,15 @@ void main()
             }
         }
 
+        private void update(Single elapsedSeconds)
+        {
+            glControl1.Camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
+            glControl1.Camera.Update(elapsedSeconds);
+        }
+
         private void render()
         {
             glControl1.MakeCurrent();
-
-            glControl1.Camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
-            glControl1.Camera.Update();
 
             //clear
             GL.ClearColor(backgroundColorDialog.Color);
@@ -229,8 +234,6 @@ void main()
             {
                 GL.PushMatrix();
 
-                GL.Rotate(rotation, Vector3.UnitY);
-
                 GL.PushAttrib(AttribMask.PolygonBit | AttribMask.EnableBit | AttribMask.LightingBit | AttribMask.CurrentBit);
 
                 GL.UseProgram(shaderProgram);
@@ -262,34 +265,34 @@ void main()
 
                 GL.PopAttrib();
 
-                //bounding box
-                GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
-
-                GL.Enable(EnableCap.DepthTest);
-
-                GL.Color3(Color.Red);
-
-                Vector3 min = model.Min;
-                Vector3 max = model.Max;
-                Vector3[] vertices = new Vector3[8];
-                UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
-
-                vertices[0] = min;
-                vertices[1] = new Vector3(max.X, min.Y, min.Z);
-                vertices[2] = new Vector3(max.X, min.Y, max.Z);
-                vertices[3] = new Vector3(min.X, min.Y, max.Z);
-                vertices[4] = new Vector3(min.X, max.Y, min.Z);
-                vertices[5] = new Vector3(max.X, max.Y, min.Z);
-                vertices[6] = max;
-                vertices[7] = new Vector3(min.X, max.Y, max.Z);
-
-                GL.EnableClientState(ArrayCap.VertexArray);
-                GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
-                GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
-
-                GL.PopAttrib();
-
                 GL.PushMatrix();
+
+                //bounding box
+                //GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+
+                //GL.Enable(EnableCap.DepthTest);
+
+                //GL.Color3(Color.Red);
+
+                //Vector3 min = model.Min;
+                //Vector3 max = model.Max;
+                //Vector3[] vertices = new Vector3[8];
+                //UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+
+                //vertices[0] = min;
+                //vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                //vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                //vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                //vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                //vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                //vertices[6] = max;
+                //vertices[7] = new Vector3(min.X, max.Y, max.Z);
+
+                //GL.EnableClientState(ArrayCap.VertexArray);
+                //GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                //GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+
+                //GL.PopAttrib();
             }
 
             glControl1.SwapBuffers();
@@ -306,12 +309,17 @@ void main()
 
         private void applicationIdle(object sender, EventArgs e)
         {
+            updateStopwatch.Stop();
+
+            Single elapsedSeconds = updateStopwatch.ElapsedMilliseconds / 1000.0f;
+
             while (glControl1.Context != null && glControl1.IsIdle)
             {
-                rotation += MathHelper.DegreesToRadians(8.0f);
-
+                update(elapsedSeconds);
                 render();
             }
+
+            updateStopwatch.Start();
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -403,6 +411,8 @@ void main()
             System.IO.MemoryStream memoryStream = packFile.Pack.CreateMemoryStreamByName(packFile.Name);
 
             model = Model.LoadFromStream(packFile.Name, memoryStream);
+
+            snapCameraToModel();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -424,6 +434,20 @@ void main()
 
             ModelExportForm.Instance.FileNames = fileNames;
             ModelExportForm.Instance.ShowDialog();
+        }
+
+        private void snapCameraToModel()
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            Vector3 center = (model.Max + model.Min) / 2.0f;
+            Vector3 extents = (model.Max - model.Min) / 2.0f;
+
+            glControl1.Camera.DesiredTarget = center;
+            glControl1.Camera.DesiredDistance = extents.Length * 1.50f;
         }
     }
 }

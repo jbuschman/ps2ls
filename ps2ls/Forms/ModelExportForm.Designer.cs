@@ -74,8 +74,8 @@
             this.groupBox1.Controls.Add(this.flipXCheckBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 115);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(141, 144);
-            this.groupBox1.TabIndex = 0;
+            this.groupBox1.Size = new System.Drawing.Size(150, 144);
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Axes";
             // 
@@ -101,7 +101,7 @@
             this.leftAxisComboBox.MaxLength = 1;
             this.leftAxisComboBox.Name = "leftAxisComboBox";
             this.leftAxisComboBox.Size = new System.Drawing.Size(69, 21);
-            this.leftAxisComboBox.TabIndex = 5;
+            this.leftAxisComboBox.TabIndex = 7;
             this.leftAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.leftAxisComboBox_SelectedIndexChanged);
             // 
             // label4
@@ -126,7 +126,7 @@
             this.upAxisComboBox.MaxLength = 1;
             this.upAxisComboBox.Name = "upAxisComboBox";
             this.upAxisComboBox.Size = new System.Drawing.Size(69, 21);
-            this.upAxisComboBox.TabIndex = 3;
+            this.upAxisComboBox.TabIndex = 6;
             this.upAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.upAxisComboBox_SelectedIndexChanged);
             // 
             // flipZCheckBox
@@ -135,7 +135,7 @@
             this.flipZCheckBox.Location = new System.Drawing.Point(6, 65);
             this.flipZCheckBox.Name = "flipZCheckBox";
             this.flipZCheckBox.Size = new System.Drawing.Size(52, 17);
-            this.flipZCheckBox.TabIndex = 2;
+            this.flipZCheckBox.TabIndex = 5;
             this.flipZCheckBox.Text = "Flip Z";
             this.flipZCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -145,7 +145,7 @@
             this.flipYCheckBox.Location = new System.Drawing.Point(6, 42);
             this.flipYCheckBox.Name = "flipYCheckBox";
             this.flipYCheckBox.Size = new System.Drawing.Size(52, 17);
-            this.flipYCheckBox.TabIndex = 1;
+            this.flipYCheckBox.TabIndex = 4;
             this.flipYCheckBox.Text = "Flip Y";
             this.flipYCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -155,7 +155,7 @@
             this.flipXCheckBox.Location = new System.Drawing.Point(6, 19);
             this.flipXCheckBox.Name = "flipXCheckBox";
             this.flipXCheckBox.Size = new System.Drawing.Size(52, 17);
-            this.flipXCheckBox.TabIndex = 0;
+            this.flipXCheckBox.TabIndex = 3;
             this.flipXCheckBox.Text = "Flip X";
             this.flipXCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -168,10 +168,10 @@
             this.groupBox2.Controls.Add(this.yScaleNumericUpDown);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.xScaleNumericUpDown);
-            this.groupBox2.Location = new System.Drawing.Point(177, 115);
+            this.groupBox2.Location = new System.Drawing.Point(168, 115);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(141, 144);
-            this.groupBox2.TabIndex = 1;
+            this.groupBox2.Size = new System.Drawing.Size(150, 144);
+            this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Scale";
             // 
@@ -186,6 +186,7 @@
             this.scaleLinkAxesCheckBox.Name = "scaleLinkAxesCheckBox";
             this.scaleLinkAxesCheckBox.Size = new System.Drawing.Size(22, 22);
             this.scaleLinkAxesCheckBox.TabIndex = 11;
+            this.scaleLinkAxesCheckBox.TabStop = false;
             this.scaleLinkAxesCheckBox.UseVisualStyleBackColor = true;
             this.scaleLinkAxesCheckBox.CheckedChanged += new System.EventHandler(this.scaleLinkAxesCheckBox_CheckedChanged);
             // 
@@ -215,7 +216,7 @@
             0});
             this.zScaleNumericUpDown.Name = "zScaleNumericUpDown";
             this.zScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
-            this.zScaleNumericUpDown.TabIndex = 9;
+            this.zScaleNumericUpDown.TabIndex = 10;
             this.zScaleNumericUpDown.Value = new decimal(new int[] {
             10,
             0,
@@ -248,7 +249,7 @@
             0});
             this.yScaleNumericUpDown.Name = "yScaleNumericUpDown";
             this.yScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
-            this.yScaleNumericUpDown.TabIndex = 7;
+            this.yScaleNumericUpDown.TabIndex = 9;
             this.yScaleNumericUpDown.Value = new decimal(new int[] {
             10,
             0,
@@ -280,7 +281,7 @@
             0});
             this.xScaleNumericUpDown.Name = "xScaleNumericUpDown";
             this.xScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
-            this.xScaleNumericUpDown.TabIndex = 5;
+            this.xScaleNumericUpDown.TabIndex = 8;
             this.xScaleNumericUpDown.Value = new decimal(new int[] {
             10,
             0,
@@ -295,7 +296,7 @@
             this.groupBox3.Location = new System.Drawing.Point(12, 39);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(306, 70);
-            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Components";
             // 
@@ -306,7 +307,7 @@
             this.textureCoordinatesCheckBox.Location = new System.Drawing.Point(6, 43);
             this.textureCoordinatesCheckBox.Name = "textureCoordinatesCheckBox";
             this.textureCoordinatesCheckBox.Size = new System.Drawing.Size(121, 17);
-            this.textureCoordinatesCheckBox.TabIndex = 1;
+            this.textureCoordinatesCheckBox.TabIndex = 2;
             this.textureCoordinatesCheckBox.Text = "Texture Coordinates";
             this.textureCoordinatesCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -318,7 +319,7 @@
             this.normalsCheckBox.Location = new System.Drawing.Point(6, 19);
             this.normalsCheckBox.Name = "normalsCheckBox";
             this.normalsCheckBox.Size = new System.Drawing.Size(64, 17);
-            this.normalsCheckBox.TabIndex = 0;
+            this.normalsCheckBox.TabIndex = 1;
             this.normalsCheckBox.Text = "Normals";
             this.normalsCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -329,6 +330,7 @@
             this.exportDirectoryTextBox.ReadOnly = true;
             this.exportDirectoryTextBox.Size = new System.Drawing.Size(278, 20);
             this.exportDirectoryTextBox.TabIndex = 0;
+            this.exportDirectoryTextBox.TabStop = false;
             // 
             // label6
             // 
@@ -348,14 +350,14 @@
             this.formatComboBox.Location = new System.Drawing.Point(57, 12);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.Size = new System.Drawing.Size(261, 21);
-            this.formatComboBox.TabIndex = 4;
+            this.formatComboBox.TabIndex = 0;
             // 
             // exportButton
             // 
             this.exportButton.Location = new System.Drawing.Point(243, 304);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(75, 23);
-            this.exportButton.TabIndex = 6;
+            this.exportButton.TabIndex = 5;
             this.exportButton.Text = "Export";
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
@@ -375,7 +377,7 @@
             this.openExportFolderBrowserDialogButton.Location = new System.Drawing.Point(296, 277);
             this.openExportFolderBrowserDialogButton.Name = "openExportFolderBrowserDialogButton";
             this.openExportFolderBrowserDialogButton.Size = new System.Drawing.Size(22, 22);
-            this.openExportFolderBrowserDialogButton.TabIndex = 1;
+            this.openExportFolderBrowserDialogButton.TabIndex = 4;
             this.openExportFolderBrowserDialogButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.openExportFolderBrowserDialogButton.UseVisualStyleBackColor = true;
             this.openExportFolderBrowserDialogButton.Click += new System.EventHandler(this.openExportFolderBrowserDialogButton_Click);
