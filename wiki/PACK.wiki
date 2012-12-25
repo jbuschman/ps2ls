@@ -23,6 +23,10 @@ struct chunk_t
 };
 }}}
 
+`next_chunk_offset` defines the absolute offset to the beginning of the next `CHUNK` block.
+
+`file_count` defines the number of files contained in this block.
+
 == FILE ==
 
 {{{
