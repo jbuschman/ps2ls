@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ps2ls")]
-[assembly: AssemblyDescription("ps2ls is a small program that allows you to browse and extract Planetside 2 pack files.")]
+[assembly: AssemblyDescription("ps2ls is a small program that allows you to browse and extract Planetside 2 pack files and model files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Colin Basnett")]
 [assembly: AssemblyProduct("ps2ls")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.11")]
-[assembly: AssemblyFileVersion("1.0.1.11")]
+[assembly: AssemblyVersion("1.1.0.72")]
+[assembly: AssemblyFileVersion("1.1.0.72")]
