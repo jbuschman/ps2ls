@@ -48,13 +48,10 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textureCoordinatesCheckBox = new System.Windows.Forms.CheckBox();
             this.normalsCheckBox = new System.Windows.Forms.CheckBox();
-            this.exportDirectoryTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.formatComboBox = new System.Windows.Forms.ComboBox();
             this.exportButton = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
             this.exportFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.openExportFolderBrowserDialogButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.zScaleNumericUpDown)).BeginInit();
@@ -74,7 +71,7 @@
             this.groupBox1.Controls.Add(this.flipXCheckBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 115);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(150, 144);
+            this.groupBox1.Size = new System.Drawing.Size(135, 144);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Axes";
@@ -91,6 +88,7 @@
             // leftAxisComboBox
             // 
             this.leftAxisComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.leftAxisComboBox.Enabled = false;
             this.leftAxisComboBox.FormattingEnabled = true;
             this.leftAxisComboBox.Items.AddRange(new object[] {
             "X",
@@ -100,9 +98,8 @@
             this.leftAxisComboBox.MaxDropDownItems = 3;
             this.leftAxisComboBox.MaxLength = 1;
             this.leftAxisComboBox.Name = "leftAxisComboBox";
-            this.leftAxisComboBox.Size = new System.Drawing.Size(69, 21);
+            this.leftAxisComboBox.Size = new System.Drawing.Size(67, 21);
             this.leftAxisComboBox.TabIndex = 7;
-            this.leftAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.leftAxisComboBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -116,6 +113,7 @@
             // upAxisComboBox
             // 
             this.upAxisComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.upAxisComboBox.Enabled = false;
             this.upAxisComboBox.FormattingEnabled = true;
             this.upAxisComboBox.Items.AddRange(new object[] {
             "X",
@@ -125,9 +123,8 @@
             this.upAxisComboBox.MaxDropDownItems = 3;
             this.upAxisComboBox.MaxLength = 1;
             this.upAxisComboBox.Name = "upAxisComboBox";
-            this.upAxisComboBox.Size = new System.Drawing.Size(69, 21);
+            this.upAxisComboBox.Size = new System.Drawing.Size(67, 21);
             this.upAxisComboBox.TabIndex = 6;
-            this.upAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.upAxisComboBox_SelectedIndexChanged);
             // 
             // flipZCheckBox
             // 
@@ -168,9 +165,9 @@
             this.groupBox2.Controls.Add(this.yScaleNumericUpDown);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.xScaleNumericUpDown);
-            this.groupBox2.Location = new System.Drawing.Point(168, 115);
+            this.groupBox2.Location = new System.Drawing.Point(153, 121);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(150, 144);
+            this.groupBox2.Size = new System.Drawing.Size(135, 138);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Scale";
@@ -203,11 +200,6 @@
             // 
             this.zScaleNumericUpDown.DecimalPlaces = 4;
             this.zScaleNumericUpDown.Enabled = false;
-            this.zScaleNumericUpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.zScaleNumericUpDown.Location = new System.Drawing.Point(26, 70);
             this.zScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
@@ -236,11 +228,6 @@
             // 
             this.yScaleNumericUpDown.DecimalPlaces = 4;
             this.yScaleNumericUpDown.Enabled = false;
-            this.yScaleNumericUpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.yScaleNumericUpDown.Location = new System.Drawing.Point(26, 44);
             this.yScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
@@ -268,11 +255,6 @@
             // xScaleNumericUpDown
             // 
             this.xScaleNumericUpDown.DecimalPlaces = 4;
-            this.xScaleNumericUpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
             this.xScaleNumericUpDown.Location = new System.Drawing.Point(26, 18);
             this.xScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
@@ -295,7 +277,7 @@
             this.groupBox3.Controls.Add(this.normalsCheckBox);
             this.groupBox3.Location = new System.Drawing.Point(12, 39);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(306, 70);
+            this.groupBox3.Size = new System.Drawing.Size(276, 70);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Components";
@@ -323,15 +305,6 @@
             this.normalsCheckBox.Text = "Normals";
             this.normalsCheckBox.UseVisualStyleBackColor = true;
             // 
-            // exportDirectoryTextBox
-            // 
-            this.exportDirectoryTextBox.Location = new System.Drawing.Point(12, 278);
-            this.exportDirectoryTextBox.Name = "exportDirectoryTextBox";
-            this.exportDirectoryTextBox.ReadOnly = true;
-            this.exportDirectoryTextBox.Size = new System.Drawing.Size(278, 20);
-            this.exportDirectoryTextBox.TabIndex = 0;
-            this.exportDirectoryTextBox.TabStop = false;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -349,12 +322,12 @@
             "Wavefront OBJ (*.obj)"});
             this.formatComboBox.Location = new System.Drawing.Point(57, 12);
             this.formatComboBox.Name = "formatComboBox";
-            this.formatComboBox.Size = new System.Drawing.Size(261, 21);
+            this.formatComboBox.Size = new System.Drawing.Size(231, 21);
             this.formatComboBox.TabIndex = 0;
             // 
             // exportButton
             // 
-            this.exportButton.Location = new System.Drawing.Point(243, 304);
+            this.exportButton.Location = new System.Drawing.Point(213, 265);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(75, 23);
             this.exportButton.TabIndex = 5;
@@ -362,36 +335,13 @@
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 262);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Directory";
-            // 
-            // openExportFolderBrowserDialogButton
-            // 
-            this.openExportFolderBrowserDialogButton.Image = global::ps2ls.Properties.Resources.folder_small_horizontal;
-            this.openExportFolderBrowserDialogButton.Location = new System.Drawing.Point(296, 277);
-            this.openExportFolderBrowserDialogButton.Name = "openExportFolderBrowserDialogButton";
-            this.openExportFolderBrowserDialogButton.Size = new System.Drawing.Size(22, 22);
-            this.openExportFolderBrowserDialogButton.TabIndex = 4;
-            this.openExportFolderBrowserDialogButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.openExportFolderBrowserDialogButton.UseVisualStyleBackColor = true;
-            this.openExportFolderBrowserDialogButton.Click += new System.EventHandler(this.openExportFolderBrowserDialogButton_Click);
-            // 
             // ModelExportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(332, 334);
-            this.Controls.Add(this.label7);
+            this.ClientSize = new System.Drawing.Size(299, 298);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.openExportFolderBrowserDialogButton);
-            this.Controls.Add(this.exportDirectoryTextBox);
             this.Controls.Add(this.formatComboBox);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -403,7 +353,6 @@
             this.ShowInTaskbar = false;
             this.Text = "Model Export";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.ModelExportForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -439,12 +388,9 @@
         private System.Windows.Forms.ComboBox upAxisComboBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox leftAxisComboBox;
-        private System.Windows.Forms.Button openExportFolderBrowserDialogButton;
-        private System.Windows.Forms.TextBox exportDirectoryTextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox formatComboBox;
         private System.Windows.Forms.Button exportButton;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.FolderBrowserDialog exportFolderBrowserDialog;
     }
 }

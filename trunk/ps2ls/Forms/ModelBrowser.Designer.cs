@@ -29,7 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.modelsListBox = new ps2ls.CustomListBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.modelsCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -38,15 +41,21 @@
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exportSelectedModelsToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
-            this.modelsListBox = new ps2ls.CustomListBox();
             this.glControl1 = new ps2ls.Forms.ModelBrowserGLControl();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.showAxesButton = new System.Windows.Forms.ToolStripButton();
+            this.showBoundingBoxButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.renderModeWireframeButton = new System.Windows.Forms.ToolStripButton();
+            this.renderModeSmoothButton = new System.Windows.Forms.ToolStripButton();
+            this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -65,9 +74,25 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.glControl1);
+            this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
             this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // modelsListBox
+            // 
+            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.modelsListBox.FormattingEnabled = true;
+            this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
+            this.modelsListBox.Items.AddRange(new object[] {
+            "CustomListBox"});
+            this.modelsListBox.Location = new System.Drawing.Point(0, 25);
+            this.modelsListBox.Name = "modelsListBox";
+            this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.modelsListBox.Size = new System.Drawing.Size(250, 553);
+            this.modelsListBox.TabIndex = 3;
+            this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
             // 
             // statusStrip2
             // 
@@ -137,6 +162,7 @@
             // exportSelectedModelsToolStripButton
             // 
             this.exportSelectedModelsToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.exportSelectedModelsToolStripButton.Enabled = false;
             this.exportSelectedModelsToolStripButton.Image = global::ps2ls.Properties.Resources.drive_download;
             this.exportSelectedModelsToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.exportSelectedModelsToolStripButton.Name = "exportSelectedModelsToolStripButton";
@@ -144,36 +170,109 @@
             this.exportSelectedModelsToolStripButton.Text = "Export Selected Models...";
             this.exportSelectedModelsToolStripButton.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // glControl1
+            // 
+            this.glControl1.BackColor = System.Drawing.Color.Black;
+            arcBallCamera1.AspectRatio = 0F;
+            arcBallCamera1.DesiredDistance = 10F;
+            arcBallCamera1.DesiredPitch = 0.7853982F;
+            arcBallCamera1.DesiredTarget = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.DesiredTarget")));
+            arcBallCamera1.DesiredYaw = -0.7853982F;
+            arcBallCamera1.FarPlaneDistance = 65536F;
+            arcBallCamera1.FieldOfView = 1.291544F;
+            arcBallCamera1.NearPlaneDistance = 0.00390625F;
+            arcBallCamera1.Pitch = 0.7853982F;
+            arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
+            arcBallCamera1.Projection = ((OpenTK.Matrix4)(resources.GetObject("arcBallCamera1.Projection")));
+            arcBallCamera1.View = ((OpenTK.Matrix4)(resources.GetObject("arcBallCamera1.View")));
+            arcBallCamera1.Yaw = -0.7853982F;
+            this.glControl1.Camera = arcBallCamera1;
+            this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl1.Location = new System.Drawing.Point(0, 25);
+            this.glControl1.Name = "glControl1";
+            this.glControl1.Size = new System.Drawing.Size(546, 575);
+            this.glControl1.TabIndex = 1;
+            this.glControl1.VSync = false;
+            this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl1_KeyDown);
+            this.glControl1.MouseEnter += new System.EventHandler(this.glControl1_MouseEnter);
+            this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showAxesButton,
+            this.showBoundingBoxButton,
+            this.toolStripSeparator3,
+            this.renderModeWireframeButton,
+            this.renderModeSmoothButton});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(546, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // showAxesButton
+            // 
+            this.showAxesButton.Checked = true;
+            this.showAxesButton.CheckOnClick = true;
+            this.showAxesButton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showAxesButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showAxesButton.Image = global::ps2ls.Properties.Resources.axes;
+            this.showAxesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showAxesButton.Name = "showAxesButton";
+            this.showAxesButton.Size = new System.Drawing.Size(23, 22);
+            this.showAxesButton.Text = "Show Axes";
+            this.showAxesButton.Click += new System.EventHandler(this.showAxesButton_Click);
+            // 
+            // showBoundingBoxButton
+            // 
+            this.showBoundingBoxButton.Checked = true;
+            this.showBoundingBoxButton.CheckOnClick = true;
+            this.showBoundingBoxButton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showBoundingBoxButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showBoundingBoxButton.Image = global::ps2ls.Properties.Resources.sphere_aabb2;
+            this.showBoundingBoxButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showBoundingBoxButton.Name = "showBoundingBoxButton";
+            this.showBoundingBoxButton.Size = new System.Drawing.Size(23, 22);
+            this.showBoundingBoxButton.Text = "Show Bounding Box";
+            this.showBoundingBoxButton.Click += new System.EventHandler(this.showBoundingBoxButton_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // renderModeWireframeButton
+            // 
+            this.renderModeWireframeButton.CheckOnClick = true;
+            this.renderModeWireframeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.renderModeWireframeButton.Image = global::ps2ls.Properties.Resources.wireframe;
+            this.renderModeWireframeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.renderModeWireframeButton.Name = "renderModeWireframeButton";
+            this.renderModeWireframeButton.Size = new System.Drawing.Size(23, 22);
+            this.renderModeWireframeButton.Text = "Show Wireframe";
+            this.renderModeWireframeButton.ToolTipText = "Wireframe (F5)";
+            this.renderModeWireframeButton.CheckedChanged += new System.EventHandler(this.renderModeWireframeButton_CheckedChanged);
+            // 
+            // renderModeSmoothButton
+            // 
+            this.renderModeSmoothButton.Checked = true;
+            this.renderModeSmoothButton.CheckOnClick = true;
+            this.renderModeSmoothButton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.renderModeSmoothButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.renderModeSmoothButton.Image = global::ps2ls.Properties.Resources.smooth;
+            this.renderModeSmoothButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.renderModeSmoothButton.Name = "renderModeSmoothButton";
+            this.renderModeSmoothButton.Size = new System.Drawing.Size(23, 22);
+            this.renderModeSmoothButton.Text = "Smooth";
+            this.renderModeSmoothButton.ToolTipText = "Smooth (F6)";
+            this.renderModeSmoothButton.CheckedChanged += new System.EventHandler(this.renderModeSmoothButton_CheckedChanged);
+            // 
             // searchModelsTimer
             // 
             this.searchModelsTimer.Interval = 500;
             this.searchModelsTimer.Tick += new System.EventHandler(this.searchModelsTimer_Tick);
-            // 
-            // modelsListBox
-            // 
-            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.modelsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.modelsListBox.FormattingEnabled = true;
-            this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
-            this.modelsListBox.Items.AddRange(new object[] {
-            "CustomListBox"});
-            this.modelsListBox.Location = new System.Drawing.Point(0, 25);
-            this.modelsListBox.Name = "modelsListBox";
-            this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.modelsListBox.Size = new System.Drawing.Size(250, 553);
-            this.modelsListBox.TabIndex = 3;
-            this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
-            // 
-            // glControl1
-            // 
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(546, 600);
-            this.glControl1.TabIndex = 1;
-            this.glControl1.VSync = false;
-            this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
             // 
             // ModelBrowser
             // 
@@ -186,12 +285,15 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.statusStrip2.ResumeLayout(false);
             this.statusStrip2.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -210,5 +312,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton exportSelectedModelsToolStripButton;
         private ModelBrowserGLControl glControl1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton renderModeWireframeButton;
+        private System.Windows.Forms.ToolStripButton renderModeSmoothButton;
+        private System.Windows.Forms.ToolStripButton showAxesButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton showBoundingBoxButton;
     }
 }

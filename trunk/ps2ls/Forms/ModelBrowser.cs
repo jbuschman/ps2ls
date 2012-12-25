@@ -32,12 +32,16 @@ namespace ps2ls.Forms
         public static ModelBrowser Instance { get { return instance; } }
         #endregion
 
-        Model model = null;
-        ColorDialog backgroundColorDialog = new ColorDialog();
+        enum RenderMode
+        {
+            Smooth,
+            //Textured
+        };
 
-        Int32 shaderProgram = 0;
-
-        Stopwatch updateStopwatch = new Stopwatch();
+        private Model model = null;
+        private ColorDialog backgroundColorDialog = new ColorDialog();
+        private Int32 shaderProgram = 0;
+        private List<ToolStripButton> renderModeButtons = new List<ToolStripButton>();
 
         #region Mesh Colors
         // a series of nice pastel colors we'll use to color meshes
@@ -81,13 +85,18 @@ namespace ps2ls.Forms
         {
             InitializeComponent();
 
+            //HACK: Can't load ModelBrowser.cs in design mode unless we have at least one item for some reason.
+            //Clear items after construction.
+            modelsListBox.Items.Clear();
+
             ModelExportForm.CreateInstance();
 
             Dock = DockStyle.Fill;
 
             backgroundColorDialog.Color = Color.FromArgb(32, 32, 32);
 
-            return;
+            renderModeButtons.Add(renderModeWireframeButton);
+            renderModeButtons.Add(renderModeSmoothButton);
         }
 
         private void compileShader(Int32 shader, String source)
@@ -109,7 +118,7 @@ namespace ps2ls.Forms
 
             if (compileResult != 1)
             {
-                Console.WriteLine("CompileError!");
+                Console.WriteLine("Compile error!");
                 Console.WriteLine(source);
             }
         }
@@ -131,7 +140,7 @@ namespace ps2ls.Forms
             //using this shader as a test for now, will make selectable ones later.
             //http://www.lighthouse3d.com/tutorials/glsl-tutorial/directional-light-per-pixel/
 
-
+            //TODO: Use external file.
 
             String vertexShaderSource = @"
 varying vec3 normal;
@@ -143,9 +152,11 @@ void main()
 
     gl_FrontColor = gl_Color;
 
-    normal = gl_Normal;
+    vec3 eyeVec = vec3(gl_ModelViewProjectionMatrix * gl_Vertex);
 
-    lightDirection = vec3(1, -1, 1);
+    normal = gl_NormalMatrix * gl_Normal;
+
+    lightDirection = -eyeVec;
 }
 ";
             String fragmentShaderSource = @"
@@ -193,10 +204,10 @@ void main()
             }
         }
 
-        private void update(Single elapsedSeconds)
+        private void update()
         {
             glControl1.Camera.AspectRatio = (Single)glControl1.ClientSize.Width / (Single)glControl1.ClientSize.Height;
-            glControl1.Camera.Update(elapsedSeconds);
+            glControl1.Camera.Update();
         }
 
         private void render()
@@ -217,18 +228,33 @@ void main()
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref view);
 
-            // debug axes
-            GL.Begin(BeginMode.Lines);
-            GL.Color3(Color.Red);
-            GL.Vertex3(Vector3.Zero);
-            GL.Vertex3(Vector3.UnitX);
-            GL.Color3(Color.Green);
-            GL.Vertex3(Vector3.Zero);
-            GL.Vertex3(Vector3.UnitY);
-            GL.Color3(Color.Blue);
-            GL.Vertex3(Vector3.Zero);
-            GL.Vertex3(Vector3.UnitZ);
-            GL.End();
+            if (showAxesButton.Checked)
+            {
+                // debug axes
+                GL.Begin(BeginMode.Lines);
+                //x
+                GL.Color3(Color.Red);
+                GL.Vertex3(Vector3.Zero);
+                GL.Vertex3(Vector3.UnitX);
+                GL.Vertex3(Vector3.UnitX); GL.Vertex3(Vector3.UnitX + new Vector3(-0.125f, 0.125f, 0.0f));
+                GL.Vertex3(Vector3.UnitX); GL.Vertex3(Vector3.UnitX + new Vector3(-0.125f, -0.125f, 0.0f));
+
+                //y
+                GL.Color3(Color.Green);
+                GL.Vertex3(Vector3.Zero);
+                GL.Vertex3(Vector3.UnitY);
+                GL.Vertex3(Vector3.UnitY); GL.Vertex3(Vector3.UnitY + new Vector3(0.125f, -0.125f, 0.0f));
+                GL.Vertex3(Vector3.UnitY); GL.Vertex3(Vector3.UnitY + new Vector3(-0.125f, -0.125f, 0.0f));
+
+                //z
+                GL.Color3(Color.Blue);
+                GL.Vertex3(Vector3.Zero);
+                GL.Vertex3(Vector3.UnitZ);
+                GL.Vertex3(Vector3.UnitZ); GL.Vertex3(Vector3.UnitZ + new Vector3(0, -0.125f, -0.125f));
+                GL.Vertex3(Vector3.UnitZ); GL.Vertex3(Vector3.UnitZ + new Vector3(0, 0.125f, -0.125f));
+
+                GL.End();
+            }
 
             if (model != null)
             {
@@ -249,7 +275,16 @@ void main()
                 {
                     ps2ls.Dme.Mesh mesh = model.Meshes[i];
 
-                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    if (renderModeWireframeButton.Checked)
+                    {
+                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                    }
+                    //else if (renderModeSmoothButton.Checked)
+                    else
+                    {
+                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                    }
+
                     GL.Color3(meshColors[i % meshColors.Length]);
 
                     GL.Begin(BeginMode.Triangles);
@@ -268,31 +303,34 @@ void main()
                 GL.PushMatrix();
 
                 //bounding box
-                //GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+                if (showBoundingBoxButton.Checked)
+                {
+                    GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
 
-                //GL.Enable(EnableCap.DepthTest);
+                    GL.Color3(Color.Red);
 
-                //GL.Color3(Color.Red);
+                    GL.Enable(EnableCap.DepthTest);
 
-                //Vector3 min = model.Min;
-                //Vector3 max = model.Max;
-                //Vector3[] vertices = new Vector3[8];
-                //UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+                    Vector3 min = model.Min;
+                    Vector3 max = model.Max;
+                    Vector3[] vertices = new Vector3[8];
+                    UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
 
-                //vertices[0] = min;
-                //vertices[1] = new Vector3(max.X, min.Y, min.Z);
-                //vertices[2] = new Vector3(max.X, min.Y, max.Z);
-                //vertices[3] = new Vector3(min.X, min.Y, max.Z);
-                //vertices[4] = new Vector3(min.X, max.Y, min.Z);
-                //vertices[5] = new Vector3(max.X, max.Y, min.Z);
-                //vertices[6] = max;
-                //vertices[7] = new Vector3(min.X, max.Y, max.Z);
+                    vertices[0] = min;
+                    vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                    vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                    vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                    vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                    vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                    vertices[6] = max;
+                    vertices[7] = new Vector3(min.X, max.Y, max.Z);
 
-                //GL.EnableClientState(ArrayCap.VertexArray);
-                //GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
-                //GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+                    GL.EnableClientState(ArrayCap.VertexArray);
+                    GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                    GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
 
-                //GL.PopAttrib();
+                    GL.PopAttrib();
+                }
             }
 
             glControl1.SwapBuffers();
@@ -309,17 +347,11 @@ void main()
 
         private void applicationIdle(object sender, EventArgs e)
         {
-            updateStopwatch.Stop();
-
-            Single elapsedSeconds = updateStopwatch.ElapsedMilliseconds / 1000.0f;
-
             while (glControl1.Context != null && glControl1.IsIdle)
             {
-                update(elapsedSeconds);
+                update();
                 render();
             }
-
-            updateStopwatch.Start();
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -402,6 +434,8 @@ void main()
         {
             PackFile packFile = null;
 
+            exportSelectedModelsToolStripButton.Enabled = modelsListBox.SelectedItems.Count > 0;
+
             try
             {
                 packFile = (PackFile)modelsListBox.SelectedItem;
@@ -447,7 +481,81 @@ void main()
             Vector3 extents = (model.Max - model.Min) / 2.0f;
 
             glControl1.Camera.DesiredTarget = center;
-            glControl1.Camera.DesiredDistance = extents.Length * 1.50f;
+            glControl1.Camera.DesiredDistance = extents.Length * 1.75f;
+        }
+
+        private void showAxesButton_Click(object sender, EventArgs e)
+        {
+            glControl1.Invalidate();
+        }
+
+        private void showWireframeButton_Click(object sender, EventArgs e)
+        {
+            glControl1.Invalidate();
+        }
+
+        private void showAABBButton_Click(object sender, EventArgs e)
+        {
+            glControl1.Invalidate();
+        }
+
+        private void renderModeWireframeButton_Click(object sender, EventArgs e)
+        {
+            foreach (ToolStripButton button in renderModeButtons)
+            {
+                button.Checked = (sender == button);
+            }
+        }
+
+        private void showBoundingBoxButton_Click(object sender, EventArgs e)
+        {
+            glControl1.Invalidate();
+        }
+
+        private void glControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F5:
+                    renderModeWireframeButton.Checked = true;
+                    break;
+                case Keys.F6:
+                    renderModeSmoothButton.Checked = true;
+                    break;
+            }
+        }
+
+        private void renderModeWireframeButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (renderModeWireframeButton.Checked)
+            {
+                foreach (ToolStripButton button in renderModeButtons)
+                {
+                    if (sender != button)
+                    {
+                        button.Checked = false;
+                    }
+                }
+            }
+        }
+
+        private void renderModeSmoothButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (renderModeSmoothButton.Checked)
+            {
+                foreach (ToolStripButton button in renderModeButtons)
+                {
+                    if (sender != button)
+                    {
+                        button.Checked = false;
+                    }
+                }
+            }
+        }
+
+        private void glControl1_MouseEnter(object sender, EventArgs e)
+        {
+            glControl1.Focus();
         }
     }
 }

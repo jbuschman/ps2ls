@@ -66,7 +66,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GenericLoadingForm_FormClosing);
             this.ResumeLayout(false);
 
         }

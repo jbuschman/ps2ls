@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace ps2ls.Forms
 {
@@ -62,8 +63,6 @@ namespace ps2ls.Forms
             extractSelectionBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractSelectionRunWorkerCompleted);
             extractSelectionBackgroundWorker.DoWork += new DoWorkEventHandler(extractSelectionDoWork);
 
-            loadingForm = new GenericLoadingForm();
-
             packOpenFileDialog.InitialDirectory = PS2LS.Instance.GameDirectory;
 
             Dock = DockStyle.Fill;
@@ -77,30 +76,6 @@ namespace ps2ls.Forms
             {
                 loadBinaryFromPaths(packOpenFileDialog.FileNames);
             }
-        }
-
-        private void removeSelectedPacksButton_Click(object sender, EventArgs e)
-        {
-            removeSelectedPacks();
-        }
-
-        private void removeSelectedPacks()
-        {
-            foreach (object item in packsListBox.SelectedItems)
-            {
-                Pack pack = null;
-
-                try
-                {
-                    pack = (Pack)item;
-                }
-                catch (Exception) { continue; }
-
-                Packs.Remove(pack.Path.GetHashCode());
-            }
-
-            refreshPacksListBox();
-            refreshFilesDataGridView();
         }
 
         private void extractSelectedPacksButton_Click(object sender, EventArgs e)
@@ -252,6 +227,8 @@ namespace ps2ls.Forms
                         continue;
                     }
 
+                    ++fileCount;
+
                     PackFile file = pack.Files.Values.ElementAt(i);
 
                     if (file.Name.ToLower().Contains(searchTextBox.Text.ToLower()) == false)
@@ -267,15 +244,13 @@ namespace ps2ls.Forms
                     row.CreateCells(filesDataGridView, new object[] { icon, file.Name, file.Type, file.Length / 1024 });
                     row.Tag = file;
                     filesDataGridView.Rows.Add(row);
-
-                    ++fileCount;
                 }
             }
 
             filesDataGridView.ResumeLayout();
 
             fileCountLabel.Text = filesDataGridView.Rows.Count + "/" + fileCount;
-            packCountLabel.Text = packs.Count + "/" + packs.Count;
+            packCountLabel.Text = packs.Count + "/" + Packs.Count;
         }
 
         private void refreshPacksListBox()
@@ -298,7 +273,6 @@ namespace ps2ls.Forms
         {
             propertyGrid.SelectedObject = packsListBox.SelectedItem;
 
-            removeSelectedPacksButton.Enabled = packsListBox.SelectedItems.Count > 0;
             extractSelectedPacksButton.Enabled = packsListBox.SelectedItems.Count > 0;
 
             refreshFilesDataGridView();
@@ -311,15 +285,18 @@ namespace ps2ls.Forms
 
         public void loadBinaryFromPaths(IEnumerable<string> paths)
         {
+            loadingForm = new GenericLoadingForm();
             loadingForm.Show();
             loadBackgroundWorker.RunWorkerAsync(paths);
         }
 
         private void loadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            loadingForm.Hide();
-
             refreshPacksListBox();
+            loadingForm.Close();
+
+            //refresh model browser
+            ModelBrowser.Instance.Refresh(); //TODO: Regulate model browser refreshes in a more temporal way
         }
 
         private void loadProgressChanged(object sender, ProgressChangedEventArgs args)
@@ -370,6 +347,7 @@ namespace ps2ls.Forms
 
         public void ExtractAllToDirectory(string directory)
         {
+            loadingForm = new GenericLoadingForm();
             loadingForm.Show();
             extractAllBackgroundWorker.RunWorkerAsync(directory);
         }
@@ -398,7 +376,7 @@ namespace ps2ls.Forms
 
         private void extractAllRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            loadingForm.Hide();
+            loadingForm.Close();
         }
 
         private void extractAllProgressChanged(object sender, ProgressChangedEventArgs args)
@@ -414,6 +392,7 @@ namespace ps2ls.Forms
 
         private void extractByPackFilesToDirectoryAsync(IEnumerable<PackFile> files, string directory)
         {
+            loadingForm = new GenericLoadingForm();
             loadingForm.Show();
 
             object[] args = new object[] { files, directory };
@@ -441,7 +420,7 @@ namespace ps2ls.Forms
 
         private void extractSelectionRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            loadingForm.Hide();
+            loadingForm.Close();
         }
 
         private void extractSelectionProgressChanged(object sender, ProgressChangedEventArgs args)
@@ -458,20 +437,13 @@ namespace ps2ls.Forms
         private void packContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + " Pack(s)...";
-            removePacksToolStripMenuItem.Text = "Remove " + packsListBox.SelectedItems.Count + " Pack(s)";
 
             extractPacksToolStripMenuItem.Enabled = packsListBox.SelectedItems.Count > 0;
-            removePacksToolStripMenuItem.Enabled = packsListBox.SelectedItems.Count > 0;
         }
 
         private void extractPacksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             extractSelectedPacks();
-        }
-
-        private void removePacksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            removeSelectedPacks();
         }
 
         public MemoryStream CreateMemoryStreamByName(String name)
