@@ -60,9 +60,10 @@ namespace ps2ls
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //HACK: Figure out a better way to do this.
             if (tabControl1.SelectedIndex == 1)
             {
-                ModelBrowser.Instance.Refresh();
+                //ModelBrowser.Instance.Refresh();
             }
         }
 

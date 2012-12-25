@@ -29,6 +29,10 @@ namespace ps2ls.Forms
         public static ModelExportForm Instance { get { return instance; } }
         #endregion
 
+        public List<String> FileNames { get; set; }
+        private GenericLoadingForm loadingForm;
+        private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
+
         public ModelExportForm()
         {
             InitializeComponent();
@@ -38,19 +42,35 @@ namespace ps2ls.Forms
             formatComboBox.SelectedIndex = 0;
             upAxisComboBox.SelectedIndex = 1;
             leftAxisComboBox.SelectedIndex = 0;
+
+            exportBackgroundWorker.WorkerReportsProgress = true;
+            exportBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(exportProgressChanged);
+            exportBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(exportRunWorkerCompleted);
+            exportBackgroundWorker.DoWork += new DoWorkEventHandler(exportDoWork);
+
         }
 
-        private void openExportFolderBrowserDialogButton_Click(object sender, EventArgs e)
+        private void exportDoWork(object sender, DoWorkEventArgs e)
         {
-            if (exportFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            e.Result = export(sender, e.Argument);
+        }
+
+        private void exportRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            loadingForm.Close();
+
+            Close();
+
+            MessageBox.Show("Successfully exported " + (Int32)e.Result + " models.");
+        }
+
+        private void exportProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (loadingForm != null)
             {
-                exportDirectoryTextBox.Text = exportFolderBrowserDialog.SelectedPath;
+                loadingForm.SetLabelText((String)e.UserState);
+                loadingForm.SetProgressBarPercent(e.ProgressPercentage);
             }
-        }
-
-        private void ModelExportForm_Load(object sender, EventArgs e)
-        {
-            exportDirectoryTextBox.Text = exportFolderBrowserDialog.SelectedPath;
         }
 
         private void xScaleNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -74,12 +94,22 @@ namespace ps2ls.Forms
             }
         }
 
-        private void exportButton_Click(object sender, EventArgs e)
+        private Int32 export(object sender, object argument)
         {
-            Model.ExportOptions exportOptions = createExportOptions();
+            List<object> arguments = (List<object>)argument;
 
-            foreach (String fileName in FileNames)
+            String directory = (String)arguments[0];
+            List<String> fileNames = (List<String>)arguments[1];
+            Model.ExportOptions exportOptions = (Model.ExportOptions)arguments[2];
+
+            BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
+
+            Int32 result = 0;
+
+            for (Int32 i = 0; i < fileNames.Count; ++i)
             {
+                String fileName = fileNames[i];
+
                 MemoryStream memoryStream = PackBrowser.Instance.CreateMemoryStreamByName(fileName);
 
                 if (memoryStream == null)
@@ -94,10 +124,16 @@ namespace ps2ls.Forms
                     continue;
                 }
 
-                model.ExportToDirectory(exportFolderBrowserDialog.SelectedPath, exportOptions);
+                model.ExportToDirectory(directory, exportOptions);
+
+                Int32 percent = (Int32)(((Single)i / (Single)fileNames.Count) * 100);
+
+                backgroundWorker.ReportProgress(percent, fileName);
+
+                ++result;
             }
 
-            return;
+            return result;
         }
 
         private Model.ExportOptions createExportOptions()
@@ -119,16 +155,24 @@ namespace ps2ls.Forms
             return exportOptions;
         }
 
-        private void upAxisComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void exportButton_Click(object sender, EventArgs e)
         {
+            if (exportFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Model.ExportOptions exportOptions = createExportOptions();
 
+                List<object> argument = new List<object>()
+                {
+                    exportFolderBrowserDialog.SelectedPath,
+                    FileNames,
+                    exportOptions
+                };
+
+                loadingForm = new GenericLoadingForm();
+                loadingForm.Show();
+
+                exportBackgroundWorker.RunWorkerAsync(argument);
+            }
         }
-
-        private void leftAxisComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        public List<String> FileNames { get; set; }
     }
 }

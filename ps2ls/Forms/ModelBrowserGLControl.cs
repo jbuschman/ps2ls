@@ -16,6 +16,7 @@ namespace ps2ls.Forms
         private Point location;
         private bool rotating;
         private bool panning;
+        private bool zooming;
 
         public ArcBallCamera Camera { get; set; }
 
@@ -37,6 +38,7 @@ namespace ps2ls.Forms
                     panning = true;
                     break;
                 case System.Windows.Forms.MouseButtons.Middle:
+                    zooming = true;
                     break;
             }
         }
@@ -52,6 +54,7 @@ namespace ps2ls.Forms
                     panning = false;
                     break;
                 case System.Windows.Forms.MouseButtons.Middle:
+                    zooming = false;
                     break;
             }
         }
@@ -77,13 +80,17 @@ namespace ps2ls.Forms
                 Vector3 up = Vector3.UnitY;
                 Vector3 left = Vector3.Cross(up, forward);
 
-                Camera.DesiredTarget += (up * deltaY) * 0.06125f;
-                Camera.DesiredTarget += (left * deltaX) * 0.06125f;
+                Camera.DesiredTarget += (up * deltaY) * 0.00390625f;
+                Camera.DesiredTarget += (left * deltaX) * 0.00390625f;
             }
             else if (rotating)
             {
                 Camera.DesiredYaw -= MathHelper.DegreesToRadians(0.25f * deltaX);
                 Camera.DesiredPitch += MathHelper.DegreesToRadians(0.25f * deltaY);
+            }
+            else if (zooming)
+            {
+                Camera.DesiredDistance -= deltaY * 0.015625f;
             }
 
             location = e.Location;
@@ -95,17 +102,9 @@ namespace ps2ls.Forms
             {
                 case Keys.Delete:
                     {
-                        ResetCamera();
                     }
                     break;
             }
-        }
-
-        public void ResetCamera()
-        {
-            Camera.DesiredPitch = MathHelper.DegreesToRadians(45.0f);
-            Camera.DesiredYaw = MathHelper.DegreesToRadians(45.0f);
-            Camera.DesiredTarget = Vector3.Zero;
         }
     }
 }

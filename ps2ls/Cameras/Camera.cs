@@ -33,7 +33,7 @@ namespace ps2ls.Cameras
             FarPlaneDistance = (Single)Math.Pow(2, 16);
         }
 
-        public virtual void Update(Single elapsedSeconds)
+        public virtual void Update()
         {
             Projection = Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearPlaneDistance, FarPlaneDistance);
             

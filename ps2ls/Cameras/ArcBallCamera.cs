@@ -12,24 +12,55 @@ namespace ps2ls.Cameras
         private Vector3 target;
 
         public Single DesiredDistance { get; set; }
-        public Vector3 DesiredTarget { get; set; }
+        public Vector3 DesiredTarget{ get; set; }
         public Single DesiredYaw { get; set; }
-        public Single DesiredPitch { get; set; }
+        private Single desiredPitch = 0;
+        public Single DesiredPitch
+        {
+            get { return desiredPitch; }
+            set
+            {
+                if (value > MathHelper.DegreesToRadians(89.9f))
+                {
+                    desiredPitch = MathHelper.DegreesToRadians(89.9f);
+                }
+                else if (value < -MathHelper.DegreesToRadians(89.9f))
+                {
+                    desiredPitch = -MathHelper.DegreesToRadians(89.9f);
+                }
+                else
+                {
+                    desiredPitch = value;
+                }
+            }
+        }
 
         public ArcBallCamera()
             : base(Camera.Type.ArcBallCamera)
         {
-            DesiredYaw = Yaw = MathHelper.DegreesToRadians(45.0f);
+            DesiredYaw = Yaw = MathHelper.DegreesToRadians(-45.0f);
             DesiredPitch = Pitch = MathHelper.DegreesToRadians(45.0f);
             DesiredDistance = distance = 10.0f;
         }
 
-        public override void Update(Single elapsedSeconds)
+        public override void Update()
         {
-            distance += (DesiredDistance - distance) * elapsedSeconds * 0.9f;
-            target += (DesiredTarget - target) * elapsedSeconds * 0.75f;
-            Yaw += (DesiredYaw - Yaw) * elapsedSeconds * 0.75f;
-            Pitch += (DesiredPitch - Pitch) * elapsedSeconds * 0.75f;
+            //distance += (DesiredDistance - distance) * elapsedSeconds * 0.75f;
+            distance = DesiredDistance;
+
+            if (distance < 0.0f)
+            {
+                distance = 0.0f;
+            }
+
+            //target += (DesiredTarget - target) * elapsedSeconds * 0.75f;
+            target = DesiredTarget;
+
+            //Yaw += (DesiredYaw - Yaw) * elapsedSeconds * 0.75f;
+            Yaw = DesiredYaw;
+
+            //Pitch += (DesiredPitch - Pitch) * elapsedSeconds * 0.75f;
+            Pitch = DesiredPitch;
 
             //clamp pitch
             if (Pitch > MathHelper.DegreesToRadians(89.9f))
@@ -46,7 +77,7 @@ namespace ps2ls.Cameras
 
             Position = target - (forward * distance);
 
-            base.Update(elapsedSeconds);
+            base.Update();
         }
     }
 }

@@ -239,6 +239,10 @@ namespace ps2ls.Dme
                     Vertex vertex = mesh.Vertices[j];
                     Vector3 position = vertex.Position;
 
+                    position.X *= options.Scale.X;
+                    position.Y *= options.Scale.Y;
+                    position.Z *= options.Scale.Z;
+
                     if (options.FlipX)
                         position.X *= -1;
 
@@ -258,6 +262,10 @@ namespace ps2ls.Dme
                         Vertex vertex = mesh.Vertices[j];
                         Vector3 normal = vertex.Normal;
 
+                        normal.X *= options.Scale.X;
+                        normal.Y *= options.Scale.Y;
+                        normal.Z *= options.Scale.Z;
+
                         if (options.FlipX)
                             normal.X *= -1;
 
@@ -266,6 +274,8 @@ namespace ps2ls.Dme
 
                         if (options.FlipZ)
                             normal.Z *= -1;
+
+                        normal.Normalize();
 
                         streamWriter.WriteLine("vn " + normal.X + " " + normal.Y + " " + normal.Z);
                     }
