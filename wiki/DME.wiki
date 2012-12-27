@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
 #labels dme,file
-
 = DME =
 
 `DME` files contain model mesh data.
