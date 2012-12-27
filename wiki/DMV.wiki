@@ -2,13 +2,11 @@
 #labels dmv,file
 
 = DMV =
+`DMV` files contain model mesh data.
 
-Add your content here.
+== Format ==
 
+`DMV` files are formatted identically to [http://code.google.com/p/ps2ls/w/DME DME] files.
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Notes ==
+`DMV` files appear to be used exclusively for collision.
