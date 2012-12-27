@@ -32,7 +32,7 @@
             ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.modelsListBox = new ps2ls.CustomListBox();
+            this.modelsListBox = new ps2ls.Controls.CustomListBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.modelsCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -339,7 +339,7 @@
         private System.Windows.Forms.ToolStripTextBox searchModelsText;
         private System.Windows.Forms.ToolStripButton clearSearchModelsText;
         private System.Windows.Forms.Timer searchModelsTimer;
-        private CustomListBox modelsListBox;
+        private ps2ls.Controls.CustomListBox modelsListBox;
         private System.Windows.Forms.ToolStripStatusLabel modelsCountToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton exportSelectedModelsToolStripButton;

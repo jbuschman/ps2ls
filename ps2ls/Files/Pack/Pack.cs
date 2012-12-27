@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Diagnostics;
+using ps2ls.IO;
 
 namespace ps2ls.Files.Pack
 {

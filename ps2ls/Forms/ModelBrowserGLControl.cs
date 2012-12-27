@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ps2ls.Cameras;
+using ps2ls.Controls;
 using OpenTK;
 
 namespace ps2ls.Forms
