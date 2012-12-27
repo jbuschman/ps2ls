@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using ps2ls.Files.Pack;
 
 namespace ps2ls.Forms
 {
@@ -187,6 +188,14 @@ namespace ps2ls.Forms
         private void PackBrowserUserControl_Load(object sender, EventArgs e)
         {
             filesMaxComboBox.SelectedIndex = 3;
+
+            if (PS2LS.Instance.GameDirectory != String.Empty)
+            {
+                if (DialogResult.Yes == MessageBox.Show(@"Do you want to load all *.pak files located in " + PS2LS.Instance.GameDirectory + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
+                {
+                    loadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
+                }
+            }
         }
 
         private void refreshFilesDataGridView()
@@ -283,7 +292,14 @@ namespace ps2ls.Forms
             refreshFilesDataGridView();
         }
 
-        public void loadBinaryFromPaths(IEnumerable<string> paths)
+        private void loadBinaryFromDirectory(string directory)
+        {
+            IEnumerable<string> files = Directory.EnumerateFiles(PS2LS.Instance.GameDirectory, "*.pack", SearchOption.TopDirectoryOnly);
+
+            loadBinaryFromPaths(files);
+        }
+
+        private void loadBinaryFromPaths(IEnumerable<string> paths)
         {
             loadingForm = new GenericLoadingForm();
             loadingForm.Show();
@@ -297,6 +313,7 @@ namespace ps2ls.Forms
 
             //refresh model browser
             ModelBrowser.Instance.Refresh(); //TODO: Regulate model browser refreshes in a more temporal way
+            TextureBrowser.Instance.Refresh();
         }
 
         private void loadProgressChanged(object sender, ProgressChangedEventArgs args)

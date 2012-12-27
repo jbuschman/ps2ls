@@ -9,7 +9,8 @@ using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using ps2ls.Cameras;
-using ps2ls.Dme;
+using ps2ls.Files.Dme;
+using ps2ls.Files.Pack;
 using System.Diagnostics;
 
 namespace ps2ls.Forms
@@ -265,15 +266,13 @@ void main()
                 GL.UseProgram(shaderProgram);
 
                 GL.Enable(EnableCap.DepthTest);
-                GL.Enable(EnableCap.Lighting);
-                GL.Enable(EnableCap.Light0);
                 GL.Enable(EnableCap.CullFace);
                 GL.CullFace(CullFaceMode.Back);
                 GL.FrontFace(FrontFaceDirection.Cw);
 
                 for (Int32 i = 0; i < model.Meshes.Length; ++i)
                 {
-                    ps2ls.Dme.Mesh mesh = model.Meshes[i];
+                    ps2ls.Files.Dme.Mesh mesh = model.Meshes[i];
 
                     if (renderModeWireframeButton.Checked)
                     {
@@ -380,14 +379,30 @@ void main()
         {
             modelsListBox.Items.Clear();
 
+            List<PackFile> files = new List<PackFile>();
             List<PackFile> dmeFiles = null;
 
             PackBrowser.Instance.PacksByType.TryGetValue(PackFile.Types.DME, out dmeFiles);
 
             if (dmeFiles != null)
             {
-                foreach (PackFile packFile in PackBrowser.Instance.PacksByType[PackFile.Types.DME])
+                files.AddRange(dmeFiles);
+            }
+
+            files.Sort(new PackFile.NameComparer());
+
+            if (files != null)
+            {
+                foreach (PackFile packFile in files)
                 {
+                    if (showAutoLODModelsButton.Checked == false)
+                    {
+                        if (packFile.Name.EndsWith("Auto.dme"))
+                        {
+                            continue;
+                        }
+                    }
+
                     if (packFile.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         modelsListBox.Items.Add(packFile);
@@ -396,7 +411,7 @@ void main()
             }
 
             Int32 count = modelsListBox.Items.Count;
-            Int32 max = dmeFiles != null ? dmeFiles.Count : 0;
+            Int32 max = files != null ? files.Count : 0;
 
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
         }
@@ -445,6 +460,8 @@ void main()
             System.IO.MemoryStream memoryStream = packFile.Pack.CreateMemoryStreamByName(packFile.Name);
 
             model = Model.LoadFromStream(packFile.Name, memoryStream);
+
+            ModelBrowserModelStats1.Model = model;
 
             snapCameraToModel();
         }
@@ -556,6 +573,11 @@ void main()
         private void glControl1_MouseEnter(object sender, EventArgs e)
         {
             glControl1.Focus();
+        }
+
+        private void showAutoLODModelsButton_CheckedChanged(object sender, EventArgs e)
+        {
+            refreshModelsListBox();
         }
     }
 }

@@ -40,7 +40,10 @@
             this.searchModelsText = new System.Windows.Forms.ToolStripTextBox();
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.showAutoLODModelsButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exportSelectedModelsToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.ModelBrowserModelStats1 = new ps2ls.Forms.ModelBrowserModelStats();
             this.glControl1 = new ps2ls.Forms.ModelBrowserGLControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.showAxesButton = new System.Windows.Forms.ToolStripButton();
@@ -73,10 +76,11 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.ModelBrowserModelStats1);
             this.splitContainer1.Panel2.Controls.Add(this.glControl1);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.SplitterDistance = 274;
             this.splitContainer1.TabIndex = 1;
             // 
             // modelsListBox
@@ -90,7 +94,7 @@
             this.modelsListBox.Location = new System.Drawing.Point(0, 25);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.modelsListBox.Size = new System.Drawing.Size(250, 553);
+            this.modelsListBox.Size = new System.Drawing.Size(274, 553);
             this.modelsListBox.TabIndex = 3;
             this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
             // 
@@ -100,7 +104,7 @@
             this.modelsCountToolStripStatusLabel});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(274, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 2;
             this.statusStrip2.Text = "statusStrip2";
@@ -120,10 +124,12 @@
             this.searchModelsText,
             this.clearSearchModelsText,
             this.toolStripSeparator2,
+            this.showAutoLODModelsButton,
+            this.toolStripSeparator1,
             this.exportSelectedModelsToolStripButton});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(250, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(274, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -140,7 +146,7 @@
             // 
             this.searchModelsText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchModelsText.Name = "searchModelsText";
-            this.searchModelsText.Size = new System.Drawing.Size(150, 25);
+            this.searchModelsText.Size = new System.Drawing.Size(100, 25);
             this.searchModelsText.TextChanged += new System.EventHandler(this.searchModelsText_TextChanged);
             // 
             // clearSearchModelsText
@@ -159,6 +165,22 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // showAutoLODModelsButton
+            // 
+            this.showAutoLODModelsButton.CheckOnClick = true;
+            this.showAutoLODModelsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.showAutoLODModelsButton.Image = global::ps2ls.Properties.Resources.robot;
+            this.showAutoLODModelsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showAutoLODModelsButton.Name = "showAutoLODModelsButton";
+            this.showAutoLODModelsButton.Size = new System.Drawing.Size(23, 22);
+            this.showAutoLODModelsButton.Text = "Show Auto LOD Models";
+            this.showAutoLODModelsButton.CheckedChanged += new System.EventHandler(this.showAutoLODModelsButton_CheckedChanged);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // exportSelectedModelsToolStripButton
             // 
             this.exportSelectedModelsToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -169,6 +191,15 @@
             this.exportSelectedModelsToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.exportSelectedModelsToolStripButton.Text = "Export Selected Models...";
             this.exportSelectedModelsToolStripButton.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // ModelBrowserModelStats1
+            // 
+            this.ModelBrowserModelStats1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ModelBrowserModelStats1.Location = new System.Drawing.Point(0, 439);
+            this.ModelBrowserModelStats1.Model = null;
+            this.ModelBrowserModelStats1.Name = "ModelBrowserModelStats1";
+            this.ModelBrowserModelStats1.Size = new System.Drawing.Size(522, 161);
+            this.ModelBrowserModelStats1.TabIndex = 3;
             // 
             // glControl1
             // 
@@ -190,9 +221,10 @@
             this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControl1.Location = new System.Drawing.Point(0, 25);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(546, 575);
+            this.glControl1.Size = new System.Drawing.Size(522, 575);
             this.glControl1.TabIndex = 1;
             this.glControl1.VSync = false;
+            this.glControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl1_Paint);
             this.glControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl1_KeyDown);
             this.glControl1.MouseEnter += new System.EventHandler(this.glControl1_MouseEnter);
             this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
@@ -208,7 +240,7 @@
             this.renderModeSmoothButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(546, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(522, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -318,5 +350,8 @@
         private System.Windows.Forms.ToolStripButton showAxesButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton showBoundingBoxButton;
+        private ModelBrowserModelStats ModelBrowserModelStats1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton showAutoLODModelsButton;
     }
 }

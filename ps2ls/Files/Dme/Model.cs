@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using OpenTK;
 
-namespace ps2ls.Dme
+namespace ps2ls.Files.Dme
 {
     public class Model
     {
@@ -77,7 +77,7 @@ namespace ps2ls.Dme
             model.Name = name;
 
             char[] buffer = binaryReader.ReadChars((Int32)dmatLength);
-            List<String> materialNames = new List<string>();
+            model.Materials = new List<string>();
             Int32 startIndex = 0;
 
             for (Int32 i = 0; i < buffer.Count(); ++i)
@@ -89,7 +89,7 @@ namespace ps2ls.Dme
                     String materialName = new String(buffer, startIndex, length);
                     startIndex = i + 1;
 
-                    materialNames.Add(materialName);
+                    model.Materials.Add(materialName);
                 }
             }
 
@@ -98,7 +98,10 @@ namespace ps2ls.Dme
             UInt32 unknownBlockLength = binaryReader.ReadUInt32();
 
             binaryReader.BaseStream.Seek(modelHeaderOffset, SeekOrigin.Begin);
-            binaryReader.BaseStream.Seek(12, SeekOrigin.Current);   //unknown
+
+            model.Unknown0 = binaryReader.ReadUInt32();
+            model.Unknown1 = binaryReader.ReadUInt32();
+            model.Unknown2 = binaryReader.ReadUInt32();
 
             //bounding box
             model.Min.X = binaryReader.ReadSingle();
@@ -119,8 +122,8 @@ namespace ps2ls.Dme
                 UInt32 vertexCount = 0;
                 UInt32 bytesPerVertex = 0;
                 UInt32 vertexBlockCount = 1;
-
                 UInt32 unknown2 = 0;
+                Int32 totalBytesPerVertex = 0;
 
                 //mesh header
                 if (dmodVersion == 3)
@@ -136,9 +139,7 @@ namespace ps2ls.Dme
                     binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
 
                     vertexBlockCount = binaryReader.ReadUInt32();
-
                     unknown2 = binaryReader.ReadUInt32();
-
                     indexCount = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
                 }
@@ -146,6 +147,8 @@ namespace ps2ls.Dme
                 {
                     return null;
                 }
+
+                totalBytesPerVertex += (Int32)bytesPerVertex;
 
                 Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
 
@@ -155,6 +158,8 @@ namespace ps2ls.Dme
                     if (dmodVersion == 4)
                     {
                         bytesPerVertex = binaryReader.ReadUInt32();
+
+                        totalBytesPerVertex += (Int32)bytesPerVertex;
                     }
 
                     for (Int32 k = 0; k < vertexCount; ++k)
@@ -162,6 +167,8 @@ namespace ps2ls.Dme
                         mesh.Vertices[k].Data.AddRange(binaryReader.ReadBytes((Int32)bytesPerVertex));
                     }
                 }
+
+                mesh.BytesPerVertex = (Int32)totalBytesPerVertex;
 
                 // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
@@ -312,9 +319,43 @@ namespace ps2ls.Dme
         {
         }
 
+        public String Name = String.Empty;
+        public UInt32 Unknown0 = 0;
+        public UInt32 Unknown1 = 0;
+        public UInt32 Unknown2 = 0;
+        public Vector3 Min = Vector3.Zero;
+        public Vector3 Max = Vector3.Zero;
+        public List<String> Materials = new List<string>();
         public Mesh[] Meshes { get; private set; }
-        public Vector3 Min;
-        public Vector3 Max;
-        public String Name;
+
+        public Int32 VertexCount
+        {
+            get
+            {
+                Int32 vertexCount = 0;
+
+                for (Int32 i = 0; i < Meshes.Length; ++i)
+                {
+                    vertexCount += Meshes[i].VertexCount;
+                }
+
+                return vertexCount;
+            }
+        }
+
+        public Int32 IndexCount
+        {
+            get
+            {
+                Int32 indexCount = 0;
+
+                for (Int32 i = 0; i < Meshes.Length; ++i)
+                {
+                    indexCount += Meshes[i].IndexCount;
+                }
+
+                return indexCount;
+            }
+        }
     }
 }

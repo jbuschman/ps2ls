@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ps2ls.Dme;
+using ps2ls.Files.Dme;
 using System.IO;
 
 namespace ps2ls.Forms
