@@ -114,7 +114,7 @@ The first part of the `MESH` block is the header.  The structure of the header d
 struct mesh_t
 {
     byte_t unknown_0[16];
-    unsigned int bytes_per_vertex_0;
+    unsigned int bytes_per_vertex;
     unsigned int vertex_count;
     unsigned int unknown_1;
     unsigned int index_count;
