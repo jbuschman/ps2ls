@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.ComponentModel;
+using ps2ls.IO;
 
 namespace ps2ls.Files.Pack
 {

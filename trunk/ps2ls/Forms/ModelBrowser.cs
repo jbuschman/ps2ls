@@ -358,7 +358,9 @@ void main()
             OpenTK.GLControl glControl = sender as OpenTK.GLControl;
 
             if (glControl.Height == 0)
+            {
                 glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
+            }
 
             GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
         }
