@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace ps2ls
+namespace ps2ls.Files.Pack
 {
     public class Pack
     {
@@ -67,17 +67,24 @@ namespace ps2ls
                 return null;
             }
 
-            while(true)
+            BinaryReaderBigEndian binaryReader = new BinaryReaderBigEndian(fileStream);
+            UInt32 nextChunkAbsoluteOffset = 0;
+            UInt32 fileCount = 0;
+
+            do
             {
-                PackChunk chunk = PackChunk.LoadBinary(pack, fileStream);
+                fileStream.Seek(nextChunkAbsoluteOffset, SeekOrigin.Begin);
 
-                if (chunk.NextChunkAbsoluteOffset == 0)
+                nextChunkAbsoluteOffset = binaryReader.ReadUInt32();
+                fileCount = binaryReader.ReadUInt32();
+
+                for (UInt32 i = 0; i < fileCount; ++i)
                 {
-                    break;
+                    PackFile file = PackFile.LoadBinary(pack, binaryReader.BaseStream);
+                    pack.Files.Add(file.Name.GetHashCode(), file);
                 }
-
-                fileStream.Seek(chunk.NextChunkAbsoluteOffset, SeekOrigin.Begin);
             }
+            while (nextChunkAbsoluteOffset != 0);
 
             return pack;
         }

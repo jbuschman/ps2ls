@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.ComponentModel;
 
-namespace ps2ls
+namespace ps2ls.Files.Pack
 {
     public class PackFile
     {
@@ -136,5 +136,24 @@ namespace ps2ls
 
         public PackFile.Types Type { get; private set; }
 
+        public class NameComparer : Comparer<PackFile>
+        {
+            public override int Compare(PackFile x, PackFile y)
+            {
+                return x.Name.CompareTo(y.Name);
+            }
+        }
+        public class LengthComparer : Comparer<PackFile>
+        {
+            public override int Compare(PackFile x, PackFile y)
+            {
+                if (x.Length > y.Length)
+                    return -1;
+                if (x.Length < y.Length)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
     }
 }

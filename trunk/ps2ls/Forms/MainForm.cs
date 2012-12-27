@@ -11,7 +11,7 @@ using ps2ls.Properties;
 using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using ps2ls.Dme;
+using ps2ls.Files;
 using ps2ls.Forms;
 
 namespace ps2ls
@@ -53,9 +53,11 @@ namespace ps2ls
         {
             PackBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
+            TextureBrowser.CreateInstance();
 
             tabControl1.TabPages[0].Controls.Add(PackBrowser.Instance);
             tabControl1.TabPages[1].Controls.Add(ModelBrowser.Instance);
+            tabControl1.TabPages[2].Controls.Add(TextureBrowser.Instance);
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
