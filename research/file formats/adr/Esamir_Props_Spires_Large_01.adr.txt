@@ -5,13 +5,13 @@ Esamir_Props_Spires_Large_01_LOD0.dme
 02 26
 Esamir_Props_Spires_Large_01_Lod0.dma
 
-05 8C 8E FE (hashed name?)
+05 8C 8E FE
 03 01 01 44 
 01 29 03 04 
 66 4E 66 B8
 
-04 - index
-09 - string length
+04 - index?
+09 - string length (!)
 default0
 
 05 - index
