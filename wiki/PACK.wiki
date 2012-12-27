@@ -23,9 +23,11 @@ struct chunk_t
 };
 }}}
 
-`next_chunk_offset` defines the absolute offset to the beginning of the next `CHUNK` block.
+`next_chunk_offset` defines the absolute offset to the beginning of the next `CHUNK` block.  If the value is `0`, then this is the last `CHUNK` in this file.
 
 `file_count` defines the number of files contained in this block.
+
+`files` is an array of `file_t`s of size `chunk_t::file_count`.
 
 == FILE ==
 
