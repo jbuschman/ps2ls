@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
 #labels dmv,file
-
 = DMV =
 `DMV` files contain model mesh data.
 
