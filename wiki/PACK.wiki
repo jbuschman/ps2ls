@@ -42,7 +42,7 @@ struct file_t
 
 `name_length` defines the string length of `file_t::name`.
 
-`name` is the name of the file of length `file_t::name_length`.
+`name` defines the name of the file of length `file_t::name_length`.
 
 `offset` defines the absolute file offset of the beginning of this file.
 
