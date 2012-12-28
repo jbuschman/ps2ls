@@ -24,9 +24,14 @@ namespace ps2ls.Files.Dme
         public Vertex[] Vertices { get; private set; }
         public UInt16[] Indices { get; private set; }
 
-        public Int32 VertexCount { get; private set; }
+        public UInt32 Index { get; set; }
+        public UInt32 Unknown1 { get; set; }
+        public UInt32 Unknown2 { get; set; }
+        public UInt32 Unknown3 { get; set; }
+        public UInt32 Unknown4 { get; set; }
+        public Int32 VertexCount { get; set; }
         public Int32 IndexCount { get; private set; }
         public Int32 BytesPerVertex { get; set; }
-        public Int32 VertexBlockCount { get; set; }
+        public UInt32 VertexBlockCount { get; set; }
     }
 }

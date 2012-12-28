@@ -53,12 +53,26 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.meshesComboBox = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.label8 = new System.Windows.Forms.Label();
             this.label99 = new System.Windows.Forms.Label();
             this.label88 = new System.Windows.Forms.Label();
             this.meshVertexCountLabel = new System.Windows.Forms.Label();
             this.meshTriangleCountLabel = new System.Windows.Forms.Label();
             this.meshBytesPerVertexLabel = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.meshIndexLabel = new System.Windows.Forms.Label();
+            this.meshUnknown1Label = new System.Windows.Forms.Label();
+            this.meshUnknown2Label = new System.Windows.Forms.Label();
+            this.meshUnknown3Label = new System.Windows.Forms.Label();
+            this.meshUnknown4Label = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.meshVertexBlockCountLabel = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.modelVersionLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -338,19 +352,36 @@
             // 
             // tableLayoutPanel5
             // 
-            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnCount = 4;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 246F));
-            this.tableLayoutPanel5.Controls.Add(this.label8, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.label99, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.label88, 0, 2);
-            this.tableLayoutPanel5.Controls.Add(this.meshVertexCountLabel, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.meshTriangleCountLabel, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.meshBytesPerVertexLabel, 1, 2);
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 159F));
+            this.tableLayoutPanel5.Controls.Add(this.label10, 2, 0);
+            this.tableLayoutPanel5.Controls.Add(this.label11, 2, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label12, 2, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label13, 2, 3);
+            this.tableLayoutPanel5.Controls.Add(this.label14, 2, 4);
+            this.tableLayoutPanel5.Controls.Add(this.meshIndexLabel, 3, 0);
+            this.tableLayoutPanel5.Controls.Add(this.meshUnknown1Label, 3, 1);
+            this.tableLayoutPanel5.Controls.Add(this.meshUnknown2Label, 3, 2);
+            this.tableLayoutPanel5.Controls.Add(this.meshUnknown3Label, 3, 3);
+            this.tableLayoutPanel5.Controls.Add(this.meshUnknown4Label, 3, 4);
+            this.tableLayoutPanel5.Controls.Add(this.label15, 0, 4);
+            this.tableLayoutPanel5.Controls.Add(this.meshVertexBlockCountLabel, 1, 4);
+            this.tableLayoutPanel5.Controls.Add(this.label88, 0, 3);
+            this.tableLayoutPanel5.Controls.Add(this.meshBytesPerVertexLabel, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.label99, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.meshTriangleCountLabel, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.label8, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.meshVertexCountLabel, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label16, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.modelVersionLabel, 1, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(130, 3);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 4;
+            this.tableLayoutPanel5.RowCount = 5;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -358,19 +389,10 @@
             this.tableLayoutPanel5.Size = new System.Drawing.Size(337, 123);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(68, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Vertex Count";
-            // 
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(3, 20);
+            this.label99.Location = new System.Drawing.Point(3, 40);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(76, 13);
             this.label99.TabIndex = 1;
@@ -379,7 +401,7 @@
             // label88
             // 
             this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(3, 40);
+            this.label88.Location = new System.Drawing.Point(3, 60);
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(85, 13);
             this.label88.TabIndex = 2;
@@ -388,7 +410,7 @@
             // meshVertexCountLabel
             // 
             this.meshVertexCountLabel.AutoSize = true;
-            this.meshVertexCountLabel.Location = new System.Drawing.Point(94, 0);
+            this.meshVertexCountLabel.Location = new System.Drawing.Point(107, 20);
             this.meshVertexCountLabel.Name = "meshVertexCountLabel";
             this.meshVertexCountLabel.Size = new System.Drawing.Size(13, 13);
             this.meshVertexCountLabel.TabIndex = 4;
@@ -397,7 +419,7 @@
             // meshTriangleCountLabel
             // 
             this.meshTriangleCountLabel.AutoSize = true;
-            this.meshTriangleCountLabel.Location = new System.Drawing.Point(94, 20);
+            this.meshTriangleCountLabel.Location = new System.Drawing.Point(107, 40);
             this.meshTriangleCountLabel.Name = "meshTriangleCountLabel";
             this.meshTriangleCountLabel.Size = new System.Drawing.Size(13, 13);
             this.meshTriangleCountLabel.TabIndex = 5;
@@ -406,11 +428,146 @@
             // meshBytesPerVertexLabel
             // 
             this.meshBytesPerVertexLabel.AutoSize = true;
-            this.meshBytesPerVertexLabel.Location = new System.Drawing.Point(94, 40);
+            this.meshBytesPerVertexLabel.Location = new System.Drawing.Point(107, 60);
             this.meshBytesPerVertexLabel.Name = "meshBytesPerVertexLabel";
             this.meshBytesPerVertexLabel.Size = new System.Drawing.Size(13, 13);
             this.meshBytesPerVertexLabel.TabIndex = 6;
             this.meshBytesPerVertexLabel.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 20);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(68, 13);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Vertex Count";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(126, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(33, 13);
+            this.label10.TabIndex = 7;
+            this.label10.Text = "Index";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(126, 20);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(62, 13);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "Unknown 1";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(126, 40);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(62, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Unknown 2";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(126, 60);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 13);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "Unknown 3";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(126, 80);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(62, 13);
+            this.label14.TabIndex = 11;
+            this.label14.Text = "Unknown 4";
+            // 
+            // meshIndexLabel
+            // 
+            this.meshIndexLabel.AutoSize = true;
+            this.meshIndexLabel.Location = new System.Drawing.Point(194, 0);
+            this.meshIndexLabel.Name = "meshIndexLabel";
+            this.meshIndexLabel.Size = new System.Drawing.Size(13, 13);
+            this.meshIndexLabel.TabIndex = 12;
+            this.meshIndexLabel.Text = "0";
+            // 
+            // meshUnknown1Label
+            // 
+            this.meshUnknown1Label.AutoSize = true;
+            this.meshUnknown1Label.Location = new System.Drawing.Point(194, 20);
+            this.meshUnknown1Label.Name = "meshUnknown1Label";
+            this.meshUnknown1Label.Size = new System.Drawing.Size(13, 13);
+            this.meshUnknown1Label.TabIndex = 13;
+            this.meshUnknown1Label.Text = "0";
+            // 
+            // meshUnknown2Label
+            // 
+            this.meshUnknown2Label.AutoSize = true;
+            this.meshUnknown2Label.Location = new System.Drawing.Point(194, 40);
+            this.meshUnknown2Label.Name = "meshUnknown2Label";
+            this.meshUnknown2Label.Size = new System.Drawing.Size(13, 13);
+            this.meshUnknown2Label.TabIndex = 14;
+            this.meshUnknown2Label.Text = "0";
+            // 
+            // meshUnknown3Label
+            // 
+            this.meshUnknown3Label.AutoSize = true;
+            this.meshUnknown3Label.Location = new System.Drawing.Point(194, 60);
+            this.meshUnknown3Label.Name = "meshUnknown3Label";
+            this.meshUnknown3Label.Size = new System.Drawing.Size(13, 13);
+            this.meshUnknown3Label.TabIndex = 15;
+            this.meshUnknown3Label.Text = "0";
+            // 
+            // meshUnknown4Label
+            // 
+            this.meshUnknown4Label.AutoSize = true;
+            this.meshUnknown4Label.Location = new System.Drawing.Point(194, 80);
+            this.meshUnknown4Label.Name = "meshUnknown4Label";
+            this.meshUnknown4Label.Size = new System.Drawing.Size(13, 13);
+            this.meshUnknown4Label.TabIndex = 16;
+            this.meshUnknown4Label.Text = "0";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 80);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(98, 13);
+            this.label15.TabIndex = 17;
+            this.label15.Text = "Vertex Block Count";
+            // 
+            // meshVertexBlockCountLabel
+            // 
+            this.meshVertexBlockCountLabel.AutoSize = true;
+            this.meshVertexBlockCountLabel.Location = new System.Drawing.Point(107, 80);
+            this.meshVertexBlockCountLabel.Name = "meshVertexBlockCountLabel";
+            this.meshVertexBlockCountLabel.Size = new System.Drawing.Size(13, 13);
+            this.meshVertexBlockCountLabel.TabIndex = 18;
+            this.meshVertexBlockCountLabel.Text = "0";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(42, 13);
+            this.label16.TabIndex = 19;
+            this.label16.Text = "Version";
+            // 
+            // modelVersionLabel
+            // 
+            this.modelVersionLabel.AutoSize = true;
+            this.modelVersionLabel.Location = new System.Drawing.Point(107, 0);
+            this.modelVersionLabel.Name = "modelVersionLabel";
+            this.modelVersionLabel.Size = new System.Drawing.Size(13, 13);
+            this.modelVersionLabel.TabIndex = 20;
+            this.modelVersionLabel.Text = "0";
             // 
             // ModelBrowserModelStats
             // 
@@ -467,6 +624,20 @@
         private System.Windows.Forms.Label meshVertexCountLabel;
         private System.Windows.Forms.Label meshTriangleCountLabel;
         private System.Windows.Forms.Label meshBytesPerVertexLabel;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label meshIndexLabel;
+        private System.Windows.Forms.Label meshUnknown1Label;
+        private System.Windows.Forms.Label meshUnknown2Label;
+        private System.Windows.Forms.Label meshUnknown3Label;
+        private System.Windows.Forms.Label meshUnknown4Label;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label meshVertexBlockCountLabel;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label modelVersionLabel;
 
     }
 }

@@ -51,7 +51,6 @@ namespace ps2ls.Files.Dme
 
             UInt32 dmodVersion = binaryReader.ReadUInt32();
 
-            // only handle version 4 for now
             if (dmodVersion != 3 && dmodVersion != 4)
             {
                 return null;
@@ -75,6 +74,7 @@ namespace ps2ls.Files.Dme
             Model model = new Model();
 
             model.Name = name;
+            model.Version = dmodVersion;
 
             char[] buffer = binaryReader.ReadChars((Int32)dmatLength);
             model.Materials = new List<string>();
@@ -122,24 +122,33 @@ namespace ps2ls.Files.Dme
                 UInt32 vertexCount = 0;
                 UInt32 bytesPerVertex = 0;
                 UInt32 vertexBlockCount = 1;
-                UInt32 unknown2 = 0;
+                UInt32 meshIndex = 0;
+                UInt32 meshUnknown1 = 0;
+                UInt32 meshUnknown2 = 0;
+                UInt32 meshUnknown3 = 0;
+                UInt32 meshUnknown4 = 0;
                 Int32 totalBytesPerVertex = 0;
 
                 //mesh header
                 if (dmodVersion == 3)
                 {
-                    binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
+                    meshIndex = binaryReader.ReadUInt32();
+                    meshUnknown1 = binaryReader.ReadUInt32();
+                    meshUnknown2 = binaryReader.ReadUInt32();
+                    meshUnknown3 = binaryReader.ReadUInt32();
                     bytesPerVertex = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
-                    binaryReader.BaseStream.Seek(4, SeekOrigin.Current);   //unknown
+                    meshUnknown4 = binaryReader.ReadUInt32();
                     indexCount = binaryReader.ReadUInt32();
                 }
                 else if (dmodVersion == 4)
                 {
-                    binaryReader.BaseStream.Seek(16, SeekOrigin.Current);   //unknown
-
+                    meshIndex = binaryReader.ReadUInt32();
+                    meshUnknown1 = binaryReader.ReadUInt32();
+                    meshUnknown2 = binaryReader.ReadUInt32();
+                    meshUnknown3 = binaryReader.ReadUInt32();
                     vertexBlockCount = binaryReader.ReadUInt32();
-                    unknown2 = binaryReader.ReadUInt32();
+                    meshUnknown4 = binaryReader.ReadUInt32();
                     indexCount = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
                 }
@@ -151,6 +160,14 @@ namespace ps2ls.Files.Dme
                 totalBytesPerVertex += (Int32)bytesPerVertex;
 
                 Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
+
+                mesh.VertexBlockCount = vertexBlockCount;
+
+                mesh.Index = meshIndex;
+                mesh.Unknown1 = meshUnknown1;
+                mesh.Unknown2 = meshUnknown2;
+                mesh.Unknown3 = meshUnknown3;
+                mesh.Unknown4 = meshUnknown4;
 
                 // read vertex data
                 for (Int32 j = 0; j < vertexBlockCount; ++j)
@@ -170,15 +187,26 @@ namespace ps2ls.Files.Dme
 
                 mesh.BytesPerVertex = (Int32)totalBytesPerVertex;
 
+                //Console.WriteLine("----");
+
                 // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
                 {
+                    //Console.WriteLine("v" + j);
+
                     Vertex vertex = mesh.Vertices[j];
                     byte[] data = vertex.Data.ToArray();
 
-                    vertex.Position.X = BitConverter.ToSingle(data, 0);
-                    vertex.Position.Y = BitConverter.ToSingle(data, 4);
-                    vertex.Position.Z = BitConverter.ToSingle(data, 8);
+                    Int32 offset = 0;
+
+                    vertex.Position.X = BitConverter.ToSingle(data, offset); offset += 4;
+                    vertex.Position.Y = BitConverter.ToSingle(data, offset); offset += 4;
+                    vertex.Position.Z = BitConverter.ToSingle(data, offset); offset += 4;
+
+                    //while (data.Length >= offset + 4)
+                    //{
+                    //    Console.WriteLine(BitConverter.ToSingle(data, offset)); offset += 4;
+                    //}
                 }
 
                 // read indices
@@ -319,6 +347,7 @@ namespace ps2ls.Files.Dme
         {
         }
 
+        public UInt32 Version = 0;
         public String Name = String.Empty;
         public UInt32 Unknown0 = 0;
         public UInt32 Unknown1 = 0;

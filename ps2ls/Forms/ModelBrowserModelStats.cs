@@ -34,6 +34,7 @@ namespace ps2ls.Forms
                 modelUnknown0Label.Text = model != null ? model.Unknown0.ToString() : "0";
                 modelUnknown1Label.Text = model != null ? model.Unknown1.ToString() : "0";
                 mdoelUnknown2Label.Text = model != null ? model.Unknown2.ToString() : "0";
+                modelVersionLabel.Text = model != null ? model.Version.ToString() : "0";
 
                 meshesComboBox.Items.Clear();
 
@@ -64,6 +65,12 @@ namespace ps2ls.Forms
             meshVertexCountLabel.Text = mesh != null ? mesh.VertexCount.ToString() : "0";
             meshTriangleCountLabel.Text = mesh != null ? (mesh.IndexCount / 3).ToString() : "0";
             meshBytesPerVertexLabel.Text = mesh != null ? mesh.BytesPerVertex.ToString() : "0";
+            meshIndexLabel.Text = mesh != null ? mesh.Index.ToString() : "0";
+            meshUnknown1Label.Text = mesh != null ? mesh.Unknown1.ToString() : "0";
+            meshUnknown2Label.Text = mesh != null ? mesh.Unknown2.ToString() : "0";
+            meshUnknown3Label.Text = mesh != null ? mesh.Unknown3.ToString() : "0";
+            meshUnknown4Label.Text = mesh != null ? mesh.Unknown4.ToString() : "0";
+            meshVertexBlockCountLabel.Text = mesh != null ? mesh.VertexBlockCount.ToString() : "0";
         }
     }
 }
