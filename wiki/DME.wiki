@@ -141,7 +141,7 @@ struct mesh_t
 
 ==== Vertex Block(s) ====
 
-Immediately following the header are`mesh_t::vertex_block_count` vertex blocks.
+Immediately following the header are `mesh_t::vertex_block_count` vertex blocks.
 
 {{{
 struct vertex_block_t
