@@ -45,7 +45,6 @@ namespace ps2ls.Cameras
 
         public override void Update()
         {
-            //distance += (DesiredDistance - distance) * elapsedSeconds * 0.75f;
             distance = DesiredDistance;
 
             if (distance < 0.0f)
@@ -53,24 +52,11 @@ namespace ps2ls.Cameras
                 distance = 0.0f;
             }
 
-            //target += (DesiredTarget - target) * elapsedSeconds * 0.75f;
             target = DesiredTarget;
 
-            //Yaw += (DesiredYaw - Yaw) * elapsedSeconds * 0.75f;
             Yaw = DesiredYaw;
 
-            //Pitch += (DesiredPitch - Pitch) * elapsedSeconds * 0.75f;
             Pitch = DesiredPitch;
-
-            //clamp pitch
-            if (Pitch > MathHelper.DegreesToRadians(89.9f))
-            {
-                Pitch = MathHelper.DegreesToRadians(89.9f);
-            }
-            else if (Pitch < -MathHelper.DegreesToRadians(89.9f))
-            {
-                Pitch = -MathHelper.DegreesToRadians(89.9f);
-            }
 
             Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
             Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
