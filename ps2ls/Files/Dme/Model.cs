@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Globalization;
 using OpenTK;
 
 namespace ps2ls.Files.Dme
@@ -260,6 +261,9 @@ namespace ps2ls.Files.Dme
 
         public void exportAsOBJToDirectory(string directory, ExportOptions options)
         {
+            NumberFormatInfo format = new NumberFormatInfo();
+            format.NumberDecimalSeparator = ".";
+
             String path = directory + @"\" + Path.GetFileNameWithoutExtension(Name) + ".obj";
 
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
@@ -287,7 +291,7 @@ namespace ps2ls.Files.Dme
                     if (options.FlipZ)
                         position.Z *= -1;
 
-                    streamWriter.WriteLine("v " + position.X + " " + position.Y + " " + position.Z);
+                    streamWriter.WriteLine("v " + position.X.ToString(format) + " " + position.Y.ToString(format) + " " + position.Z.ToString(format));
                 }
 
                 if (options.Normals)
@@ -312,7 +316,7 @@ namespace ps2ls.Files.Dme
 
                         normal.Normalize();
 
-                        streamWriter.WriteLine("vn " + normal.X + " " + normal.Y + " " + normal.Z);
+                        streamWriter.WriteLine("vn " + normal.X.ToString(format) + " " + normal.Y.ToString(format) + " " + normal.Z.ToString(format));
                     }
                 }
             }
