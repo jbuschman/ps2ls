@@ -10,11 +10,11 @@ namespace ps2ls.Cameras
     {
         private Single distance;
         private Vector3 target;
+        private Single desiredPitch = 0;
 
         public Single DesiredDistance { get; set; }
         public Vector3 DesiredTarget{ get; set; }
         public Single DesiredYaw { get; set; }
-        private Single desiredPitch = 0;
         public Single DesiredPitch
         {
             get { return desiredPitch; }

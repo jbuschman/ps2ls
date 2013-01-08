@@ -10,32 +10,6 @@ namespace ps2ls.Files.Dme
 {
     public class Model
     {
-        public enum ExportFormat
-        {
-            OBJ,
-            PLY
-        }
-
-        public enum Axes
-        {
-            X,
-            Y,
-            Z
-        }
-
-        public struct ExportOptions
-        {
-            public ExportFormat Format;
-            public Axes UpAxis;
-            public Axes LeftAxis;
-            public Boolean FlipX;
-            public Boolean FlipY;
-            public Boolean FlipZ;
-            public Boolean Normals;
-            public Boolean TextureCoordinates;
-            public Vector3 Scale;
-        }
-
         public static Model LoadFromStream(String name, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
@@ -203,11 +177,6 @@ namespace ps2ls.Files.Dme
                     vertex.Position.X = BitConverter.ToSingle(data, offset); offset += 4;
                     vertex.Position.Y = BitConverter.ToSingle(data, offset); offset += 4;
                     vertex.Position.Z = BitConverter.ToSingle(data, offset); offset += 4;
-
-                    //while (data.Length >= offset + 4)
-                    //{
-                    //    Console.WriteLine(BitConverter.ToSingle(data, offset)); offset += 4;
-                    //}
                 }
 
                 // read indices
@@ -244,111 +213,6 @@ namespace ps2ls.Files.Dme
             }
 
             return model;
-        }
-
-        public void ExportToDirectory(string directory, ExportOptions options)
-        {
-            switch (options.Format)
-            {
-                case ExportFormat.OBJ:
-                    exportAsOBJToDirectory(directory, options);
-                    break;
-                case ExportFormat.PLY:
-                    exportAsPLYToDirectory(directory, options);
-                    break;
-            }
-        }
-
-        public void exportAsOBJToDirectory(string directory, ExportOptions options)
-        {
-            NumberFormatInfo format = new NumberFormatInfo();
-            format.NumberDecimalSeparator = ".";
-
-            String path = directory + @"\" + Path.GetFileNameWithoutExtension(Name) + ".obj";
-
-            FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
-
-            for(Int32 i = 0; i < Meshes.Length; ++i)
-            {
-                Mesh mesh = Meshes[i];
-
-                for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
-                {
-                    Vertex vertex = mesh.Vertices[j];
-                    Vector3 position = vertex.Position;
-
-                    position.X *= options.Scale.X;
-                    position.Y *= options.Scale.Y;
-                    position.Z *= options.Scale.Z;
-
-                    if (options.FlipX)
-                        position.X *= -1;
-
-                    if (options.FlipY)
-                        position.Y *= -1;
-
-                    if (options.FlipZ)
-                        position.Z *= -1;
-
-                    streamWriter.WriteLine("v " + position.X.ToString(format) + " " + position.Y.ToString(format) + " " + position.Z.ToString(format));
-                }
-
-                if (options.Normals)
-                {
-                    for (Int32 j = 0; j < mesh.Vertices.Length; ++j)
-                    {
-                        Vertex vertex = mesh.Vertices[j];
-                        Vector3 normal = vertex.Normal;
-
-                        normal.X *= options.Scale.X;
-                        normal.Y *= options.Scale.Y;
-                        normal.Z *= options.Scale.Z;
-
-                        if (options.FlipX)
-                            normal.X *= -1;
-
-                        if (options.FlipY)
-                            normal.Y *= -1;
-
-                        if (options.FlipZ)
-                            normal.Z *= -1;
-
-                        normal.Normalize();
-
-                        streamWriter.WriteLine("vn " + normal.X.ToString(format) + " " + normal.Y.ToString(format) + " " + normal.Z.ToString(format));
-                    }
-                }
-            }
-
-            Int32 vertexCount = 0;
-
-            for(Int32 i = 0; i < Meshes.Length; ++i)
-            {
-                Mesh mesh = Meshes[i];
-
-                streamWriter.WriteLine("g Mesh" + i);
-
-                for (Int32 j = 0; j < mesh.Indices.Length; j += 3 )
-                {
-                    if (options.Normals)
-                    {
-                        streamWriter.WriteLine("f " + (vertexCount + mesh.Indices[j + 2] + 1) + "//" + (vertexCount + mesh.Indices[j + 2] + 1) + " " + (vertexCount + mesh.Indices[j + 1] + 1) + "//" + (vertexCount + mesh.Indices[j + 1] + 1) + " " + (vertexCount + mesh.Indices[j + 0] + 1) + "//" + (vertexCount + mesh.Indices[j + 0] + 1));
-                    }
-                    else
-                    {
-                        streamWriter.WriteLine("f " + (vertexCount + mesh.Indices[j + 2] + 1) + " " + (vertexCount + mesh.Indices[j + 1] + 1) + " " + (vertexCount + mesh.Indices[j + 0] + 1));
-                    }
-                }
-
-                vertexCount += mesh.Vertices.Length;
-            }
-
-            streamWriter.Close();
-        }
-
-        public void exportAsPLYToDirectory(string directory, ExportOptions options)
-        {
         }
 
         public UInt32 Version = 0;

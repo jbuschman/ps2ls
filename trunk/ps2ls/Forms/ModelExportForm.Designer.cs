@@ -318,12 +318,11 @@
             // 
             this.formatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.formatComboBox.FormattingEnabled = true;
-            this.formatComboBox.Items.AddRange(new object[] {
-            "Wavefront OBJ (*.obj)"});
             this.formatComboBox.Location = new System.Drawing.Point(57, 12);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.Size = new System.Drawing.Size(231, 21);
             this.formatComboBox.TabIndex = 0;
+            this.formatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
             // 
             // exportButton
             // 
