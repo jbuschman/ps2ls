@@ -5,6 +5,37 @@
 
 Add your content here.
 
+{{{
+struct dmat_t
+{
+    char magic[4];
+    unsigned int version;
+    unsigned int length;
+    char* textures;
+};
+}}}
+
+{{{
+struct material_t
+{
+    unsigned int name_hash;
+    unsigned int data_length;
+    unsigned int material_definition_hash;
+    unsigned int parameter_count;
+    material_parameter_t parameters[parameter_count];
+};
+}}}
+
+{{{
+struct material_parameter_t
+{
+    unsigned int name_hash;
+    unsigned int class;
+    unsigned int type;
+    unsigned int data_length;
+    byte_t data[data_length];
+};
+}}}
 
 = Details =
 
