@@ -13,6 +13,7 @@ struct dmat_t
     unsigned int length;
     char* textures;
     unsigned int material_count;
+    material_t materials[material_count];
 };
 }}}
 
