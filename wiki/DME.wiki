@@ -32,7 +32,7 @@ struct dmod_t
 {
     char magic[4];
     unsigned int version;
-    unsigned int model_header_offset;
+    unsigned int dmat_length;
 };
 }}}
 
@@ -40,7 +40,7 @@ struct dmod_t
 
 `version` defines the version of the `DME` file.  At the time of this writing, the only values encountered have been `3` and `4`.
 
-`model_header_offset` defines the relative file offset to the beginning of the `MODEL` block.
+`dmat_length` defines the length of the `DMAT` block.
 
 ----
 === DMAT ===
