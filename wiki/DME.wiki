@@ -40,7 +40,7 @@ struct dmod_t
 
 `version` defines the version of the `DME` file.  At the time of this writing, the only values encountered have been `3` and `4`.
 
-`model_header_offset` defines the absolute file offset to the beginning of the `MODEL` block.
+`model_header_offset` defines the relative file offset to the beginning of the `MODEL` block.
 
 ----
 === DMAT ===
