@@ -1,9 +1,5 @@
-#summary One-sentence summary of this page.
 #labels dma,file
-
 = DMA =
-
-Add your content here.
 
 === DMAT ===
 
