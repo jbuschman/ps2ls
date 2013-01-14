@@ -5,17 +5,33 @@
 
 Add your content here.
 
+=== DMAT ===
+
 {{{
 struct dmat_t
 {
     char magic[4];
     unsigned int version;
-    unsigned int length;
-    char* textures;
+    unsigned int textures_length;
+    char textures[textures_length];
     unsigned int material_count;
     material_t materials[material_count];
 };
 }}}
+`magic` is a 4-character code that is always "DMAT".
+
+`version` defines the version of the DMA file.  At the time of this writing, the only value encountered has been `1`.
+
+`textures_length` defines the byte length of the `textures` string block.
+
+`textures` is a contiguous block of null-terminated strings.  Each string defines the file name of the texture to be used for the material.
+
+`material_count` defines the amount of `MATERIAL` blocks that immediately follow the `DMAT` block.
+
+`materials` is an array of `material_t` structs of size `dmat_t::material_count`.
+
+----
+=== MATERIAL ===
 
 {{{
 struct material_t
@@ -28,20 +44,35 @@ struct material_t
 };
 }}}
 
+`name_hash` is the 
+
+`data_length` defines the length of the `MATERIAL` block.
+
+`material_definition_hash` defines the hashed name of the material definition as defined in the `materials_3.xml` file.
+
+`parameter_count` defines the size of the `material_t::parameters` array.
+
+`parameters` is an array of `material_parameter_t` objects of size `material_t::parameter_count`.
+
+----
+=== MATERIAL PARAMETER ===
 {{{
 struct material_parameter_t
 {
     unsigned int name_hash;
-    unsigned int class;
-    unsigned int type;
+    unsigned int d3dxparameter_class;
+    unsigned int d3dxparameter_type;
     unsigned int data_length;
     byte_t data[data_length];
 };
 }}}
 
-= Details =
+`name_hash` is the hashed name of the parameter.  Its usage is unknown.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+`d3dxparameter_class` defines the [http://msdn.microsoft.com/en-us/library/windows/desktop/bb205378(v=vs.85).aspx D3DXPARAMETER_CLASS] of the parameter.
+
+`d3dxparameter_type` defines the [http://msdn.microsoft.com/en-us/library/windows/desktop/bb205380(v=vs.85).aspx D3DXPARAMTER_TYPE] of the parameter.
+
+`data_length` defines size of the `material_parameter_t::data` array.
+
+`data` is a byte array of size `material_parameter_t::data_length` that defines the parameter data.
