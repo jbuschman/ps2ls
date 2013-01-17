@@ -93,7 +93,7 @@ struct mesh_t
 struct mesh_t
 {
     byte_t unknown_0[16];
-    unsigned int vertex_block_count;
+    unsigned int vertex_stream_count;
     unsigned int unknown_1;
     unsigned int index_count;
     unsigned int vertex_count;
