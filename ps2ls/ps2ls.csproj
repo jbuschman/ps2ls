@@ -341,8 +341,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)..\devil-net\Libs\$(Platform)\DevIL.dll" "$(TargetDir)DevIL.dll"
-copy /Y "$(SolutionDir)..\devil-net\Libs\$(Platform)\ILU.dll" "$(TargetDir)ILU.dll"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
