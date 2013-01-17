@@ -39,7 +39,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exportSelectedTexturesToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.searchTexturesTimer = new System.Windows.Forms.Timer(this.components);
-            this.texturesListBox = new ps2ls.Controls.CustomListBox();
+            this.texturesListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.glControl1 = new ps2ls.Forms.MaterialBrowserGLControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -207,7 +207,7 @@
         private System.Windows.Forms.ToolStripTextBox searchTexturesText;
         private System.Windows.Forms.ToolStripButton clearSearchTexturesText;
         private System.Windows.Forms.Timer searchTexturesTimer;
-        private ps2ls.Controls.CustomListBox texturesListBox;
+        private ps2ls.Forms.Controls.CustomListBox texturesListBox;
         private System.Windows.Forms.ToolStripStatusLabel modelsCountToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton exportSelectedTexturesToolStripButton;

@@ -36,7 +36,7 @@ namespace ps2ls.Cameras
         }
 
         public ArcBallCamera()
-            : base(Camera.Type.ArcBallCamera)
+            : base(Camera.Types.ArcBall)
         {
             DesiredYaw = Yaw = MathHelper.DegreesToRadians(-45.0f);
             DesiredPitch = Pitch = MathHelper.DegreesToRadians(45.0f);

@@ -32,7 +32,7 @@
             ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.modelsListBox = new ps2ls.Controls.CustomListBox();
+            this.modelsListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.modelsCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -214,8 +214,6 @@
             arcBallCamera1.NearPlaneDistance = 0.00390625F;
             arcBallCamera1.Pitch = 0.7853982F;
             arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
-            arcBallCamera1.Projection = ((OpenTK.Matrix4)(resources.GetObject("arcBallCamera1.Projection")));
-            arcBallCamera1.View = ((OpenTK.Matrix4)(resources.GetObject("arcBallCamera1.View")));
             arcBallCamera1.Yaw = -0.7853982F;
             this.glControl1.Camera = arcBallCamera1;
             this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -339,7 +337,7 @@
         private System.Windows.Forms.ToolStripTextBox searchModelsText;
         private System.Windows.Forms.ToolStripButton clearSearchModelsText;
         private System.Windows.Forms.Timer searchModelsTimer;
-        private ps2ls.Controls.CustomListBox modelsListBox;
+        private ps2ls.Forms.Controls.CustomListBox modelsListBox;
         private System.Windows.Forms.ToolStripStatusLabel modelsCountToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton exportSelectedModelsToolStripButton;

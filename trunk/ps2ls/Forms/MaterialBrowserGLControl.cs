@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ps2ls.Controls;
+using ps2ls.Forms.Controls;
 using ps2ls.Cameras;
 
 namespace ps2ls.Forms

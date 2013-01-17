@@ -23,30 +23,8 @@ namespace ps2ls.Graphics.Materials
                 float16_2,
                 Short2,
                 Float1,
+                Short4,
             }
-
-            public enum DataUsages
-            {
-                None = -1,
-                Position,
-                Color,
-                Texcoord,
-                Tangent,
-                Binormal,
-                BlendWeight,
-                BlendIndices
-            }
-
-            private static String[] dataUsageStrings =
-            {
-                "Position",
-                "Color",
-                "Texcoord",
-                "Tangent",
-                "Binormal",
-                "BlendWeight",
-                "BlendIndices"
-            };
 
             private static String[] dataTypeStrings =
             {
@@ -57,7 +35,8 @@ namespace ps2ls.Graphics.Materials
                 "ubyte4n",
                 "float16_2",
                 "Short2",
-                "Float1"
+                "Float1",
+                "Short4"
             };
 
             public static Int32[] dataTypeSizes =
@@ -69,7 +48,33 @@ namespace ps2ls.Graphics.Materials
                 4,  //ubyte4n
                 8,  //float16_2
                 4,  //Short2
-                4   //Float1
+                4,  //Float1
+                8,  //Short4
+            };
+
+            public enum DataUsages
+            {
+                None = -1,
+                Position,
+                Color,
+                Texcoord,
+                Tangent,
+                Binormal,
+                BlendWeight,
+                BlendIndices,
+                Normal
+            }
+
+            private static String[] dataUsageStrings =
+            {
+                "Position",
+                "Color",
+                "Texcoord",
+                "Tangent",
+                "Binormal",
+                "BlendWeight",
+                "BlendIndices",
+                "Normal"
             };
 
             public UInt32 Stream;
@@ -81,9 +86,10 @@ namespace ps2ls.Graphics.Materials
             {
                 for (Int32 i = 0; i < dataTypeStrings.Length; ++i)
                 {
-                    if (String.Compare(typeString, dataTypeStrings[i], true) >= 0)
+                    if (String.Compare(typeString, dataTypeStrings[i], true) == 0)
                     {
                         type = (DataTypes)i;
+                        return;
                     }
                 }
 
@@ -94,9 +100,10 @@ namespace ps2ls.Graphics.Materials
             {
                 for (Int32 i = 0; i < dataUsageStrings.Length; ++i)
                 {
-                    if (String.Compare(usageString, dataUsageStrings[i], true) >= 0)
+                    if (String.Compare(usageString, dataUsageStrings[i], true) == 0)
                     {
                         usage = (DataUsages)i;
+                        return;
                     }
                 }
 

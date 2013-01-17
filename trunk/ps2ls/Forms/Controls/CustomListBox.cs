@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace ps2ls.Controls
+namespace ps2ls.Forms.Controls
 {
     public class CustomListBox : ListBox
     {
-        public System.Drawing.Image Image { get; set; }
+        public Image Image { get; set; }
 
         public CustomListBox()
         {
-            this.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.CustomListBox_DrawItem);
+            this.DrawItem += new DrawItemEventHandler(this.CustomListBox_DrawItem);
 
-            DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            DrawMode = DrawMode.OwnerDrawFixed;
         }
 
         private void CustomListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
+            {
                 return;
+            }
 
             e.DrawBackground();
 
             String text = ((ListBox)sender).Items[e.Index].ToString();
-            System.Drawing.Point point = new System.Drawing.Point(0, e.Bounds.Y);
+            Point point = new Point(0, e.Bounds.Y);
 
             if (Image != null)
             {
@@ -33,7 +37,7 @@ namespace ps2ls.Controls
                 point.X += Image.Width;
             }
 
-            e.Graphics.DrawString(text, e.Font, new System.Drawing.SolidBrush(System.Drawing.Color.Black), point);
+            e.Graphics.DrawString(text, e.Font, new SolidBrush(Color.Black), point);
             e.DrawFocusRectangle();
         } 
     }
