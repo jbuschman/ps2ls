@@ -7,6 +7,7 @@ using ps2ls.Graphics;
 using ps2ls.Graphics.Materials;
 using System.Threading;
 using System.Globalization;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls
 {
@@ -22,6 +23,8 @@ namespace ps2ls
             Application.SetCompatibleTextRenderingDefault(false);
 
             PS2LS.CreateInstance();
+            PackManager.CreateInstance();
+
             AboutBox.CreateInstance();
             MainForm.CreateInstance();
 

@@ -333,7 +333,7 @@ void main(void)
 
             //load material definitions
             //TODO move elsewhere
-            MemoryStream memoryStream = PackBrowser.Instance.CreateAssetMemoryStreamByName("materials_3.xml");
+            MemoryStream memoryStream = PackManager.Instance.CreateAssetMemoryStreamByName("materials_3.xml");
 
             if(memoryStream != null)
             {
@@ -381,7 +381,7 @@ void main(void)
             List<Asset> assets = new List<Asset>();
             List<Asset> dmes = null;
 
-            PackBrowser.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
+            PackManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
 
             if (dmes != null)
             {

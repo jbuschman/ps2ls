@@ -78,9 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Dma\Material.cs" />
+    <Compile Include="Assets\Pack\PackManager.cs" />
     <Compile Include="Controls\CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core\Name.cs" />
     <Compile Include="Cryptography\Jenkins.cs" />
     <Compile Include="Assets\Dma\Dma.cs" />
     <Compile Include="Graphics\Materials\DrawStyle.cs" />
