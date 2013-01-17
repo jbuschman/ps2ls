@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using ps2ls.Core;
 
 namespace ps2ls.Assets.Dma
 {
