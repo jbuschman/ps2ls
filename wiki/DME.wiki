@@ -52,7 +52,6 @@ The `MODEL` block begins at the absolute file offset defined by `dmod_t::model_h
 {{{
 struct model_t
 {
-    char unknown_0[12];
     aabb_t aabb;
     unsigned int mesh_count;
 };
