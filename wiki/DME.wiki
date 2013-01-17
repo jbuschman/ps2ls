@@ -44,41 +44,8 @@ struct dmod_t
 
 ----
 === DMAT ===
-Immediately following the `DMOD` block is the `DMAT` block, which has information about the materials used for this model.
+Immediately following the `DMOD` block is an inline [http://code.google.com/p/ps2ls/wiki/DMA DMA] file of length `dmod_t::dmat_length`.
 
-{{{
-struct dmat_t
-{
-    char magic[4];
-    unsigned int version;
-    unsigned int length;
-    char* materials;
-};
-}}}
-
-`magic` is a 4-character code that is always `"DMAT"`.
-
-`version` defines the version of the `DMAT` block.  At the time of this writing, the only value encountered has been `1`.
-
-`length` defines the length in bytes of `dmat_t::materials`.
-
-`materials` is a contiguous block of null-terminated strings of size `dmat_t::length`.
-----
-=== UNKNOWN0 ===
-Immediately following the `DMAT` block is a block of unknown data we will call `UNKNOWN0`.
-
-{{{
-struct unknown0_t
-{
-    unsigned int version;
-    unsigned int unknown_1;
-    unsigned int length;
-};
-}}}
-
-`version` defines the version of the `UNKNOWN0` block.  At the time of this writing, the only value encountered has been `1`.
-
-`length` defines the length in bytes of the `UNKNOWN0` block relative to the start of the `UNKNOWN0` block.
 ----
 === MODEL ===
 The `MODEL` block begins at the absolute file offset defined by `dmod_t::model_header_offset`.
