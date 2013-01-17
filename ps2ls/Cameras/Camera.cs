@@ -8,13 +8,14 @@ namespace ps2ls.Cameras
 {
     public class Camera
     {
-        public enum Type
+        public enum Types
         {
-            ArcBallCamera
+            ArcBall,
+            Free
         };
 
-        public Matrix4 View { get; set; }
-        public Matrix4 Projection { get; set; }
+        public Matrix4 View { get; protected set; }
+        public Matrix4 Projection { get; protected set; }
         public Single AspectRatio { get; set; }
         public Single FieldOfView { get; set; }
         public Single NearPlaneDistance { get; set; }
@@ -23,9 +24,9 @@ namespace ps2ls.Cameras
         public Single Pitch { get; set; }
         public Single Yaw { get; set; }
 
-        public Camera.Type CameraType { get; private set; }
+        public Camera.Types CameraType { get; private set; }
 
-        protected Camera(Camera.Type type)
+        protected Camera(Camera.Types type)
         {
             CameraType = type;
             FieldOfView = MathHelper.DegreesToRadians(74.0f);

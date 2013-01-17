@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace ps2ls.Controls
+namespace ps2ls.Forms.Controls
 {
     public class CustomGLControl : GLControl
     {
