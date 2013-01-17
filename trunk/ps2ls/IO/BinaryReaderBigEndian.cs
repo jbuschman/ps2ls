@@ -73,5 +73,13 @@ namespace ps2ls.IO
             Array.Reverse(bytes);
             return BitConverter.ToDouble(bytes, 0);
         }
+
+        //TODO test, or put entire conversion in here and just return a float
+        public HalfSingle ReadHalfSingle()
+        {
+            byte[] bytes = base.ReadBytes(2);
+            Array.Reverse(bytes);
+            return new HalfSingle(bytes);
+        }
     }
 }

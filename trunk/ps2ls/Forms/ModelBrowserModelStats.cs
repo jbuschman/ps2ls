@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ps2ls.Files.Dme;
+using ps2ls.Assets.Dme;
 
 namespace ps2ls.Forms
 {
@@ -65,7 +65,7 @@ namespace ps2ls.Forms
             meshVertexCountLabel.Text = mesh != null ? mesh.VertexCount.ToString() : "0";
             meshTriangleCountLabel.Text = mesh != null ? (mesh.IndexCount / 3).ToString() : "0";
             meshBytesPerVertexLabel.Text = mesh != null ? mesh.BytesPerVertex.ToString() : "0";
-            meshIndexLabel.Text = mesh != null ? mesh.Index.ToString() : "0";
+            meshIndexLabel.Text = mesh != null ? mesh.MaterialIndex.ToString() : "0";
             meshUnknown1Label.Text = mesh != null ? mesh.Unknown1.ToString() : "0";
             meshUnknown2Label.Text = mesh != null ? mesh.Unknown2.ToString() : "0";
             meshUnknown3Label.Text = mesh != null ? mesh.Unknown3.ToString() : "0";

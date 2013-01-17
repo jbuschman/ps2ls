@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using ps2ls.Forms;
+using ps2ls.Graphics;
+using ps2ls.Graphics.Materials;
 using System.Threading;
 using System.Globalization;
 
@@ -20,9 +23,11 @@ namespace ps2ls
 
             PS2LS.CreateInstance();
             AboutBox.CreateInstance();
-            Form1.CreateInstance();
+            MainForm.CreateInstance();
 
-            Application.Run(Form1.Instance);
+            MaterialDefinitionManager.CreateInstance();
+
+            Application.Run(MainForm.Instance);
         }
     }
 }

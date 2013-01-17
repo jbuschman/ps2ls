@@ -11,19 +11,18 @@ using ps2ls.Properties;
 using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using ps2ls.Files;
-using ps2ls.Forms;
+using ps2ls.Assets;
 
-namespace ps2ls
+namespace ps2ls.Forms
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         #region Singleton
-        private static Form1 instance = null;
+        private static MainForm instance = null;
 
         public static void CreateInstance()
         {
-            instance = new Form1();
+            instance = new MainForm();
         }
 
         public static void DeleteInstance()
@@ -31,10 +30,10 @@ namespace ps2ls
             instance = null;
         }
 
-        public static Form1 Instance { get { return instance; } }
+        public static MainForm Instance { get { return instance; } }
         #endregion
 
-        private Form1()
+        private MainForm()
         {
             InitializeComponent();
         }
@@ -53,20 +52,11 @@ namespace ps2ls
         {
             PackBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
-            TextureBrowser.CreateInstance();
+            MaterialBrowser.CreateInstance();
 
             tabControl1.TabPages[0].Controls.Add(PackBrowser.Instance);
             tabControl1.TabPages[1].Controls.Add(ModelBrowser.Instance);
-            tabControl1.TabPages[2].Controls.Add(TextureBrowser.Instance);
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //HACK: Figure out a better way to do this.
-            if (tabControl1.SelectedIndex == 1)
-            {
-                //ModelBrowser.Instance.Refresh();
-            }
+            tabControl1.TabPages[2].Controls.Add(MaterialBrowser.Instance);
         }
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)

@@ -9,9 +9,12 @@ using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using ps2ls.Cameras;
-using ps2ls.Files.Dme;
-using ps2ls.Files.Pack;
+using ps2ls.Assets.Dme;
+using ps2ls.Assets.Pack;
 using System.Diagnostics;
+using ps2ls.Graphics.Materials;
+using System.IO;
+using System.Xml;
 
 namespace ps2ls.Forms
 {
@@ -144,37 +147,22 @@ namespace ps2ls.Forms
             //TODO: Use external file.
 
             String vertexShaderSource = @"
-varying vec3 normal;
-varying vec3 lightDirection;
+varying vec4 color;
 
-void main() 
-{ 
+void main(void)
+{
     gl_Position = ftransform();
 
-    gl_FrontColor = gl_Color;
-
-    vec3 eyeVec = vec3(gl_ModelViewProjectionMatrix * gl_Vertex);
-
-    normal = gl_NormalMatrix * gl_Normal;
-
-    lightDirection = -eyeVec;
+    color.xyz = (-gl_Normal * 0.5) + 0.5;
+    color.w = 1.0;
 }
 ";
             String fragmentShaderSource = @"
-varying vec3 normal; 
-varying vec3 lightDirection;
+varying vec4 color;
 
-void main()
+void main(void)
 {
-    const vec4 ambientColor = vec4(0.25, 0.25, 0.25, 1.0);
-    const vec4 diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);
-
-    vec3 normalizedNormal = normalize(normal);
-    vec3 noralizedLightDirection = normalize(lightDirection);
-
-    float diffuseTerm = clamp(dot(normalizedNormal, noralizedLightDirection), 0.0, 1.0);
-
-    gl_FragColor = gl_Color * (ambientColor + (diffuseColor * diffuseTerm));
+    gl_FragColor = color;
 }
 ";
 
@@ -214,6 +202,8 @@ void main()
         private void render()
         {
             glControl1.MakeCurrent();
+
+            GL.Viewport(0, 0, glControl1.ClientSize.Width, glControl1.ClientSize.Height);
 
             //clear
             GL.ClearColor(backgroundColorDialog.Color);
@@ -272,7 +262,7 @@ void main()
 
                 for (Int32 i = 0; i < model.Meshes.Length; ++i)
                 {
-                    ps2ls.Files.Dme.Mesh mesh = model.Meshes[i];
+                    ps2ls.Assets.Dme.Mesh mesh = model.Meshes[i];
 
                     if (renderModeWireframeButton.Checked)
                     {
@@ -341,6 +331,15 @@ void main()
 
             createShaderProgram();
 
+            //load material definitions
+            //TODO move elsewhere
+            MemoryStream memoryStream = PackBrowser.Instance.CreateAssetMemoryStreamByName("materials_3.xml");
+
+            if(memoryStream != null)
+            {
+                MaterialDefinitionManager.Instance.LoadFromStream(memoryStream);
+            }
+
             Application.Idle += applicationIdle;
         }
 
@@ -361,8 +360,6 @@ void main()
             {
                 glControl.ClientSize = new System.Drawing.Size(glControl.ClientSize.Width, 1);
             }
-
-            GL.Viewport(0, 0, glControl.ClientSize.Width, glControl.ClientSize.Height);
         }
 
         private void glControl1_Paint(object sender, PaintEventArgs e)
@@ -381,39 +378,39 @@ void main()
         {
             modelsListBox.Items.Clear();
 
-            List<PackFile> files = new List<PackFile>();
-            List<PackFile> dmeFiles = null;
+            List<Asset> assets = new List<Asset>();
+            List<Asset> dmes = null;
 
-            PackBrowser.Instance.PacksByType.TryGetValue(PackFile.Types.DME, out dmeFiles);
+            PackBrowser.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
 
-            if (dmeFiles != null)
+            if (dmes != null)
             {
-                files.AddRange(dmeFiles);
+                assets.AddRange(dmes);
             }
 
-            files.Sort(new PackFile.NameComparer());
+            assets.Sort(new Asset.NameComparer());
 
-            if (files != null)
+            if (assets != null)
             {
-                foreach (PackFile packFile in files)
+                foreach (Asset asset in assets)
                 {
                     if (showAutoLODModelsButton.Checked == false)
                     {
-                        if (packFile.Name.EndsWith("Auto.dme"))
+                        if (asset.Name.EndsWith("Auto.dme"))
                         {
                             continue;
                         }
                     }
 
-                    if (packFile.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (asset.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        modelsListBox.Items.Add(packFile);
+                        modelsListBox.Items.Add(asset);
                     }
                 }
             }
 
             Int32 count = modelsListBox.Items.Count;
-            Int32 max = files != null ? files.Count : 0;
+            Int32 max = assets != null ? assets.Count : 0;
 
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
         }
@@ -449,19 +446,19 @@ void main()
 
         private void modelsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PackFile packFile = null;
+            Asset asset = null;
 
             exportSelectedModelsToolStripButton.Enabled = modelsListBox.SelectedItems.Count > 0;
 
             try
             {
-                packFile = (PackFile)modelsListBox.SelectedItem;
+                asset = (Asset)modelsListBox.SelectedItem;
             }
             catch (InvalidCastException) { return; }
 
-            System.IO.MemoryStream memoryStream = packFile.Pack.CreateMemoryStreamByName(packFile.Name);
+            System.IO.MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
 
-            model = Model.LoadFromStream(packFile.Name, memoryStream);
+            model = Model.LoadFromStream(asset.Name, memoryStream);
 
             ModelBrowserModelStats1.Model = model;
 
@@ -474,15 +471,15 @@ void main()
 
             foreach (object selectedItem in modelsListBox.SelectedItems)
             {
-                PackFile packFile = null;
+                Asset asset = null;
 
                 try
                 {
-                    packFile = (PackFile)selectedItem;
+                    asset = (Asset)selectedItem;
                 }
                 catch (InvalidCastException) { continue; }
 
-                fileNames.Add(packFile.Name);
+                fileNames.Add(asset.Name);
             }
 
             ModelExportForm.Instance.FileNames = fileNames;

@@ -5,8 +5,11 @@ using System.Text;
 using System.IO;
 using System.Globalization;
 using OpenTK;
+using ps2ls.Assets.Dma;
+using ps2ls.Graphics.Materials;
+using ps2ls.Cryptography;
 
-namespace ps2ls.Files.Dme
+namespace ps2ls.Assets.Dme
 {
     public class Model
     {
@@ -14,6 +17,7 @@ namespace ps2ls.Files.Dme
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
+            //header
             byte[] magic = binaryReader.ReadBytes(4);
 
             if (magic[0] != 'D' ||
@@ -33,50 +37,10 @@ namespace ps2ls.Files.Dme
 
             UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
 
-            magic = binaryReader.ReadBytes(4);
-
-            if (magic[0] != 'D' ||
-                magic[1] != 'M' ||
-                magic[2] != 'A' ||
-                magic[3] != 'T')
-            {
-                return null;
-            }
-
-            UInt32 dmatVersion = binaryReader.ReadUInt32();
-            UInt32 dmatLength = binaryReader.ReadUInt32();
-
             Model model = new Model();
-
-            model.Name = name;
-            model.Version = dmodVersion;
-
-            char[] buffer = binaryReader.ReadChars((Int32)dmatLength);
-            model.Materials = new List<string>();
-            Int32 startIndex = 0;
-
-            for (Int32 i = 0; i < buffer.Count(); ++i)
-            {
-                if (buffer[i] == '\0')
-                {
-                    Int32 length = i - startIndex;
-
-                    String materialName = new String(buffer, startIndex, length);
-                    startIndex = i + 1;
-
-                    model.Materials.Add(materialName);
-                }
-            }
-
-            UInt32 unknown0 = binaryReader.ReadUInt32();
-            UInt32 unknown1 = binaryReader.ReadUInt32();
-            UInt32 unknownBlockLength = binaryReader.ReadUInt32();
-
-            binaryReader.BaseStream.Seek(modelHeaderOffset, SeekOrigin.Begin);
-
-            model.Unknown0 = binaryReader.ReadUInt32();
-            model.Unknown1 = binaryReader.ReadUInt32();
-            model.Unknown2 = binaryReader.ReadUInt32();
+            
+            //materials
+            Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Materials);
 
             //bounding box
             model.Min.X = binaryReader.ReadSingle();
@@ -87,6 +51,7 @@ namespace ps2ls.Files.Dme
             model.Max.Y = binaryReader.ReadSingle();
             model.Max.Z = binaryReader.ReadSingle();
 
+            //meshes
             UInt32 meshCount = binaryReader.ReadUInt32();
 
             model.Meshes = new Mesh[meshCount];
@@ -97,33 +62,34 @@ namespace ps2ls.Files.Dme
                 UInt32 vertexCount = 0;
                 UInt32 bytesPerVertex = 0;
                 UInt32 vertexBlockCount = 1;
-                UInt32 meshIndex = 0;
+                UInt32 materialIndex = 0;
                 UInt32 meshUnknown1 = 0;
                 UInt32 meshUnknown2 = 0;
                 UInt32 meshUnknown3 = 0;
                 UInt32 meshUnknown4 = 0;
                 Int32 totalBytesPerVertex = 0;
+                UInt32 indexSize = 0;
 
-                //mesh header
+                //switch on mesh header
                 if (dmodVersion == 3)
                 {
-                    meshIndex = binaryReader.ReadUInt32();
+                    materialIndex = binaryReader.ReadUInt32();
                     meshUnknown1 = binaryReader.ReadUInt32();
                     meshUnknown2 = binaryReader.ReadUInt32();
                     meshUnknown3 = binaryReader.ReadUInt32();
                     bytesPerVertex = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
-                    meshUnknown4 = binaryReader.ReadUInt32();
+                    indexSize = binaryReader.ReadUInt32();
                     indexCount = binaryReader.ReadUInt32();
                 }
                 else if (dmodVersion == 4)
                 {
-                    meshIndex = binaryReader.ReadUInt32();
+                    materialIndex = binaryReader.ReadUInt32();
                     meshUnknown1 = binaryReader.ReadUInt32();
                     meshUnknown2 = binaryReader.ReadUInt32();
                     meshUnknown3 = binaryReader.ReadUInt32();
                     vertexBlockCount = binaryReader.ReadUInt32();
-                    meshUnknown4 = binaryReader.ReadUInt32();
+                    indexSize = binaryReader.ReadUInt32();
                     indexCount = binaryReader.ReadUInt32();
                     vertexCount = binaryReader.ReadUInt32();
                 }
@@ -137,8 +103,7 @@ namespace ps2ls.Files.Dme
                 Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
 
                 mesh.VertexBlockCount = vertexBlockCount;
-
-                mesh.Index = meshIndex;
+                mesh.MaterialIndex = materialIndex;
                 mesh.Unknown1 = meshUnknown1;
                 mesh.Unknown2 = meshUnknown2;
                 mesh.Unknown3 = meshUnknown3;
@@ -162,21 +127,23 @@ namespace ps2ls.Files.Dme
 
                 mesh.BytesPerVertex = (Int32)totalBytesPerVertex;
 
-                //Console.WriteLine("----");
+                //TODO: fix hash function, lookups are failing
+                //MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(Int32)mesh.MaterialIndex].MaterialDefinitionHash];
+                MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[Jenkins.OneAtATime("OcclusionModel")];
+                VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
+
+                Int32 positionOffset = vertexLayout.GetEntryCountByUsage(VertexLayout.Entry.EntryUsage.Position);
 
                 // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
                 {
-                    //Console.WriteLine("v" + j);
-
                     Vertex vertex = mesh.Vertices[j];
                     byte[] data = vertex.Data.ToArray();
 
-                    Int32 offset = 0;
-
-                    vertex.Position.X = BitConverter.ToSingle(data, offset); offset += 4;
-                    vertex.Position.Y = BitConverter.ToSingle(data, offset); offset += 4;
-                    vertex.Position.Z = BitConverter.ToSingle(data, offset); offset += 4;
+                    //position
+                    vertex.Position.X = BitConverter.ToSingle(data, positionOffset + 0);
+                    vertex.Position.Y = BitConverter.ToSingle(data, positionOffset + 4);
+                    vertex.Position.Z = BitConverter.ToSingle(data, positionOffset + 8);
                 }
 
                 // read indices
@@ -222,7 +189,7 @@ namespace ps2ls.Files.Dme
         public UInt32 Unknown2 = 0;
         public Vector3 Min = Vector3.Zero;
         public Vector3 Max = Vector3.Zero;
-        public List<String> Materials = new List<string>();
+        public List<Material> Materials = new List<Material>();
         public Mesh[] Meshes { get; private set; }
 
         public Int32 VertexCount

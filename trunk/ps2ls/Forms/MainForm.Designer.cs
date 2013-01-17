@@ -1,6 +1,6 @@
-﻿namespace ps2ls
+﻿namespace ps2ls.Forms
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,13 +38,13 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.reportIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.searchFilesTimer = new System.Windows.Forms.Timer(this.components);
+            this.searchAssetsTimer = new System.Windows.Forms.Timer(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
@@ -109,9 +109,9 @@
             this.reportIssueToolStripMenuItem.Text = "Report Issue...";
             this.reportIssueToolStripMenuItem.Click += new System.EventHandler(this.reportIssueToolStripMenuItem_Click);
             // 
-            // searchFilesTimer
+            // searchAssetsTimer
             // 
-            this.searchFilesTimer.Interval = 500;
+            this.searchAssetsTimer.Interval = 500;
             // 
             // tabPage1
             // 
@@ -134,7 +134,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(784, 538);
             this.tabControl1.TabIndex = 1;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -146,18 +145,18 @@
             this.tabPage2.Text = "Model Browser";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // searchModelsTimer
-            // 
-            this.searchModelsTimer.Interval = 500;
-            // 
             // tabPage3
             // 
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(776, 512);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Texture Browser";
+            this.tabPage3.Text = "Material Browser";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // searchModelsTimer
+            // 
+            this.searchModelsTimer.Interval = 500;
             // 
             // Form1
             // 
@@ -187,7 +186,7 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.Timer searchFilesTimer;
+        private System.Windows.Forms.Timer searchAssetsTimer;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;

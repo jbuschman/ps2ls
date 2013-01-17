@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics.OpenGL;
 
-namespace ps2ls.Files.Dme
+namespace ps2ls.Assets.Dme
 {
     public class Mesh
     {
@@ -24,7 +24,7 @@ namespace ps2ls.Files.Dme
         public Vertex[] Vertices { get; private set; }
         public UInt16[] Indices { get; private set; }
 
-        public UInt32 Index { get; set; }
+        public UInt32 MaterialIndex { get; set; }
         public UInt32 Unknown1 { get; set; }
         public UInt32 Unknown2 { get; set; }
         public UInt32 Unknown3 { get; set; }

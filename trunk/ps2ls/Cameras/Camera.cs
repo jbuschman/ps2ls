@@ -30,7 +30,7 @@ namespace ps2ls.Cameras
             CameraType = type;
             FieldOfView = MathHelper.DegreesToRadians(74.0f);
             NearPlaneDistance = (Single)Math.Pow(2, -8);
-            FarPlaneDistance = (Single)Math.Pow(2, 16);
+            FarPlaneDistance = (Single)Math.Pow(2, 8);
         }
 
         public virtual void Update()

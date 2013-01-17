@@ -6,9 +6,9 @@ using System.IO;
 using System.ComponentModel;
 using ps2ls.IO;
 
-namespace ps2ls.Files.Pack
+namespace ps2ls.Assets.Pack
 {
-    public class PackFile
+    public class Asset
     {
         private static String[] typeStrings =
         {
@@ -63,42 +63,42 @@ namespace ps2ls.Files.Pack
             Unknown
         };
 
-        private PackFile(Pack pack)
+        private Asset(Pack pack)
         {
             Pack = pack;
             Name = String.Empty;
-            Length = 0;
+            Size = 0;
             AbsoluteOffset = 0;
             Extension = String.Empty;
             Type = Types.Unknown;
         }
 
-        public static PackFile LoadBinary(Pack pack, Stream stream)
+        public static Asset LoadBinary(Pack pack, Stream stream)
         {
             BinaryReaderBigEndian reader = new BinaryReaderBigEndian(stream);
 
-            PackFile fileInfo = new PackFile(pack);
+            Asset asset = new Asset(pack);
 
             UInt32 count = reader.ReadUInt32();
-            fileInfo.Name = new String(reader.ReadChars((Int32)count));
-            fileInfo.AbsoluteOffset = reader.ReadUInt32();
-            fileInfo.Length = reader.ReadUInt32();
-            fileInfo.Crc32 = reader.ReadUInt32();
+            asset.Name = new String(reader.ReadChars((Int32)count));
+            asset.AbsoluteOffset = reader.ReadUInt32();
+            asset.Size = reader.ReadUInt32();
+            asset.Crc32 = reader.ReadUInt32();
 
-            String extension = Path.GetExtension(fileInfo.Name);
+            String extension = Path.GetExtension(asset.Name);
 
             for (Int32 i = 0; i < typeStrings.Length; ++i)
             {
                 if (extension.ToLower() == typeStrings[i])
                 {
-                    fileInfo.Type = (PackFile.Types)(i);
+                    asset.Type = (Asset.Types)(i);
                     break;
                 }
             }
 
-            fileInfo.Extension = Path.GetExtension(fileInfo.Name).Trim(new char[] { '.' }).ToUpper();
+            asset.Extension = Path.GetExtension(asset.Name).Trim(new char[] { '.' }).ToUpper();
 
-            return fileInfo;
+            return asset;
         }
 
         public override string ToString()
@@ -106,19 +106,19 @@ namespace ps2ls.Files.Pack
             return Name;
         }
 
-        public static System.Drawing.Image GetImageFromType(PackFile.Types type)
+        public static System.Drawing.Image GetImageFromType(Asset.Types type)
         {
             switch (type)
             {
-                case PackFile.Types.DME:
+                case Asset.Types.DME:
                     return Properties.Resources.tree;
-                case PackFile.Types.DDS:
+                case Asset.Types.DDS:
                     return Properties.Resources.image;
-                case PackFile.Types.TXT:
+                case Asset.Types.TXT:
                     return Properties.Resources.document_tex;
-                case PackFile.Types.XML:
+                case Asset.Types.XML:
                     return Properties.Resources.document_xaml;
-                case PackFile.Types.FSB:
+                case Asset.Types.FSB:
                     return Properties.Resources.music;
             }
 
@@ -129,28 +129,28 @@ namespace ps2ls.Files.Pack
         public Pack Pack { get; private set; }
 
         public String Name { get; private set; }
-        public UInt32 Length { get; private set; }
+        public UInt32 Size { get; private set; }
         public UInt32 AbsoluteOffset { get; private set; }
         public UInt32 Crc32 { get; private set; }
 
         public String Extension { get; private set; }
 
-        public PackFile.Types Type { get; private set; }
+        public Asset.Types Type { get; private set; }
 
-        public class NameComparer : Comparer<PackFile>
+        public class NameComparer : Comparer<Asset>
         {
-            public override int Compare(PackFile x, PackFile y)
+            public override int Compare(Asset x, Asset y)
             {
                 return x.Name.CompareTo(y.Name);
             }
         }
-        public class LengthComparer : Comparer<PackFile>
+        public class LengthComparer : Comparer<Asset>
         {
-            public override int Compare(PackFile x, PackFile y)
+            public override int Compare(Asset x, Asset y)
             {
-                if (x.Length > y.Length)
+                if (x.Size > y.Size)
                     return -1;
-                if (x.Length < y.Length)
+                if (x.Size < y.Size)
                     return 1;
                 else
                     return 0;
