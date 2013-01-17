@@ -11,7 +11,7 @@ namespace ps2ls.Assets.Dme
 {
     public class Mesh
     {
-        public List<Byte> VertexData { get; private set; }
+        public List<Byte[]> VertexStreams { get; private set; }
         public Byte[] IndexData { get; private set; }
 
         public Vertex[] Vertices { get; private set; }
@@ -23,8 +23,6 @@ namespace ps2ls.Assets.Dme
         public UInt32 Unknown4 { get; set; }
         public Int32 VertexCount { get; set; }
         public Int32 IndexCount { get; private set; }
-        public Int32 BytesPerVertex { get; set; }
-        public UInt32 VertexBlockCount { get; set; }
 
         private Mesh(Int32 vertexCount, Int32 indexCount)
         {
@@ -46,13 +44,12 @@ namespace ps2ls.Assets.Dme
             UInt32 indexCount = 0;
             UInt32 vertexCount = 0;
             UInt32 bytesPerVertex = 0;
-            UInt32 vertexBlockCount = 1;
+            UInt32 vertexStreamCount = 1;
             UInt32 materialIndex = 0;
             UInt32 meshUnknown1 = 0;
             UInt32 meshUnknown2 = 0;
             UInt32 meshUnknown3 = 0;
             UInt32 meshUnknown4 = 0;
-            UInt32 totalBytesPerVertex = 0;
             UInt32 indexSize = 0;
 
             //switch on mesh header
@@ -73,7 +70,7 @@ namespace ps2ls.Assets.Dme
                 meshUnknown1 = binaryReader.ReadUInt32();
                 meshUnknown2 = binaryReader.ReadUInt32();
                 meshUnknown3 = binaryReader.ReadUInt32();
-                vertexBlockCount = binaryReader.ReadUInt32();
+                vertexStreamCount = binaryReader.ReadUInt32();
                 indexSize = binaryReader.ReadUInt32();
                 indexCount = binaryReader.ReadUInt32();
                 vertexCount = binaryReader.ReadUInt32();
@@ -83,13 +80,9 @@ namespace ps2ls.Assets.Dme
                 return null;
             }
 
-            totalBytesPerVertex += bytesPerVertex;
-
             Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
 
-            mesh.VertexData = new List<Byte>((Int32)vertexCount * (Int32)totalBytesPerVertex);
-
-            mesh.VertexBlockCount = vertexBlockCount;
+            mesh.VertexStreams = new List<Byte[]>((Int32)vertexStreamCount);
             mesh.MaterialIndex = materialIndex;
             mesh.Unknown1 = meshUnknown1;
             mesh.Unknown2 = meshUnknown2;
@@ -97,45 +90,39 @@ namespace ps2ls.Assets.Dme
             mesh.Unknown4 = meshUnknown4;
 
             // read vertex data
-            for (Int32 j = 0; j < vertexBlockCount; ++j)
+            for (Int32 j = 0; j < vertexStreamCount; ++j)
             {
                 if (version == 4)
                 {
                     bytesPerVertex = binaryReader.ReadUInt32();
-
-                    totalBytesPerVertex += bytesPerVertex;
                 }
 
-                for (Int32 k = 0; k < vertexCount; ++k)
-                {
-                    //mesh.Vertices[k].Data.AddRange(binaryReader.ReadBytes((Int32)bytesPerVertex));
+                Byte[] vertexStream = binaryReader.ReadBytes((Int32)vertexCount * (Int32)bytesPerVertex);
 
-                    mesh.VertexData.AddRange(binaryReader.ReadBytes((Int32)bytesPerVertex));
-                }
+                mesh.VertexStreams.Add(vertexStream);
             }
-
-            mesh.BytesPerVertex = (Int32)totalBytesPerVertex;
 
             //TODO: fix hash function, lookups are failing
             //MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(Int32)mesh.MaterialIndex].MaterialDefinitionHash];
             MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[Jenkins.OneAtATime("OcclusionModel")];
             VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
-            Int32 positionOffset = vertexLayout.GetOffsetFromDataUsageAndIndex(VertexLayout.Entry.DataUsages.Position, 0);
+            Int32 positionStream = 0;
+            Int32 positionOffset = 0;
 
-            //TODO: move this elsewhere
-            // interpret vertex data
-            byte[] vertexData = mesh.VertexData.ToArray();
+            vertexLayout.GetStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionStream, out positionOffset);
+
+            Byte[] vertexData = mesh.VertexStreams[positionStream];
+            Int32 positionStride = vertexData.Length / (Int32)vertexCount;
 
             for (Int32 j = 0; j < vertexCount; ++j)
             {
                 Vertex vertex = mesh.Vertices[j];
 
-                //TODO: these are fucked, figure out what the deal is
                 //position
-                vertex.Position.X = BitConverter.ToSingle(vertexData, ((Int32)totalBytesPerVertex * j) + positionOffset + 0);
-                vertex.Position.Y = BitConverter.ToSingle(vertexData, ((Int32)totalBytesPerVertex * j) + positionOffset + 4);
-                vertex.Position.Z = BitConverter.ToSingle(vertexData, ((Int32)totalBytesPerVertex * j) + positionOffset + 8);
+                vertex.Position.X = BitConverter.ToSingle(vertexData, (positionStride * j) + positionOffset + 0);
+                vertex.Position.Y = BitConverter.ToSingle(vertexData, (positionStride * j) + positionOffset + 4);
+                vertex.Position.Z = BitConverter.ToSingle(vertexData, (positionStride * j) + positionOffset + 8);
             }
 
             // read indices
