@@ -30,39 +30,9 @@ namespace ps2ls.Forms
         public static PackBrowser Instance { get { return instance; } }
         #endregion
 
-        public Dictionary<Int32, Pack> Packs { get; private set; }
-
-        public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
-
-        private GenericLoadingForm loadingForm;
-        private BackgroundWorker loadBackgroundWorker;
-        private BackgroundWorker extractAllBackgroundWorker;
-        private BackgroundWorker extractSelectionBackgroundWorker;
-
         private PackBrowser()
         {
             InitializeComponent();
-
-            Packs = new Dictionary<Int32, Pack>();
-            AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
-
-            loadBackgroundWorker = new BackgroundWorker();
-            loadBackgroundWorker.WorkerReportsProgress = true;
-            loadBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(loadProgressChanged);
-            loadBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadRunWorkerCompleted);
-            loadBackgroundWorker.DoWork += new DoWorkEventHandler(loadDoWork);
-
-            extractAllBackgroundWorker = new BackgroundWorker();
-            extractAllBackgroundWorker.WorkerReportsProgress = true;
-            extractAllBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(extractAllProgressChanged);
-            extractAllBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractAllRunWorkerCompleted);
-            extractAllBackgroundWorker.DoWork += new DoWorkEventHandler(extractAllDoWork);
-
-            extractSelectionBackgroundWorker = new BackgroundWorker();
-            extractSelectionBackgroundWorker.WorkerReportsProgress = true;
-            extractSelectionBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(extractSelectionProgressChanged);
-            extractSelectionBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractSelectionRunWorkerCompleted);
-            extractSelectionBackgroundWorker.DoWork += new DoWorkEventHandler(extractSelectionDoWork);
 
             packOpenFileDialog.InitialDirectory = PS2LS.Instance.GameDirectory;
 
@@ -75,7 +45,7 @@ namespace ps2ls.Forms
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                loadBinaryFromPaths(packOpenFileDialog.FileNames);
+                PackManager.Instance.LoadBinaryFromPaths(packOpenFileDialog.FileNames);
             }
         }
 
@@ -106,7 +76,7 @@ namespace ps2ls.Forms
                     }
                 }
 
-                extractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                PackManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -134,7 +104,7 @@ namespace ps2ls.Forms
                     assets.Add(file);
                 }
 
-                extractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                PackManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -193,7 +163,7 @@ namespace ps2ls.Forms
             {
                 if (DialogResult.Yes == MessageBox.Show(@"Do you want to load all *.pak files located in " + PS2LS.Instance.GameDirectory + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
                 {
-                    loadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
+                    PackManager.Instance.LoadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
                 }
             }
         }
@@ -260,18 +230,7 @@ namespace ps2ls.Forms
             assetsDataGridView.ResumeLayout();
 
             fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + fileCount;
-            packCountLabel.Text = packs.Count + "/" + Packs.Count;
-        }
-
-        private void refreshPacksListBox()
-        {
-            packsListBox.ClearSelected();
-            packsListBox.Items.Clear();
-
-            foreach (KeyValuePair<Int32, Pack> pack in Packs)
-            {
-                packsListBox.Items.Add(pack.Value);
-            }
+            packCountLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
         }
 
         private void assetsDataGridView_SelectionChanged(object sender, EventArgs e)
@@ -293,167 +252,6 @@ namespace ps2ls.Forms
             refreshAssetsDataGridView();
         }
 
-        private void loadBinaryFromDirectory(string directory)
-        {
-            IEnumerable<string> files = Directory.EnumerateFiles(PS2LS.Instance.GameDirectory, "*.pack", SearchOption.TopDirectoryOnly);
-
-            loadBinaryFromPaths(files);
-        }
-
-        private void loadBinaryFromPaths(IEnumerable<string> paths)
-        {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
-            loadBackgroundWorker.RunWorkerAsync(paths);
-        }
-
-        private void loadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
-        {
-            refreshPacksListBox();
-            loadingForm.Close();
-
-            //refresh model browser
-            ModelBrowser.Instance.Refresh(); //TODO: Regulate model browser refreshes in a more temporal way
-            MaterialBrowser.Instance.Refresh();
-        }
-
-        private void loadProgressChanged(object sender, ProgressChangedEventArgs args)
-        {
-            loadingForm.SetProgressBarPercent(args.ProgressPercentage);
-            loadingForm.SetLabelText((String)args.UserState);
-        }
-
-        private void loadDoWork(object sender, DoWorkEventArgs args)
-        {
-            loadBinaryFromPaths(sender, args.Argument);
-        }
-
-        private void loadBinaryFromPaths(object sender, object arg)
-        {
-            BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            IEnumerable<string> paths = (IEnumerable<string>)arg;
-
-            for (Int32 i = 0; i < paths.Count(); ++i)
-            {
-                String path = paths.ElementAt(i);
-                Pack pack = null;
-
-                if (Packs.TryGetValue(path.GetHashCode(), out pack) == false)
-                {
-                    pack = Pack.LoadBinary(path);
-
-                    if (pack != null)
-                    {
-                        Packs.Add(path.GetHashCode(), pack);
-
-                        foreach (Asset asset in pack.Assets.Values)
-                        {
-                            if (false == AssetsByType.ContainsKey(asset.Type))
-                            {
-                                AssetsByType.Add(asset.Type, new List<Asset>());
-                            }
-
-                            AssetsByType[asset.Type].Add(asset);
-                        }
-                    }
-                }
-
-                Single percent = (Single)(i + 1) / (Single)paths.Count();
-                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(path));
-            }
-        }
-
-        public void ExtractAllToDirectory(string directory)
-        {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
-            extractAllBackgroundWorker.RunWorkerAsync(directory);
-        }
-
-        private void extractAllToDirectory(object sender, object arg)
-        {
-            BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            String directory = String.Empty;
-
-            try
-            {
-                directory = (String)arg;
-            }
-            catch (InvalidCastException) { return; }
-
-            for (Int32 i = 0; i < Packs.Count; ++i)
-            {
-                Pack pack = Packs.Values.ElementAt(i);
-
-                pack.ExtractAllFilesToDirectory(directory);
-
-                Single percent = (Single)(i + 1) / (Single)Packs.Count;
-                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(pack.Path));
-            }
-        }
-
-        private void extractAllRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
-        {
-            loadingForm.Close();
-        }
-
-        private void extractAllProgressChanged(object sender, ProgressChangedEventArgs args)
-        {
-            loadingForm.SetProgressBarPercent(args.ProgressPercentage);
-            loadingForm.SetLabelText((String)args.UserState);
-        }
-
-        private void extractAllDoWork(object sender, DoWorkEventArgs args)
-        {
-            extractAllToDirectory(sender, args.Argument);
-        }
-
-        private void extractByAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
-        {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
-            object[] args = new object[] { assets, directory };
-
-            extractSelectionBackgroundWorker.RunWorkerAsync(args);
-        }
-
-        private void extractByAssetsToDirectory(object sender, object arg)
-        {
-            BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            object[] args = (object[])arg;
-            IEnumerable<Asset> assets = (IEnumerable<Asset>)args[0];
-            String directory = (String)args[1];
-
-            for (Int32 i = 0; i < assets.Count(); ++i)
-            {
-                Asset file = assets.ElementAt(i);
-
-                file.Pack.ExtractAssetByNameToDirectory(file.Name, directory);
-
-                Single percent = (Single)(i + 1) / (Single)assets.Count();
-                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(file.Name));
-            }
-        }
-
-        private void extractSelectionRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
-        {
-            loadingForm.Close();
-        }
-
-        private void extractSelectionProgressChanged(object sender, ProgressChangedEventArgs args)
-        {
-            loadingForm.SetProgressBarPercent(args.ProgressPercentage);
-            loadingForm.SetLabelText((String)args.UserState);
-        }
-
-        private void extractSelectionDoWork(object sender, DoWorkEventArgs args)
-        {
-            extractByAssetsToDirectory(sender, args.Argument);
-        }
-
         private void packContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + " Pack(s)...";
@@ -465,21 +263,15 @@ namespace ps2ls.Forms
             extractSelectedPacks();
         }
 
-        public MemoryStream CreateAssetMemoryStreamByName(String name)
+        public void RefreshPacksListBox()
         {
-            MemoryStream memoryStream = null;
+            packsListBox.ClearSelected();
+            packsListBox.Items.Clear();
 
-            foreach (Pack pack in Packs.Values)
+            foreach (KeyValuePair<Int32, Pack> pack in PackManager.Instance.Packs)
             {
-                memoryStream = pack.CreateAssetMemoryStreamByName(name);
-
-                if (memoryStream != null)
-                {
-                    break;
-                }
+                packsListBox.Items.Add(pack.Value);
             }
-
-            return memoryStream;
         }
     }
 }

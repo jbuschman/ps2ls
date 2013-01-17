@@ -166,21 +166,21 @@ namespace ps2ls.Forms
         {
             texturesListBox.Items.Clear();
 
-            List<Asset> files = new List<Asset>();
-            List<Asset> dmaFiles = null;
+            List<Asset> assets = new List<Asset>();
+            List<Asset> dmas = null;
 
-            PackBrowser.Instance.AssetsByType.TryGetValue(Asset.Types.DMA, out dmaFiles);
+            PackManager.Instance.AssetsByType.TryGetValue(Asset.Types.DMA, out dmas);
 
-            if (dmaFiles != null)
+            if (dmas != null)
             {
-                files.AddRange(dmaFiles);
+                assets.AddRange(dmas);
             }
 
-            files.Sort(new Asset.NameComparer());
+            assets.Sort(new Asset.NameComparer());
 
-            if (files != null)
+            if (assets != null)
             {
-                foreach (Asset asset in files)
+                foreach (Asset asset in assets)
                 {
                     if (asset.Name.IndexOf(searchTexturesText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
@@ -190,7 +190,7 @@ namespace ps2ls.Forms
             }
 
             Int32 count = texturesListBox.Items.Count;
-            Int32 max = files != null ? files.Count : 0;
+            Int32 max = assets != null ? assets.Count : 0;
 
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
         }

@@ -10,6 +10,7 @@ using ps2ls.Assets.Dme;
 using System.IO;
 using OpenTK;
 using System.Globalization;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls.Forms
 {
@@ -188,7 +189,7 @@ namespace ps2ls.Forms
             {
                 String fileName = fileNames[i];
 
-                MemoryStream memoryStream = PackBrowser.Instance.CreateAssetMemoryStreamByName(fileName);
+                MemoryStream memoryStream = PackManager.Instance.CreateAssetMemoryStreamByName(fileName);
 
                 if (memoryStream == null)
                 {
