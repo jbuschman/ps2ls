@@ -13,6 +13,47 @@ namespace ps2ls.Assets.Dme
 {
     public class Model
     {
+        public UInt32 Version = 0;
+        public String Name = String.Empty;
+        public UInt32 Unknown0 = 0;
+        public UInt32 Unknown1 = 0;
+        public UInt32 Unknown2 = 0;
+        public Vector3 Min = Vector3.Zero;
+        public Vector3 Max = Vector3.Zero;
+        public List<Material> Materials = new List<Material>();
+        public Mesh[] Meshes { get; private set; }
+
+        #region Attributes
+        public Int32 VertexCount
+        {
+            get
+            {
+                Int32 vertexCount = 0;
+
+                for (Int32 i = 0; i < Meshes.Length; ++i)
+                {
+                    vertexCount += Meshes[i].VertexCount;
+                }
+
+                return vertexCount;
+            }
+        }
+        public Int32 IndexCount
+        {
+            get
+            {
+                Int32 indexCount = 0;
+
+                for (Int32 i = 0; i < Meshes.Length; ++i)
+                {
+                    indexCount += Meshes[i].IndexCount;
+                }
+
+                return indexCount;
+            }
+        }
+        #endregion
+
         public static Model LoadFromStream(String name, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
@@ -134,6 +175,7 @@ namespace ps2ls.Assets.Dme
 
                 Int32 positionOffset = vertexLayout.GetOffsetFromDataUsageAndIndex(VertexLayout.Entry.DataUsages.Position, 0);
 
+                //TODO: move this elsewhere
                 // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
                 {
@@ -181,46 +223,6 @@ namespace ps2ls.Assets.Dme
             }
 
             return model;
-        }
-
-        public UInt32 Version = 0;
-        public String Name = String.Empty;
-        public UInt32 Unknown0 = 0;
-        public UInt32 Unknown1 = 0;
-        public UInt32 Unknown2 = 0;
-        public Vector3 Min = Vector3.Zero;
-        public Vector3 Max = Vector3.Zero;
-        public List<Material> Materials = new List<Material>();
-        public Mesh[] Meshes { get; private set; }
-
-        public Int32 VertexCount
-        {
-            get
-            {
-                Int32 vertexCount = 0;
-
-                for (Int32 i = 0; i < Meshes.Length; ++i)
-                {
-                    vertexCount += Meshes[i].VertexCount;
-                }
-
-                return vertexCount;
-            }
-        }
-
-        public Int32 IndexCount
-        {
-            get
-            {
-                Int32 indexCount = 0;
-
-                for (Int32 i = 0; i < Meshes.Length; ++i)
-                {
-                    indexCount += Meshes[i].IndexCount;
-                }
-
-                return indexCount;
-            }
         }
     }
 }

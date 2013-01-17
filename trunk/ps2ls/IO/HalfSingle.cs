@@ -17,7 +17,7 @@ namespace ps2ls.IO
         }
 
         //http://www.experts-exchange.com/Programming/Languages/C_Sharp/Q_23967775.html
-        Single ToSingle()
+        public Single ToSingle()
         {
             const int exponentBits = 5;
             const int exponentBitMask = (1 << exponentBits) - 1; //0x1F = 31

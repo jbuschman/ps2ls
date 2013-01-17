@@ -90,7 +90,7 @@ namespace ps2ls.Assets.Pack
             return pack;
         }
 
-        public Boolean ExtractAllFilesToDirectory(String directory)
+        public Boolean ExtractAllAssetsToDirectory(String directory)
         {
             FileStream fileStream = null;
 

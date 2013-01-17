@@ -152,7 +152,7 @@ namespace ps2ls.Assets.Pack
             {
                 Pack pack = Packs.Values.ElementAt(i);
 
-                pack.ExtractAllFilesToDirectory(directory);
+                pack.ExtractAllAssetsToDirectory(directory);
 
                 Single percent = (Single)(i + 1) / (Single)Packs.Count;
                 backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(pack.Path));

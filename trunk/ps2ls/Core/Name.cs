@@ -8,13 +8,16 @@ namespace ps2ls.Core
 {
     public struct Name : IComparable<Name>
     {
-        private String _string;
+        private String string_;
         private UInt32 hash;
 
-        public Name(String _string)
+        public String String { get { return string_; } }
+        public UInt32 Hash { get { return hash; } }
+
+        public Name(String string_)
         {
-            this._string = _string;
-            hash = Jenkins.OneAtATime(_string);
+            this.string_ = string_;
+            hash = Jenkins.OneAtATime(string_);
         }
 
         Int32 IComparable<Name>.CompareTo(Name other)
