@@ -1,6 +1,8 @@
 #labels dma,file
 = DMA =
 
+`DMA` files contain material information.
+
 === DMAT ===
 
 {{{
