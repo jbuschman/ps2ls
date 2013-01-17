@@ -12,7 +12,7 @@ namespace ps2ls.Graphics.Materials
     {
         public class Entry
         {
-            public enum EntryType
+            public enum DataTypes
             {
                 None = -1,
                 Float3,
@@ -25,7 +25,7 @@ namespace ps2ls.Graphics.Materials
                 Float1,
             }
 
-            public enum EntryUsage
+            public enum DataUsages
             {
                 None = -1,
                 Position,
@@ -37,7 +37,7 @@ namespace ps2ls.Graphics.Materials
                 BlendIndices
             }
 
-            private static String[] usageStrings =
+            private static String[] dataUsageStrings =
             {
                 "Position",
                 "Color",
@@ -48,7 +48,7 @@ namespace ps2ls.Graphics.Materials
                 "BlendIndices"
             };
 
-            private static String[] typeStrings =
+            private static String[] dataTypeStrings =
             {
                 "Float3",
                 "D3dcolor",
@@ -60,7 +60,7 @@ namespace ps2ls.Graphics.Materials
                 "Float1"
             };
 
-            public static Int32[] typeSizes =
+            public static Int32[] dataTypeSizes =
             {
                 12, //Float3
                 4,  //D3dcolor
@@ -73,39 +73,39 @@ namespace ps2ls.Graphics.Materials
             };
 
             public UInt32 Stream;
-            public EntryType Type;
-            public EntryUsage Usage;
-            public UInt32 UsageIndex;
+            public DataTypes DataType;
+            public DataUsages DataUsage;
+            public UInt32 DataUsageIndex;
 
-            public static void GetTypeFromString(String typeString, out EntryType type)
+            public static void GetDataTypeFromString(String typeString, out DataTypes type)
             {
-                for (Int32 i = 0; i < typeStrings.Length; ++i)
+                for (Int32 i = 0; i < dataTypeStrings.Length; ++i)
                 {
-                    if (String.Compare(typeString, typeStrings[i], true) >= 0)
+                    if (String.Compare(typeString, dataTypeStrings[i], true) >= 0)
                     {
-                        type = (EntryType)i;
+                        type = (DataTypes)i;
                     }
                 }
 
-                type = EntryType.None;
+                type = DataTypes.None;
             }
 
-            public static void GetUsageFromString(String usageString, out EntryUsage usage)
+            public static void GetDataUsageFromString(String usageString, out DataUsages usage)
             {
-                for (Int32 i = 0; i < usageStrings.Length; ++i)
+                for (Int32 i = 0; i < dataUsageStrings.Length; ++i)
                 {
-                    if (String.Compare(usageString, usageStrings[i], true) >= 0)
+                    if (String.Compare(usageString, dataUsageStrings[i], true) >= 0)
                     {
-                        usage = (EntryUsage)i;
+                        usage = (DataUsages)i;
                     }
                 }
 
-                usage = EntryUsage.None;
+                usage = DataUsages.None;
             }
 
-            public static Int32 GetTypeSize(EntryType type)
+            public static Int32 GetDataTypeSize(DataTypes type)
             {
-                return typeSizes[(Int32)type];
+                return dataTypeSizes[(Int32)type];
             }
         }
 
@@ -145,16 +145,16 @@ namespace ps2ls.Graphics.Materials
                 //stream
                 entry.Stream = UInt32.Parse(navigator.GetAttribute("Stream", String.Empty));
 
-                //type
-                String typeString = navigator.GetAttribute("Type", String.Empty);
-                Entry.GetTypeFromString(typeString, out entry.Type);
+                //data type
+                String dataTypeString = navigator.GetAttribute("Type", String.Empty);
+                Entry.GetDataTypeFromString(dataTypeString, out entry.DataType);
 
-                //usage
-                String usageString = navigator.GetAttribute("Usage", String.Empty);
-                Entry.GetUsageFromString(usageString, out entry.Usage);
+                //data usage
+                String dataUsageString = navigator.GetAttribute("Usage", String.Empty);
+                Entry.GetDataUsageFromString(dataUsageString, out entry.DataUsage);
 
-                //usage index
-                entry.UsageIndex = UInt32.Parse(navigator.GetAttribute("UsageIndex", String.Empty));
+                //data usage index
+                entry.DataUsageIndex = UInt32.Parse(navigator.GetAttribute("UsageIndex", String.Empty));
 
                 vertexLayout.Entries.Add(entry);
             }
@@ -167,18 +167,18 @@ namespace ps2ls.Graphics.Materials
             return Name;
         }
 
-        public Boolean HasEntryUsage(Entry.EntryUsage usage)
+        public Boolean HasDataUsage(Entry.DataUsages usage)
         {
-            return GetEntryCountByUsage(usage) > 0;
+            return GetEntryCountByDataUsage(usage) > 0;
         }
 
-        public Int32 GetEntryCountByUsage(Entry.EntryUsage usage)
+        public Int32 GetEntryCountByDataUsage(Entry.DataUsages usage)
         {
             Int32 count = 0;
 
             foreach (Entry entry in Entries)
             {
-                if (entry.Usage == usage)
+                if (entry.DataUsage == usage)
                 {
                     ++count;
                 }
@@ -187,13 +187,13 @@ namespace ps2ls.Graphics.Materials
             return count;
         }
 
-        public Int32 GetOffsetFromEntryUsageAndIndex(Entry.EntryUsage usage, Int32 index)
+        public Int32 GetOffsetFromDataUsageAndIndex(Entry.DataUsages usage, Int32 index)
         {
             Int32 offset = 0;
 
             foreach (Entry entry in Entries)
             {
-                if (entry.Usage == usage)
+                if (entry.DataUsage == usage)
                 {
                     if (index == 0)
                     {
@@ -201,7 +201,7 @@ namespace ps2ls.Graphics.Materials
                     }
                 }
 
-                offset += Entry.GetTypeSize(entry.Type);
+                offset += Entry.GetDataTypeSize(entry.DataType);
 
                 --index;
             }

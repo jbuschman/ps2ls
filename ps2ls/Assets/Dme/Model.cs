@@ -132,7 +132,7 @@ namespace ps2ls.Assets.Dme
                 MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[Jenkins.OneAtATime("OcclusionModel")];
                 VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
-                Int32 positionOffset = vertexLayout.GetEntryCountByUsage(VertexLayout.Entry.EntryUsage.Position);
+                Int32 positionOffset = vertexLayout.GetOffsetFromDataUsageAndIndex(VertexLayout.Entry.DataUsages.Position, 0);
 
                 // interpret vertex data
                 for (Int32 j = 0; j < vertexCount; ++j)
@@ -154,6 +154,7 @@ namespace ps2ls.Assets.Dme
                     mesh.Indices[j] = index;
                 }
 
+                //TODO: remove once we read these in from file
                 // calculate normals
                 for (Int32 j = 0; j < indexCount;)
                 {
