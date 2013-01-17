@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
-using ps2ls.Files.Pack;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls.Forms
 {
@@ -32,7 +32,7 @@ namespace ps2ls.Forms
 
         public Dictionary<Int32, Pack> Packs { get; private set; }
 
-        public Dictionary<PackFile.Types, List<PackFile>> PacksByType { get; private set; }
+        public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
 
         private GenericLoadingForm loadingForm;
         private BackgroundWorker loadBackgroundWorker;
@@ -44,7 +44,7 @@ namespace ps2ls.Forms
             InitializeComponent();
 
             Packs = new Dictionary<Int32, Pack>();
-            PacksByType = new Dictionary<PackFile.Types, List<PackFile>>();
+            AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
 
             loadBackgroundWorker = new BackgroundWorker();
             loadBackgroundWorker.WorkerReportsProgress = true;
@@ -88,7 +88,7 @@ namespace ps2ls.Forms
         {
             if (packFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                List<PackFile> files = new List<PackFile>();
+                List<Asset> assets = new List<Asset>();
 
                 foreach (object item in packsListBox.SelectedItems)
                 {
@@ -100,13 +100,13 @@ namespace ps2ls.Forms
                     }
                     catch (Exception) { continue; }
 
-                    foreach (PackFile file in pack.Files.Values)
+                    foreach (Asset file in pack.Assets.Values)
                     {
-                        files.Add(file);
+                        assets.Add(file);
                     }
                 }
 
-                extractByPackFilesToDirectoryAsync(files, packFolderBrowserDialog.SelectedPath);
+                extractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -115,26 +115,26 @@ namespace ps2ls.Forms
             searchTextBox.Clear();
         }
 
-        private void extractSelectedFilesButton_Click(object sender, EventArgs e)
+        private void extractSelectedAssetsButton_Click(object sender, EventArgs e)
         {
             if (packFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                List<PackFile> files = new List<PackFile>();
+                List<Asset> assets = new List<Asset>();
 
-                foreach (DataGridViewRow row in filesDataGridView.SelectedRows)
+                foreach (DataGridViewRow row in assetsDataGridView.SelectedRows)
                 {
-                    PackFile file = null;
+                    Asset file = null;
 
                     try
                     {
-                        file = (PackFile)row.Tag;
+                        file = (Asset)row.Tag;
                     }
                     catch (InvalidCastException) { continue; }
 
-                    files.Add(file);
+                    assets.Add(file);
                 }
 
-                extractByPackFilesToDirectoryAsync(files, packFolderBrowserDialog.SelectedPath);
+                extractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -144,11 +144,11 @@ namespace ps2ls.Forms
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            searchFilesTimer.Stop();
-            searchFilesTimer.Start();
+            searchAssetsTimer.Stop();
+            searchAssetsTimer.Start();
         }
 
-        private void searchFilesTimer_Tick(object sender, EventArgs e)
+        private void searchAssetsTimer_Tick(object sender, EventArgs e)
         {
             if (searchTextBox.Text.Length > 0)
             {
@@ -161,9 +161,9 @@ namespace ps2ls.Forms
                 clearSearchButton.Enabled = false;
             }
 
-            refreshFilesDataGridView();
+            refreshAssetsDataGridView();
 
-            searchFilesTimer.Stop();
+            searchAssetsTimer.Stop();
         }
 
         private void packsListBox_DrawItem(object sender, DrawItemEventArgs e)
@@ -198,11 +198,11 @@ namespace ps2ls.Forms
             }
         }
 
-        private void refreshFilesDataGridView()
+        private void refreshAssetsDataGridView()
         {
-            filesDataGridView.SuspendLayout();
+            assetsDataGridView.SuspendLayout();
 
-            filesDataGridView.Rows.Clear();
+            assetsDataGridView.Rows.Clear();
 
             ListBox.SelectedObjectCollection packs = packsListBox.SelectedItems;
 
@@ -229,7 +229,7 @@ namespace ps2ls.Forms
                 }
                 catch (InvalidCastException) { continue; }
 
-                for (Int32 i = 0; i < pack.Files.Values.Count; ++i)
+                for (Int32 i = 0; i < pack.Assets.Values.Count; ++i)
                 {
                     if (fileCount >= rowMax)
                     {
@@ -238,7 +238,7 @@ namespace ps2ls.Forms
 
                     ++fileCount;
 
-                    PackFile file = pack.Files.Values.ElementAt(i);
+                    Asset file = pack.Assets.Values.ElementAt(i);
 
                     if (file.Name.ToLower().Contains(searchTextBox.Text.ToLower()) == false)
                     {
@@ -247,18 +247,19 @@ namespace ps2ls.Forms
 
                     String extension = System.IO.Path.GetExtension(file.Name);
 
-                    Image icon = PackFile.GetImageFromType(file.Type);
+                    Image icon = Asset.GetImageFromType(file.Type);
 
                     DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(filesDataGridView, new object[] { icon, file.Name, file.Type, file.Length / 1024 });
+                    row.CreateCells(assetsDataGridView, new object[] { icon, file.Name, file.Type, file.Size / 1024 });
                     row.Tag = file;
-                    filesDataGridView.Rows.Add(row);
+
+                    assetsDataGridView.Rows.Add(row);
                 }
             }
 
-            filesDataGridView.ResumeLayout();
+            assetsDataGridView.ResumeLayout();
 
-            fileCountLabel.Text = filesDataGridView.Rows.Count + "/" + fileCount;
+            fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + fileCount;
             packCountLabel.Text = packs.Count + "/" + Packs.Count;
         }
 
@@ -273,9 +274,9 @@ namespace ps2ls.Forms
             }
         }
 
-        private void filesDataGridView_SelectionChanged(object sender, EventArgs e)
+        private void assetsDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            extractSelectedFilesButton.Enabled = filesDataGridView.SelectedRows.Count > 0;
+            extractSelectedAssetsButton.Enabled = assetsDataGridView.SelectedRows.Count > 0;
         }
 
         private void packsListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -284,12 +285,12 @@ namespace ps2ls.Forms
 
             extractSelectedPacksButton.Enabled = packsListBox.SelectedItems.Count > 0;
 
-            refreshFilesDataGridView();
+            refreshAssetsDataGridView();
         }
 
         private void filesMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            refreshFilesDataGridView();
+            refreshAssetsDataGridView();
         }
 
         private void loadBinaryFromDirectory(string directory)
@@ -303,6 +304,7 @@ namespace ps2ls.Forms
         {
             loadingForm = new GenericLoadingForm();
             loadingForm.Show();
+
             loadBackgroundWorker.RunWorkerAsync(paths);
         }
 
@@ -313,7 +315,7 @@ namespace ps2ls.Forms
 
             //refresh model browser
             ModelBrowser.Instance.Refresh(); //TODO: Regulate model browser refreshes in a more temporal way
-            TextureBrowser.Instance.Refresh();
+            MaterialBrowser.Instance.Refresh();
         }
 
         private void loadProgressChanged(object sender, ProgressChangedEventArgs args)
@@ -345,14 +347,14 @@ namespace ps2ls.Forms
                     {
                         Packs.Add(path.GetHashCode(), pack);
 
-                        foreach (PackFile packFile in pack.Files.Values)
+                        foreach (Asset asset in pack.Assets.Values)
                         {
-                            if (false == PacksByType.ContainsKey(packFile.Type))
+                            if (false == AssetsByType.ContainsKey(asset.Type))
                             {
-                                PacksByType.Add(packFile.Type, new List<PackFile>());
+                                AssetsByType.Add(asset.Type, new List<Asset>());
                             }
 
-                            PacksByType[packFile.Type].Add(packFile);
+                            AssetsByType[asset.Type].Add(asset);
                         }
                     }
                 }
@@ -366,6 +368,7 @@ namespace ps2ls.Forms
         {
             loadingForm = new GenericLoadingForm();
             loadingForm.Show();
+
             extractAllBackgroundWorker.RunWorkerAsync(directory);
         }
 
@@ -407,30 +410,30 @@ namespace ps2ls.Forms
             extractAllToDirectory(sender, args.Argument);
         }
 
-        private void extractByPackFilesToDirectoryAsync(IEnumerable<PackFile> files, string directory)
+        private void extractByAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
         {
             loadingForm = new GenericLoadingForm();
             loadingForm.Show();
 
-            object[] args = new object[] { files, directory };
+            object[] args = new object[] { assets, directory };
 
             extractSelectionBackgroundWorker.RunWorkerAsync(args);
         }
 
-        private void extractByPackFilesToDirectory(object sender, object arg)
+        private void extractByAssetsToDirectory(object sender, object arg)
         {
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
             object[] args = (object[])arg;
-            IEnumerable<PackFile> files = (IEnumerable<PackFile>)args[0];
+            IEnumerable<Asset> assets = (IEnumerable<Asset>)args[0];
             String directory = (String)args[1];
 
-            for (Int32 i = 0; i < files.Count(); ++i)
+            for (Int32 i = 0; i < assets.Count(); ++i)
             {
-                PackFile file = files.ElementAt(i);
+                Asset file = assets.ElementAt(i);
 
-                file.Pack.ExtractFileByNameToDirectory(file.Name, directory);
+                file.Pack.ExtractAssetByNameToDirectory(file.Name, directory);
 
-                Single percent = (Single)(i + 1) / (Single)files.Count();
+                Single percent = (Single)(i + 1) / (Single)assets.Count();
                 backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(file.Name));
             }
         }
@@ -448,13 +451,12 @@ namespace ps2ls.Forms
 
         private void extractSelectionDoWork(object sender, DoWorkEventArgs args)
         {
-            extractByPackFilesToDirectory(sender, args.Argument);
+            extractByAssetsToDirectory(sender, args.Argument);
         }
 
         private void packContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
             extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + " Pack(s)...";
-
             extractPacksToolStripMenuItem.Enabled = packsListBox.SelectedItems.Count > 0;
         }
 
@@ -463,13 +465,13 @@ namespace ps2ls.Forms
             extractSelectedPacks();
         }
 
-        public MemoryStream CreateMemoryStreamByName(String name)
+        public MemoryStream CreateAssetMemoryStreamByName(String name)
         {
             MemoryStream memoryStream = null;
 
             foreach (Pack pack in Packs.Values)
             {
-                memoryStream = pack.CreateMemoryStreamByName(name);
+                memoryStream = pack.CreateAssetMemoryStreamByName(name);
 
                 if (memoryStream != null)
                 {

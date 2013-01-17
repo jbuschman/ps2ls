@@ -4,20 +4,17 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace ps2ls.Files.Dme
+namespace ps2ls.Assets.Dme
 {
     public class Vertex
     {
-        public List<Byte> Data;
+        public Vertex()
+        {
+            Data = new List<byte>();
+        }
 
         public Vector3 Position;
         public Vector3 Normal;
-        public List<Vector2> UVs;
-
-        public Vertex()
-        {
-            UVs = new List<Vector2>();
-            Data = new List<byte>();
-        }
+        public List<Byte> Data;
     }
 }

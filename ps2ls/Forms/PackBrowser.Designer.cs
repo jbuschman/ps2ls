@@ -42,7 +42,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.extractSelectedPacksButton = new System.Windows.Forms.ToolStripButton();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.filesDataGridView = new System.Windows.Forms.DataGridView();
+            this.assetsDataGridView = new System.Windows.Forms.DataGridView();
             this.FileIcon = new System.Windows.Forms.DataGridViewImageColumn();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,14 +55,14 @@
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.extractSelectedFilesButton = new System.Windows.Forms.ToolStripButton();
+            this.extractSelectedAssetsButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.packCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.packFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.searchFilesTimer = new System.Windows.Forms.Timer(this.components);
+            this.searchAssetsTimer = new System.Windows.Forms.Timer(this.components);
             this.packOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.packFileContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.assetContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,10 +76,10 @@
             this.splitContainer3.SuspendLayout();
             this.packContextMenuStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.assetsDataGridView)).BeginInit();
             this.toolStrip3.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.packFileContextMenuStrip.SuspendLayout();
+            this.assetContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
@@ -94,7 +94,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.filesDataGridView);
+            this.splitContainer2.Panel2.Controls.Add(this.assetsDataGridView);
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip3);
             this.splitContainer2.Panel2.Controls.Add(this.statusStrip1);
             this.splitContainer2.Size = new System.Drawing.Size(800, 600);
@@ -199,14 +199,14 @@
             this.propertyGrid.TabIndex = 4;
             this.propertyGrid.ToolbarVisible = false;
             // 
-            // filesDataGridView
+            // assetsDataGridView
             // 
-            this.filesDataGridView.AllowUserToAddRows = false;
-            this.filesDataGridView.AllowUserToDeleteRows = false;
-            this.filesDataGridView.AllowUserToOrderColumns = true;
-            this.filesDataGridView.AllowUserToResizeRows = false;
-            this.filesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.filesDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.assetsDataGridView.AllowUserToAddRows = false;
+            this.assetsDataGridView.AllowUserToDeleteRows = false;
+            this.assetsDataGridView.AllowUserToOrderColumns = true;
+            this.assetsDataGridView.AllowUserToResizeRows = false;
+            this.assetsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.assetsDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -214,9 +214,9 @@
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.filesDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.filesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.filesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.assetsDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.assetsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.assetsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.FileIcon,
             this.FileName,
             this.FileType,
@@ -228,11 +228,11 @@
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.filesDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
-            this.filesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.filesDataGridView.Location = new System.Drawing.Point(0, 25);
-            this.filesDataGridView.Name = "filesDataGridView";
-            this.filesDataGridView.ReadOnly = true;
+            this.assetsDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            this.assetsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assetsDataGridView.Location = new System.Drawing.Point(0, 25);
+            this.assetsDataGridView.Name = "assetsDataGridView";
+            this.assetsDataGridView.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -240,12 +240,12 @@
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.filesDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.filesDataGridView.RowHeadersVisible = false;
-            this.filesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.filesDataGridView.Size = new System.Drawing.Size(664, 553);
-            this.filesDataGridView.TabIndex = 1;
-            this.filesDataGridView.SelectionChanged += new System.EventHandler(this.filesDataGridView_SelectionChanged);
+            this.assetsDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.assetsDataGridView.RowHeadersVisible = false;
+            this.assetsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.assetsDataGridView.Size = new System.Drawing.Size(664, 553);
+            this.assetsDataGridView.TabIndex = 1;
+            this.assetsDataGridView.SelectionChanged += new System.EventHandler(this.assetsDataGridView_SelectionChanged);
             // 
             // FileIcon
             // 
@@ -290,7 +290,7 @@
             this.toolStripLabel2,
             this.filesMaxComboBox,
             this.toolStripSeparator3,
-            this.extractSelectedFilesButton});
+            this.extractSelectedAssetsButton});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(664, 25);
@@ -356,16 +356,16 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
-            // extractSelectedFilesButton
+            // extractSelectedAssetsButton
             // 
-            this.extractSelectedFilesButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.extractSelectedFilesButton.Enabled = false;
-            this.extractSelectedFilesButton.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.extractSelectedFilesButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.extractSelectedFilesButton.Name = "extractSelectedFilesButton";
-            this.extractSelectedFilesButton.Size = new System.Drawing.Size(23, 22);
-            this.extractSelectedFilesButton.Text = "Extract Selected Files...";
-            this.extractSelectedFilesButton.Click += new System.EventHandler(this.extractSelectedFilesButton_Click);
+            this.extractSelectedAssetsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.extractSelectedAssetsButton.Enabled = false;
+            this.extractSelectedAssetsButton.Image = global::ps2ls.Properties.Resources.drive_download;
+            this.extractSelectedAssetsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.extractSelectedAssetsButton.Name = "extractSelectedAssetsButton";
+            this.extractSelectedAssetsButton.Size = new System.Drawing.Size(23, 22);
+            this.extractSelectedAssetsButton.Text = "Extract Selected Files...";
+            this.extractSelectedAssetsButton.Click += new System.EventHandler(this.extractSelectedAssetsButton_Click);
             // 
             // statusStrip1
             // 
@@ -393,24 +393,24 @@
             this.fileCountLabel.Size = new System.Drawing.Size(40, 17);
             this.fileCountLabel.Text = "0/0";
             // 
-            // searchFilesTimer
+            // searchAssetsTimer
             // 
-            this.searchFilesTimer.Interval = 500;
-            this.searchFilesTimer.Tick += new System.EventHandler(this.searchFilesTimer_Tick);
+            this.searchAssetsTimer.Interval = 500;
+            this.searchAssetsTimer.Tick += new System.EventHandler(this.searchAssetsTimer_Tick);
             // 
             // packOpenFileDialog
             // 
             this.packOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
             this.packOpenFileDialog.Multiselect = true;
             // 
-            // packFileContextMenuStrip
+            // assetContextMenuStrip
             // 
-            this.packFileContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.assetContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.extractToolStripMenuItem,
             this.toolStripSeparator1,
             this.removeToolStripMenuItem});
-            this.packFileContextMenuStrip.Name = "packFileContextMenuStrip";
-            this.packFileContextMenuStrip.Size = new System.Drawing.Size(153, 76);
+            this.assetContextMenuStrip.Name = "assetContextMenuStrip";
+            this.assetContextMenuStrip.Size = new System.Drawing.Size(153, 76);
             // 
             // extractToolStripMenuItem
             // 
@@ -452,12 +452,12 @@
             this.packContextMenuStrip.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.filesDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.assetsDataGridView)).EndInit();
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.packFileContextMenuStrip.ResumeLayout(false);
+            this.assetContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -472,7 +472,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton extractSelectedPacksButton;
         private System.Windows.Forms.PropertyGrid propertyGrid;
-        private System.Windows.Forms.DataGridView filesDataGridView;
+        private System.Windows.Forms.DataGridView assetsDataGridView;
         private System.Windows.Forms.DataGridViewImageColumn FileIcon;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileType;
@@ -485,15 +485,15 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton extractSelectedFilesButton;
+        private System.Windows.Forms.ToolStripButton extractSelectedAssetsButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel packCountLabel;
         private System.Windows.Forms.ToolStripStatusLabel fileCountLabel;
         private System.Windows.Forms.FolderBrowserDialog packFolderBrowserDialog;
-        private System.Windows.Forms.Timer searchFilesTimer;
+        private System.Windows.Forms.Timer searchAssetsTimer;
         private System.Windows.Forms.OpenFileDialog packOpenFileDialog;
         private System.Windows.Forms.ContextMenuStrip packContextMenuStrip;
-        private System.Windows.Forms.ContextMenuStrip packFileContextMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip assetContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem extractToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
