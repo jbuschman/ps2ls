@@ -100,18 +100,18 @@ struct mesh_t
 };
 }}}
 
-`vertex_block_count` defines the number of vertex data blocks in this mesh.  When `dmod_t::version` is `3`, this value is assumed to be `1`.
+`vertex_stream_count` defines the number of vertex data blocks in this mesh.  When `dmod_t::version` is `3`, this value is assumed to be `1`.
 
 `index_count` defines the number of indices in this mesh.
 
 `vertex_count` defines the number of vertices in this mesh.
 
-==== Vertex Block(s) ====
+==== Vertex Streams(s) ====
 
-Immediately following the header are `mesh_t::vertex_block_count` vertex blocks.
+Immediately following the header are `mesh_t::vertex_stream_count` vertex streams.
 
 {{{
-struct vertex_block_t
+struct vertex_stream_t
 {
     unsigned int bytes_per_vertex;
     byte_t* vertices;
@@ -120,7 +120,7 @@ struct vertex_block_t
 
 `bytes_per_vertex` defines the number of bytes per vertex for the vertex block.
 
-`vertices` is a contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex * mesh_t::vertex_count`.  In the first vertex block, the first 12 bytes for each vertex define a `vector3_t` struct defining its location.
+`vertices` is a contiguous block of vertex data.  The length in bytes of this block is `mesh_t::bytes_per_vertex * mesh_t::vertex_count`.
 
 ==== Index Block ====
 
