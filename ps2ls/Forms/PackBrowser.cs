@@ -157,7 +157,7 @@ namespace ps2ls.Forms
 
         private void PackBrowserUserControl_Load(object sender, EventArgs e)
         {
-            filesMaxComboBox.SelectedIndex = 3;
+            filesMaxComboBox.SelectedIndex = 3; //infinity
 
             if (PS2LS.Instance.GameDirectory != String.Empty)
             {
