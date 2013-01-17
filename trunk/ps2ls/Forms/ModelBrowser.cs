@@ -276,7 +276,7 @@ void main(void)
 
                     GL.Color3(meshColors[i % meshColors.Length]);
 
-                    GL.Begin(BeginMode.Triangles);
+                    GL.Begin(BeginMode.Points);
                     for (Int32 j = 0; j < mesh.Indices.Length; ++j)
                     {
                         GL.Normal3(mesh.Vertices[mesh.Indices[j]].Normal);
