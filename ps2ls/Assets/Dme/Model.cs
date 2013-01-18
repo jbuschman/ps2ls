@@ -99,7 +99,7 @@ namespace ps2ls.Assets.Dme
 
             for (Int32 i = 0; i < meshCount; ++i)
             {
-                Mesh mesh = Mesh.LoadFromStreamWithVersion(binaryReader.BaseStream, dmodVersion);
+                Mesh mesh = Mesh.LoadFromStreamWithVersion(binaryReader.BaseStream, dmodVersion, model.Materials);
 
                 if (mesh != null)
                 {

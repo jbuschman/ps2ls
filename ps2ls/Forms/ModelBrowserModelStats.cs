@@ -70,7 +70,7 @@ namespace ps2ls.Forms
             meshUnknown2Label.Text = mesh != null ? mesh.Unknown2.ToString() : "0";
             meshUnknown3Label.Text = mesh != null ? mesh.Unknown3.ToString() : "0";
             meshUnknown4Label.Text = mesh != null ? mesh.Unknown4.ToString() : "0";
-            meshVertexBlockCountLabel.Text = mesh != null ? mesh.VertexStreams.Count.ToString() : "0";
+            meshVertexBlockCountLabel.Text = mesh != null ? mesh.VertexStreams.Length.ToString() : "0";
         }
     }
 }
