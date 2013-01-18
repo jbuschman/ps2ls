@@ -10,7 +10,9 @@ namespace ps2ls.Cryptography
         //http://en.wikipedia.org/wiki/Jenkins_hash_function#one-at-a-time
         public static UInt32 OneAtATime(String key)
         {
-            UInt32 hash = 0;
+            //[4:56:55 AM] Herbert Harrison: Yeah, you need to use signed ints (so Int32) inside the function and cast to UInt32 on return
+            //[4:57:45 AM] Herbert Harrison: And some places use uppercase for the hashes
+            Int32 hash = 0;
 
             for (Int32 i = 0; i < key.Length; ++i)
             {
@@ -23,7 +25,7 @@ namespace ps2ls.Cryptography
             hash ^= (hash >> 11);
             hash += (hash << 15);
 
-            return hash;
+            return (UInt32)hash;
         }
     }
 }

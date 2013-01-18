@@ -15,6 +15,7 @@ using System.Diagnostics;
 using ps2ls.Graphics.Materials;
 using System.IO;
 using System.Xml;
+using System.Runtime.InteropServices;
 
 namespace ps2ls.Forms
 {
@@ -38,8 +39,7 @@ namespace ps2ls.Forms
 
         enum RenderMode
         {
-            Smooth,
-            //Textured
+            Smooth
         };
 
         private Model model = null;
@@ -141,10 +141,7 @@ namespace ps2ls.Forms
             Int32 fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
-            //using this shader as a test for now, will make selectable ones later.
-            //http://www.lighthouse3d.com/tutorials/glsl-tutorial/directional-light-per-pixel/
-
-            //TODO: Use external file.
+            //TODO: Use external shader source files.
 
             String vertexShaderSource = @"
 varying vec4 color;
@@ -262,13 +259,12 @@ void main(void)
 
                 for (Int32 i = 0; i < model.Meshes.Length; ++i)
                 {
-                    ps2ls.Assets.Dme.Mesh mesh = model.Meshes[i];
+                    Mesh mesh = model.Meshes[i];
 
                     if (renderModeWireframeButton.Checked)
                     {
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                     }
-                    //else if (renderModeSmoothButton.Checked)
                     else
                     {
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
@@ -276,13 +272,35 @@ void main(void)
 
                     GL.Color3(meshColors[i % meshColors.Length]);
 
-                    GL.Begin(BeginMode.Triangles);
-                    for (Int32 j = 0; j < mesh.Indices.Length; ++j)
+                    GCHandle vertexDataHandle = GCHandle.Alloc(mesh.VertexStreams[0].Data, GCHandleType.Pinned);
+                    IntPtr vertexData = vertexDataHandle.AddrOfPinnedObject();
+
+                    GCHandle indexDataHandle = GCHandle.Alloc(mesh.VertexStreams[0].Data, GCHandleType.Pinned);
+                    IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
+
+                    GL.EnableClientState(ArrayCap.VertexArray);
+                    GL.EnableClientState(ArrayCap.IndexArray);
+
+                    //todo: this is kinda messed up again
+                    GL.VertexPointer(3, VertexPointerType.Float, mesh.VertexStreams[0].BytesPerVertex, vertexData);
+
+                    switch(mesh.IndexSize)
                     {
-                        GL.Normal3(mesh.Vertices[mesh.Indices[j]].Normal);
-                        GL.Vertex3(mesh.Vertices[mesh.Indices[j]].Position);
+                        case 2:
+                            GL.IndexPointer(IndexPointerType.Short, 0, 0);
+                            break;
+                        case 4:
+                            GL.IndexPointer(IndexPointerType.Int, 0, 0);
+                            break;
                     }
-                    GL.End();
+
+                    GL.DrawArrays(BeginMode.Triangles, 0, mesh.IndexCount);
+
+                    GL.DisableClientState(ArrayCap.IndexArray);
+                    GL.DisableClientState(ArrayCap.VertexArray);
+
+                    vertexDataHandle.Free();
+                    indexDataHandle.Free();
                 }
 
                 GL.UseProgram(0);
@@ -294,31 +312,31 @@ void main(void)
                 //bounding box
                 if (showBoundingBoxButton.Checked)
                 {
-                    GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+                    //GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
 
-                    GL.Color3(Color.Red);
+                    //GL.Color3(Color.Red);
 
-                    GL.Enable(EnableCap.DepthTest);
+                    //GL.Enable(EnableCap.DepthTest);
 
-                    Vector3 min = model.Min;
-                    Vector3 max = model.Max;
-                    Vector3[] vertices = new Vector3[8];
-                    UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+                    //Vector3 min = model.Min;
+                    //Vector3 max = model.Max;
+                    //Vector3[] vertices = new Vector3[8];
+                    //UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
 
-                    vertices[0] = min;
-                    vertices[1] = new Vector3(max.X, min.Y, min.Z);
-                    vertices[2] = new Vector3(max.X, min.Y, max.Z);
-                    vertices[3] = new Vector3(min.X, min.Y, max.Z);
-                    vertices[4] = new Vector3(min.X, max.Y, min.Z);
-                    vertices[5] = new Vector3(max.X, max.Y, min.Z);
-                    vertices[6] = max;
-                    vertices[7] = new Vector3(min.X, max.Y, max.Z);
+                    //vertices[0] = min;
+                    //vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                    //vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                    //vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                    //vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                    //vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                    //vertices[6] = max;
+                    //vertices[7] = new Vector3(min.X, max.Y, max.Z);
 
-                    GL.EnableClientState(ArrayCap.VertexArray);
-                    GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
-                    GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+                    //GL.EnableClientState(ArrayCap.VertexArray);
+                    //GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                    //GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
 
-                    GL.PopAttrib();
+                    //GL.PopAttrib();
                 }
             }
 
