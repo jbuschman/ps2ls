@@ -261,6 +261,20 @@ void main(void)
                 {
                     Mesh mesh = model.Meshes[i];
 
+                    //pin handles to stream data
+                    GCHandle[] streamDataGCHandles = new GCHandle[mesh.VertexStreams.Length];
+
+                    for (Int32 j = 0; j < streamDataGCHandles.Length; ++j)
+                    {
+                        streamDataGCHandles[j] = GCHandle.Alloc(mesh.VertexStreams[j].Data, GCHandleType.Pinned);
+                    }
+
+                    //fetch material definition and vertex layout
+                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(Int32)mesh.MaterialIndex].MaterialDefinitionHash];
+                    VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
+
+                    GL.Color3(meshColors[i % meshColors.Length]);
+
                     if (renderModeWireframeButton.Checked)
                     {
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
@@ -270,37 +284,48 @@ void main(void)
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                     }
 
-                    GL.Color3(meshColors[i % meshColors.Length]);
+                    //position
+                    VertexLayout.Entry.DataTypes positionDataType = VertexLayout.Entry.DataTypes.None;
+                    Int32 positionStream = 0;
+                    Int32 positionOffset = 0;
+                    bool positionExists = vertexLayout.GetDataTypeAndStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
 
-                    GCHandle vertexDataHandle = GCHandle.Alloc(mesh.VertexStreams[0].Data, GCHandleType.Pinned);
-                    IntPtr vertexData = vertexDataHandle.AddrOfPinnedObject();
-
-                    GCHandle indexDataHandle = GCHandle.Alloc(mesh.VertexStreams[0].Data, GCHandleType.Pinned);
-                    IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
-
-                    GL.EnableClientState(ArrayCap.VertexArray);
-                    GL.EnableClientState(ArrayCap.IndexArray);
-
-                    //todo: this is kinda messed up again
-                    GL.VertexPointer(3, VertexPointerType.Float, mesh.VertexStreams[0].BytesPerVertex, vertexData);
-
-                    switch(mesh.IndexSize)
+                    if (positionExists)
                     {
-                        case 2:
-                            GL.IndexPointer(IndexPointerType.Short, 0, 0);
-                            break;
-                        case 4:
-                            GL.IndexPointer(IndexPointerType.Int, 0, 0);
-                            break;
+                        IntPtr positionData = streamDataGCHandles[positionStream].AddrOfPinnedObject();
+
+                        GL.EnableClientState(ArrayCap.VertexArray);
+                        GL.VertexPointer(3, VertexPointerType.Float, mesh.VertexStreams[positionStream].BytesPerVertex, positionData + positionOffset);
                     }
 
-                    GL.DrawArrays(BeginMode.Triangles, 0, mesh.IndexCount);
+                    //normal
+                    VertexLayout.Entry.DataTypes normalDataType = VertexLayout.Entry.DataTypes.None;
+                    Int32 normalStream = 0;
+                    Int32 normalOffset = 0;
+                    bool normalExists = vertexLayout.GetDataTypeAndStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
 
-                    GL.DisableClientState(ArrayCap.IndexArray);
+                    if (normalExists)
+                    {
+                        IntPtr normalData = streamDataGCHandles[normalStream].AddrOfPinnedObject();
+
+                        GL.EnableClientState(ArrayCap.NormalArray);
+                        GL.NormalPointer(NormalPointerType.Float, mesh.VertexStreams[normalStream].BytesPerVertex, normalData + normalOffset);
+                    }
+
+                    //indices
+                    GCHandle indexDataHandle = GCHandle.Alloc(mesh.IndexData, GCHandleType.Pinned);
+                    IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
+
+                    GL.DrawElements(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
+
                     GL.DisableClientState(ArrayCap.VertexArray);
+                    GL.DisableClientState(ArrayCap.NormalArray);
 
-                    vertexDataHandle.Free();
-                    indexDataHandle.Free();
+                    //free stream data handles
+                    for (Int32 j = 0; j < streamDataGCHandles.Length; ++j)
+                    {
+                        streamDataGCHandles[j].Free();
+                    }
                 }
 
                 GL.UseProgram(0);
@@ -312,31 +337,31 @@ void main(void)
                 //bounding box
                 if (showBoundingBoxButton.Checked)
                 {
-                    //GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+                    GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
 
-                    //GL.Color3(Color.Red);
+                    GL.Color3(Color.Red);
 
-                    //GL.Enable(EnableCap.DepthTest);
+                    GL.Enable(EnableCap.DepthTest);
 
-                    //Vector3 min = model.Min;
-                    //Vector3 max = model.Max;
-                    //Vector3[] vertices = new Vector3[8];
-                    //UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+                    Vector3 min = model.Min;
+                    Vector3 max = model.Max;
+                    Vector3[] vertices = new Vector3[8];
+                    UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
 
-                    //vertices[0] = min;
-                    //vertices[1] = new Vector3(max.X, min.Y, min.Z);
-                    //vertices[2] = new Vector3(max.X, min.Y, max.Z);
-                    //vertices[3] = new Vector3(min.X, min.Y, max.Z);
-                    //vertices[4] = new Vector3(min.X, max.Y, min.Z);
-                    //vertices[5] = new Vector3(max.X, max.Y, min.Z);
-                    //vertices[6] = max;
-                    //vertices[7] = new Vector3(min.X, max.Y, max.Z);
+                    vertices[0] = min;
+                    vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                    vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                    vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                    vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                    vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                    vertices[6] = max;
+                    vertices[7] = new Vector3(min.X, max.Y, max.Z);
 
-                    //GL.EnableClientState(ArrayCap.VertexArray);
-                    //GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
-                    //GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+                    GL.EnableClientState(ArrayCap.VertexArray);
+                    GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                    GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
 
-                    //GL.PopAttrib();
+                    GL.PopAttrib();
                 }
             }
 

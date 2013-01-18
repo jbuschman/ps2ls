@@ -111,7 +111,7 @@ namespace ps2ls.Assets.Dme
             mesh.Unknown3 = meshUnknown3;
             mesh.Unknown4 = meshUnknown4;
 
-            // read vertex data
+            // read vertex streams
             for (Int32 j = 0; j < vertexStreamCount; ++j)
             {
                 if (version == 4)
@@ -127,36 +127,8 @@ namespace ps2ls.Assets.Dme
                 }
             }
 
-            //TODO: fix hash function, lookups are failing
-            MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[materials.ElementAt((Int32)mesh.MaterialIndex).MaterialDefinitionHash];
-            VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
-
-            Int32 positionStream = 0;
-            Int32 positionOffset = 0;
-
-            vertexLayout.GetStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionStream, out positionOffset);
-
-            Byte[] vertexData = mesh.VertexStreams[positionStream].Data;
-            Int32 positionStride = vertexData.Length / (Int32)vertexCount;
-
             // read indices
             mesh.IndexData = binaryReader.ReadBytes((Int32)indexCount * (Int32)indexSize);
-
-            for (Int32 j = 0; j < indexCount; ++j)
-            {
-                UInt16 index = 0;
-
-                switch (indexSize)
-                {
-                    case 2:
-                        index = BitConverter.ToUInt16(mesh.IndexData, j * 2);
-                        break;
-                    default:
-                        throw new Exception();
-                }
-
-                mesh.Indices[j] = index;
-            }
 
             //TODO: remove once we read these in from file
             // calculate normals
