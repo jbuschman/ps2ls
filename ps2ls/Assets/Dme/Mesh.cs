@@ -130,29 +130,6 @@ namespace ps2ls.Assets.Dme
             // read indices
             mesh.IndexData = binaryReader.ReadBytes((Int32)indexCount * (Int32)indexSize);
 
-            //TODO: remove once we read these in from file
-            // calculate normals
-            for (Int32 j = 0; j < indexCount; )
-            {
-                UInt16[] faceIndices = { mesh.Indices[j++], mesh.Indices[j++], mesh.Indices[j++] };
-
-                Vector3 vertex0 = mesh.Vertices[faceIndices[0]].Position;
-                Vector3 vertex1 = mesh.Vertices[faceIndices[1]].Position;
-                Vector3 vertex2 = mesh.Vertices[faceIndices[2]].Position;
-
-                Vector3 normal = Vector3.Cross((vertex1 - vertex0), (vertex2 - vertex0));
-
-                mesh.Vertices[faceIndices[0]].Normal += normal;
-                mesh.Vertices[faceIndices[1]].Normal += normal;
-                mesh.Vertices[faceIndices[2]].Normal += normal;
-            }
-
-            // normalize normals
-            for (Int32 j = 0; j < vertexCount; ++j)
-            {
-                mesh.Vertices[j].Normal.Normalize();
-            }
-
             return mesh;
         }
     }
