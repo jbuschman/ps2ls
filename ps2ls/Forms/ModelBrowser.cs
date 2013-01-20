@@ -103,6 +103,7 @@ namespace ps2ls.Forms
             renderModeButtons.Add(renderModeSmoothButton);
         }
 
+        //TODO: move this elsehwere
         private void compileShader(Int32 shader, String source)
         {
             ErrorCode e;
@@ -127,6 +128,7 @@ namespace ps2ls.Forms
             }
         }
 
+        //TODO: move this elsehwere
         private void createShaderProgram()
         {
             ErrorCode e;
@@ -142,7 +144,6 @@ namespace ps2ls.Forms
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
             //TODO: Use external shader source files.
-
             String vertexShaderSource = @"
 varying vec4 color;
 varying vec2 uv;
@@ -326,7 +327,7 @@ void main(void)
 
                         GL.EnableClientState(ArrayCap.TextureCoordArray);
 
-                        TexCoordPointerType texCoord0PointerType;
+                        TexCoordPointerType texCoord0PointerType = TexCoordPointerType.Float;
 
                         switch (texCoord0DataType)
                         {
@@ -337,7 +338,6 @@ void main(void)
                                 texCoord0PointerType = TexCoordPointerType.HalfFloat;
                                 break;
                             default:
-                                texCoord0PointerType = TexCoordPointerType.Float;
                                 break;
                         }
 
@@ -350,8 +350,11 @@ void main(void)
 
                     GL.DrawElements(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
 
+                    indexDataHandle.Free();
+
                     GL.DisableClientState(ArrayCap.VertexArray);
                     GL.DisableClientState(ArrayCap.NormalArray);
+                    GL.DisableClientState(ArrayCap.TextureCoordArray);
 
                     //free stream data handles
                     for (Int32 j = 0; j < streamDataGCHandles.Length; ++j)
