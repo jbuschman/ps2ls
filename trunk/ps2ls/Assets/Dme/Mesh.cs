@@ -39,68 +39,49 @@ namespace ps2ls.Assets.Dme
         public UInt32 Unknown2 { get; set; }
         public UInt32 Unknown3 { get; set; }
         public UInt32 Unknown4 { get; set; }
-        public Int32 VertexCount { get; set; }
-        public Int32 IndexCount { get; private set; }
-        public Int32 IndexSize { get; private set; }
+        public UInt32 VertexCount { get; set; }
+        public UInt32 IndexCount { get; private set; }
+        public UInt32 IndexSize { get; private set; }
 
-        private Mesh(Int32 vertexCount, Int32 indexCount)
+        private Mesh()
         {
-            VertexCount = vertexCount;
-            IndexCount = indexCount;
         }
 
         public static Mesh LoadFromStreamWithVersion(Stream stream, UInt32 version, ICollection<Dma.Material> materials)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
-            UInt32 indexCount = 0;
-            UInt32 vertexCount = 0;
+            Mesh mesh = new Mesh();
+
             UInt32 bytesPerVertex = 0;
             UInt32 vertexStreamCount = 1;
-            UInt32 materialIndex = 0;
-            UInt32 meshUnknown1 = 0;
-            UInt32 meshUnknown2 = 0;
-            UInt32 meshUnknown3 = 0;
-            UInt32 meshUnknown4 = 0;
-            UInt32 indexSize = 0;
+
+            mesh.MaterialIndex = binaryReader.ReadUInt32();
+            mesh.Unknown1 = binaryReader.ReadUInt32();
+            mesh.Unknown2 = binaryReader.ReadUInt32();
+            mesh.Unknown3 = binaryReader.ReadUInt32();
 
             //switch on mesh header
             if (version == 3)
             {
-                materialIndex = binaryReader.ReadUInt32();
-                meshUnknown1 = binaryReader.ReadUInt32();
-                meshUnknown2 = binaryReader.ReadUInt32();
-                meshUnknown3 = binaryReader.ReadUInt32();
                 bytesPerVertex = binaryReader.ReadUInt32();
-                vertexCount = binaryReader.ReadUInt32();
-                indexSize = binaryReader.ReadUInt32();
-                indexCount = binaryReader.ReadUInt32();
+                mesh.VertexCount = binaryReader.ReadUInt32();
+                mesh.IndexSize = binaryReader.ReadUInt32();
+                mesh.IndexCount = binaryReader.ReadUInt32();
             }
             else if (version == 4)
             {
-                materialIndex = binaryReader.ReadUInt32();
-                meshUnknown1 = binaryReader.ReadUInt32();
-                meshUnknown2 = binaryReader.ReadUInt32();
-                meshUnknown3 = binaryReader.ReadUInt32();
                 vertexStreamCount = binaryReader.ReadUInt32();
-                indexSize = binaryReader.ReadUInt32();
-                indexCount = binaryReader.ReadUInt32();
-                vertexCount = binaryReader.ReadUInt32();
+                mesh.IndexSize = binaryReader.ReadUInt32();
+                mesh.IndexCount = binaryReader.ReadUInt32();
+                mesh.VertexCount = binaryReader.ReadUInt32();
             }
             else
             {
                 return null;
             }
 
-            Mesh mesh = new Mesh((Int32)vertexCount, (Int32)indexCount);
-
             mesh.VertexStreams = new VertexStream[(Int32)vertexStreamCount];
-            mesh.MaterialIndex = materialIndex;
-            mesh.IndexSize = (Int32)indexSize;
-            mesh.Unknown1 = meshUnknown1;
-            mesh.Unknown2 = meshUnknown2;
-            mesh.Unknown3 = meshUnknown3;
-            mesh.Unknown4 = meshUnknown4;
 
             // read vertex streams
             for (Int32 j = 0; j < vertexStreamCount; ++j)
@@ -110,7 +91,7 @@ namespace ps2ls.Assets.Dme
                     bytesPerVertex = binaryReader.ReadUInt32();
                 }
 
-                VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (Int32)vertexCount, (Int32)bytesPerVertex);
+                VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (Int32)mesh.VertexCount, (Int32)bytesPerVertex);
 
                 if (vertexStream != null)
                 {
@@ -119,7 +100,7 @@ namespace ps2ls.Assets.Dme
             }
 
             // read indices
-            mesh.IndexData = binaryReader.ReadBytes((Int32)indexCount * (Int32)indexSize);
+            mesh.IndexData = binaryReader.ReadBytes((Int32)mesh.IndexCount * (Int32)mesh.IndexSize);
 
             return mesh;
         }
