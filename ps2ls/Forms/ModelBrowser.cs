@@ -37,11 +37,6 @@ namespace ps2ls.Forms
         public static ModelBrowser Instance { get { return instance; } }
         #endregion
 
-        enum RenderMode
-        {
-            Smooth
-        };
-
         private Model model = null;
         private ColorDialog backgroundColorDialog = new ColorDialog();
         private Int32 shaderProgram = 0;
@@ -348,7 +343,7 @@ void main(void)
                     GCHandle indexDataHandle = GCHandle.Alloc(mesh.IndexData, GCHandleType.Pinned);
                     IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
 
-                    GL.DrawElements(BeginMode.Triangles, mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
+                    GL.DrawElements(BeginMode.Triangles, (Int32)mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
 
                     indexDataHandle.Free();
 

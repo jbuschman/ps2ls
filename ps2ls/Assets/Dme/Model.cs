@@ -13,22 +13,24 @@ namespace ps2ls.Assets.Dme
 {
     public class Model
     {
-        public UInt32 Version = 0;
-        public String Name = String.Empty;
-        public UInt32 Unknown0 = 0;
-        public UInt32 Unknown1 = 0;
-        public UInt32 Unknown2 = 0;
-        public Vector3 Min = Vector3.Zero;
-        public Vector3 Max = Vector3.Zero;
-        public List<Material> Materials = new List<Material>();
+        public UInt32 Version { get; private set; }
+        public String Name { get; private set; }
+        public UInt32 Unknown0 { get; private set; }
+        public UInt32 Unknown1 { get; private set; }
+        public UInt32 Unknown2 { get; private set; }
+        private Vector3 min;
+        public Vector3 Min { get { return min; } }
+        private Vector3 max;
+        public Vector3 Max { get { return max; } }
+        public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
 
         #region Attributes
-        public Int32 VertexCount
+        public UInt32 VertexCount
         {
             get
             {
-                Int32 vertexCount = 0;
+                UInt32 vertexCount = 0;
 
                 for (Int32 i = 0; i < Meshes.Length; ++i)
                 {
@@ -38,11 +40,11 @@ namespace ps2ls.Assets.Dme
                 return vertexCount;
             }
         }
-        public Int32 IndexCount
+        public UInt32 IndexCount
         {
             get
             {
-                Int32 indexCount = 0;
+                UInt32 indexCount = 0;
 
                 for (Int32 i = 0; i < Meshes.Length; ++i)
                 {
@@ -80,18 +82,19 @@ namespace ps2ls.Assets.Dme
 
             Model model = new Model();
             model.Name = name;
-            
+
             //materials
+            model.Materials = new List<Material>();
             Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Materials);
 
             //bounding box
-            model.Min.X = binaryReader.ReadSingle();
-            model.Min.Y = binaryReader.ReadSingle();
-            model.Min.Z = binaryReader.ReadSingle();
+            model.min.X = binaryReader.ReadSingle();
+            model.min.Y = binaryReader.ReadSingle();
+            model.min.Z = binaryReader.ReadSingle();
 
-            model.Max.X = binaryReader.ReadSingle();
-            model.Max.Y = binaryReader.ReadSingle();
-            model.Max.Z = binaryReader.ReadSingle();
+            model.max.X = binaryReader.ReadSingle();
+            model.max.Y = binaryReader.ReadSingle();
+            model.max.Z = binaryReader.ReadSingle();
 
             //meshes
             UInt32 meshCount = binaryReader.ReadUInt32();
