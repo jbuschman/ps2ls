@@ -4,12 +4,13 @@ using System.IO;
 
 namespace ps2ls.Assets.Adr
 {
+    //Based on work by Herber Harrison @ http://sktest.aruarose.com/binxml.h
     public class Adr
     {
         public class Tag
         {
-            Byte ID { get; private set; }
-            Byte[] Data { get; private set; }
+            public Byte ID { get; private set; }
+            public Byte[] Data { get; private set; }
 
             private Tag()
             {
@@ -23,14 +24,35 @@ namespace ps2ls.Assets.Adr
 
                 tag.ID = binaryReader.ReadByte();
 
-                UInt32 size = binaryReader.ReadUInt32();
+                Byte b;
+                UInt32 size;
+
+                b = binaryReader.ReadByte();
+
+                if (b < 0x80)
+                {
+                    size = b;
+                }
+                else if (b == 0xFF)
+                {
+                    size = binaryReader.ReadUInt32();
+                }
+                else
+                {
+                    size = ((UInt32)b & 0x7F) << 8;
+
+                    b = binaryReader.ReadByte();
+
+                    size |= b;
+                }
+
                 tag.Data = binaryReader.ReadBytes((Int32)size);
 
                 return tag;
             }
         }
 
-        List<Tag> Tags { get; private set; }
+        public List<Tag> Tags { get; private set; }
 
         private Adr()
         {

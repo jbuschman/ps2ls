@@ -77,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Adr\Adr.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\ModelExporter.cs" />
     <Compile Include="Assets\Pack\PackManager.cs" />

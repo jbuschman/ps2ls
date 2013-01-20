@@ -194,7 +194,7 @@ namespace ps2ls.Graphics.Materials
             return count;
         }
 
-        public Boolean GetDataTypeAndStreamAndOffsetFromDataUsageAndUsageIndex(Entry.DataUsages dataUsage, Int32 usageIndex, out Entry.DataTypes dataType, out Int32 stream, out Int32 offset)
+        public Boolean GetEntryInfoFromDataUsageAndUsageIndex(Entry.DataUsages dataUsage, Int32 usageIndex, out Entry.DataTypes dataType, out Int32 stream, out Int32 offset)
         {
             dataType = Entry.DataTypes.None;
             stream = 0;
@@ -211,10 +211,9 @@ namespace ps2ls.Graphics.Materials
 
                 stream = (Int32)entry.Stream;
 
-                if (entry.DataUsage == dataUsage && usageIndex == 0)
+                if (entry.DataUsage == dataUsage && entry.DataUsageIndex == usageIndex)
                 {
                     dataType = entry.DataType;
-
                     return true;
                 }
 
@@ -223,9 +222,6 @@ namespace ps2ls.Graphics.Materials
 
                 //set previous stream for next iteration
                 previousStream = entry.Stream;
-
-                //decrement usage index
-                --usageIndex;
             }
 
             return false;
