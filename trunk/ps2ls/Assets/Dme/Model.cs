@@ -79,6 +79,7 @@ namespace ps2ls.Assets.Dme
             UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
 
             Model model = new Model();
+            model.Name = name;
             
             //materials
             Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Materials);

@@ -10,6 +10,12 @@ namespace ps2ls.IO
         private Byte msb;
         private Byte lsb;
 
+        public HalfSingle(Byte[] bytes, Int32 offset)
+        {
+            msb = bytes[offset + 0];
+            lsb = bytes[offset + 1];
+        }
+
         public HalfSingle(IEnumerable<Byte> bytes)
         {
             msb = bytes.ElementAt(0);

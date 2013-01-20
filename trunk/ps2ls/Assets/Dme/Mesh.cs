@@ -34,8 +34,6 @@ namespace ps2ls.Assets.Dme
         public VertexStream[] VertexStreams { get; private set; }
         public Byte[] IndexData { get; private set; }
 
-        public Vertex[] Vertices { get; private set; }
-        public UInt16[] Indices { get; private set; }
         public UInt32 MaterialIndex { get; set; }
         public UInt32 Unknown1 { get; set; }
         public UInt32 Unknown2 { get; set; }
@@ -49,13 +47,6 @@ namespace ps2ls.Assets.Dme
         {
             VertexCount = vertexCount;
             IndexCount = indexCount;
-            Vertices = new Vertex[vertexCount];
-            Indices = new UInt16[indexCount];
-
-            for (Int32 i = 0; i < vertexCount; ++i)
-            {
-                Vertices[i] = new Vertex();
-            }
         }
 
         public static Mesh LoadFromStreamWithVersion(Stream stream, UInt32 version, ICollection<Dma.Material> materials)

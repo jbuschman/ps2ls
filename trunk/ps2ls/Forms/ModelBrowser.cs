@@ -145,13 +145,15 @@ namespace ps2ls.Forms
 
             String vertexShaderSource = @"
 varying vec4 color;
+varying vec2 uv;
 
 void main(void)
 {
     gl_Position = ftransform();
 
-    color.xyz = (-gl_Normal * 0.5) + 0.5;
-    color.w = 1.0;
+    gl_TexCoord[0] = gl_MultiTexCoord0;
+
+    color = vec4(gl_TexCoord[0].xy, 0, 1);
 }
 ";
             String fragmentShaderSource = @"
@@ -288,7 +290,7 @@ void main(void)
                     VertexLayout.Entry.DataTypes positionDataType = VertexLayout.Entry.DataTypes.None;
                     Int32 positionStream = 0;
                     Int32 positionOffset = 0;
-                    bool positionExists = vertexLayout.GetDataTypeAndStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
+                    bool positionExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
 
                     if (positionExists)
                     {
@@ -302,7 +304,7 @@ void main(void)
                     VertexLayout.Entry.DataTypes normalDataType = VertexLayout.Entry.DataTypes.None;
                     Int32 normalStream = 0;
                     Int32 normalOffset = 0;
-                    bool normalExists = vertexLayout.GetDataTypeAndStreamAndOffsetFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
+                    bool normalExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
 
                     if (normalExists)
                     {
@@ -310,6 +312,36 @@ void main(void)
 
                         GL.EnableClientState(ArrayCap.NormalArray);
                         GL.NormalPointer(NormalPointerType.Float, mesh.VertexStreams[normalStream].BytesPerVertex, normalData + normalOffset);
+                    }
+
+                    //texture coordiantes
+                    VertexLayout.Entry.DataTypes texCoord0DataType = VertexLayout.Entry.DataTypes.None;
+                    Int32 texCoord0Stream = 0;
+                    Int32 texCoord0Offset = 0;
+                    bool texCoord0Exists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0Stream, out texCoord0Offset);
+
+                    if (texCoord0Exists)
+                    {
+                        IntPtr texCoord0Data = streamDataGCHandles[texCoord0Stream].AddrOfPinnedObject();
+
+                        GL.EnableClientState(ArrayCap.TextureCoordArray);
+
+                        TexCoordPointerType texCoord0PointerType;
+
+                        switch (texCoord0DataType)
+                        {
+                            case VertexLayout.Entry.DataTypes.Float2:
+                                texCoord0PointerType = TexCoordPointerType.Float;
+                                break;
+                            case VertexLayout.Entry.DataTypes.float16_2:
+                                texCoord0PointerType = TexCoordPointerType.HalfFloat;
+                                break;
+                            default:
+                                texCoord0PointerType = TexCoordPointerType.Float;
+                                break;
+                        }
+
+                        GL.TexCoordPointer(2, texCoord0PointerType, mesh.VertexStreams[texCoord0Stream].BytesPerVertex, texCoord0Data + texCoord0Offset);
                     }
 
                     //indices
@@ -331,8 +363,6 @@ void main(void)
                 GL.UseProgram(0);
 
                 GL.PopAttrib();
-
-                GL.PushMatrix();
 
                 //bounding box
                 if (showBoundingBoxButton.Checked)
