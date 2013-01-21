@@ -12,14 +12,14 @@ using ps2ls.Assets.Pack;
 
 namespace ps2ls.Forms
 {
-    public partial class PackBrowser : UserControl
+    public partial class AssetBrowser : UserControl
     {
         #region Singleton
-        private static PackBrowser instance = null;
+        private static AssetBrowser instance = null;
 
         public static void CreateInstance()
         {
-            instance = new PackBrowser();
+            instance = new AssetBrowser();
         }
 
         public static void DeleteInstance()
@@ -27,10 +27,10 @@ namespace ps2ls.Forms
             instance = null;
         }
 
-        public static PackBrowser Instance { get { return instance; } }
+        public static AssetBrowser Instance { get { return instance; } }
         #endregion
 
-        private PackBrowser()
+        private AssetBrowser()
         {
             InitializeComponent();
 
@@ -45,7 +45,7 @@ namespace ps2ls.Forms
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                PackManager.Instance.LoadBinaryFromPaths(packOpenFileDialog.FileNames);
+                AssetManager.Instance.LoadBinaryFromPaths(packOpenFileDialog.FileNames);
             }
         }
 
@@ -76,7 +76,7 @@ namespace ps2ls.Forms
                     }
                 }
 
-                PackManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -104,7 +104,7 @@ namespace ps2ls.Forms
                     assets.Add(file);
                 }
 
-                PackManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -163,7 +163,7 @@ namespace ps2ls.Forms
             {
                 if (DialogResult.Yes == MessageBox.Show(@"Do you want to load all *.pak files located in " + PS2LS.Instance.GameDirectory + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
                 {
-                    PackManager.Instance.LoadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
+                    AssetManager.Instance.LoadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
                 }
             }
         }
@@ -230,7 +230,7 @@ namespace ps2ls.Forms
             assetsDataGridView.ResumeLayout();
 
             fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + fileCount;
-            packCountLabel.Text = packs.Count + "/" + PackManager.Instance.Packs.Count;
+            packCountLabel.Text = packs.Count + "/" + AssetManager.Instance.Packs.Count;
         }
 
         private void assetsDataGridView_SelectionChanged(object sender, EventArgs e)
@@ -268,7 +268,7 @@ namespace ps2ls.Forms
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
 
-            foreach (KeyValuePair<Int32, Pack> pack in PackManager.Instance.Packs)
+            foreach (KeyValuePair<Int32, Pack> pack in AssetManager.Instance.Packs)
             {
                 packsListBox.Items.Add(pack.Value);
             }

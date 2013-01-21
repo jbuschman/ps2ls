@@ -23,7 +23,7 @@ namespace ps2ls
             Application.SetCompatibleTextRenderingDefault(false);
 
             PS2LS.CreateInstance();
-            PackManager.CreateInstance();
+            AssetManager.CreateInstance();
 
             AboutBox.CreateInstance();
             MainForm.CreateInstance();

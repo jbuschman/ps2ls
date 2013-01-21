@@ -362,35 +362,35 @@ void main(void)
 
                 GL.PopAttrib();
 
-                //bounding box
-                if (showBoundingBoxButton.Checked)
-                {
-                    GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
+                ////bounding box
+                //if (showBoundingBoxButton.Checked)
+                //{
+                //    GL.PushAttrib(AttribMask.CurrentBit | AttribMask.EnableBit);
 
-                    GL.Color3(Color.Red);
+                //    GL.Color3(Color.Red);
 
-                    GL.Enable(EnableCap.DepthTest);
+                //    GL.Enable(EnableCap.DepthTest);
 
-                    Vector3 min = model.Min;
-                    Vector3 max = model.Max;
-                    Vector3[] vertices = new Vector3[8];
-                    UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
+                //    Vector3 min = model.Min;
+                //    Vector3 max = model.Max;
+                //    Vector3[] vertices = new Vector3[8];
+                //    UInt32[] indices = { 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 };
 
-                    vertices[0] = min;
-                    vertices[1] = new Vector3(max.X, min.Y, min.Z);
-                    vertices[2] = new Vector3(max.X, min.Y, max.Z);
-                    vertices[3] = new Vector3(min.X, min.Y, max.Z);
-                    vertices[4] = new Vector3(min.X, max.Y, min.Z);
-                    vertices[5] = new Vector3(max.X, max.Y, min.Z);
-                    vertices[6] = max;
-                    vertices[7] = new Vector3(min.X, max.Y, max.Z);
+                //    vertices[0] = min;
+                //    vertices[1] = new Vector3(max.X, min.Y, min.Z);
+                //    vertices[2] = new Vector3(max.X, min.Y, max.Z);
+                //    vertices[3] = new Vector3(min.X, min.Y, max.Z);
+                //    vertices[4] = new Vector3(min.X, max.Y, min.Z);
+                //    vertices[5] = new Vector3(max.X, max.Y, min.Z);
+                //    vertices[6] = max;
+                //    vertices[7] = new Vector3(min.X, max.Y, max.Z);
 
-                    GL.EnableClientState(ArrayCap.VertexArray);
-                    GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
-                    GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
+                //    GL.EnableClientState(ArrayCap.VertexArray);
+                //    GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+                //    GL.DrawRangeElements(BeginMode.Lines, 0, 23, 24, DrawElementsType.UnsignedInt, indices);
 
-                    GL.PopAttrib();
-                }
+                //    GL.PopAttrib();
+                //}
             }
 
             glControl1.SwapBuffers();
@@ -401,15 +401,6 @@ void main(void)
             glControl1.CreateGraphics();
 
             createShaderProgram();
-
-            //load material definitions
-            //TODO move elsewhere
-            MemoryStream memoryStream = PackManager.Instance.CreateAssetMemoryStreamByName("materials_3.xml");
-
-            if(memoryStream != null)
-            {
-                MaterialDefinitionManager.Instance.LoadFromStream(memoryStream);
-            }
 
             Application.Idle += applicationIdle;
         }
@@ -452,7 +443,7 @@ void main(void)
             List<Asset> assets = new List<Asset>();
             List<Asset> dmes = null;
 
-            PackManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
+            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
 
             if (dmes != null)
             {

@@ -24,6 +24,7 @@ namespace ps2ls.Assets.Dme
         public Vector3 Max { get { return max; } }
         public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
+        public List<String> Textures { get; private set; }
 
         #region Attributes
         public UInt32 VertexCount
@@ -70,22 +71,23 @@ namespace ps2ls.Assets.Dme
             {
                 return null;
             }
+            Model model = new Model();
 
-            UInt32 dmodVersion = binaryReader.ReadUInt32();
+            model.Version = binaryReader.ReadUInt32();
 
-            if (dmodVersion != 3 && dmodVersion != 4)
+            if (model.Version != 3 && model.Version != 4)
             {
                 return null;
             }
 
             UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
 
-            Model model = new Model();
             model.Name = name;
 
             //materials
+            model.Textures = new List<String>();
             model.Materials = new List<Material>();
-            Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Materials);
+            Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Textures, model.Materials);
 
             //bounding box
             model.min.X = binaryReader.ReadSingle();
@@ -103,7 +105,7 @@ namespace ps2ls.Assets.Dme
 
             for (Int32 i = 0; i < meshCount; ++i)
             {
-                Mesh mesh = Mesh.LoadFromStreamWithVersion(binaryReader.BaseStream, dmodVersion, model.Materials);
+                Mesh mesh = Mesh.LoadFromStreamWithVersion(binaryReader.BaseStream, model.Version, model.Materials);
 
                 if (mesh != null)
                 {

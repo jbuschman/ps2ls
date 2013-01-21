@@ -153,7 +153,7 @@ namespace ps2ls.Assets.Pack
                 fileStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
                 fileStream.Read(buffer, 0, (int)asset.Size);
 
-                FileStream file = new FileStream(directory + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
+                FileStream file = new FileStream(directory + @"\" + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
                 file.Write(buffer, 0, (int)asset.Size);
                 file.Close();
             }

@@ -5,17 +5,18 @@ using System.Text;
 using System.IO;
 using System.ComponentModel;
 using ps2ls.Forms;
+using ps2ls.Graphics.Materials;
 
 namespace ps2ls.Assets.Pack
 {
-    class PackManager
+    class AssetManager
     {
         #region Singleton
-        private static PackManager instance = null;
+        private static AssetManager instance = null;
 
         public static void CreateInstance()
         {
-            instance = new PackManager();
+            instance = new AssetManager();
         }
 
         public static void DeleteInstance()
@@ -23,7 +24,7 @@ namespace ps2ls.Assets.Pack
             instance = null;
         }
 
-        public static PackManager Instance { get { return instance; } }
+        public static AssetManager Instance { get { return instance; } }
         #endregion
 
         public Dictionary<Int32, Pack> Packs { get; private set; }
@@ -34,7 +35,7 @@ namespace ps2ls.Assets.Pack
         private BackgroundWorker extractAllBackgroundWorker;
         private BackgroundWorker extractSelectionBackgroundWorker;
 
-        private PackManager()
+        private AssetManager()
         {
             Packs = new Dictionary<Int32, Pack>();
             AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
@@ -77,10 +78,25 @@ namespace ps2ls.Assets.Pack
         {
             loadingForm.Close();
 
-            PackBrowser.Instance.RefreshPacksListBox();
+            if (AssetBrowser.Instance != null)
+            {
+                AssetBrowser.Instance.RefreshPacksListBox();
+            }
 
-            ModelBrowser.Instance.Refresh();
-            MaterialBrowser.Instance.Refresh();
+            if (ModelBrowser.Instance != null)
+            {
+                ModelBrowser.Instance.Refresh();
+            }
+
+            if (MaterialBrowser.Instance != null)
+            {
+                MaterialBrowser.Instance.Refresh();
+            }
+
+            //if (memoryStream != null)
+            //{
+            //    MaterialDefinitionManager.Instance.LoadFromStream(memoryStream);
+            //}
         }
 
         private void loadProgressChanged(object sender, ProgressChangedEventArgs args)
@@ -173,6 +189,17 @@ namespace ps2ls.Assets.Pack
         private void extractAllDoWork(object sender, DoWorkEventArgs args)
         {
             extractAllToDirectory(sender, args.Argument);
+        }
+
+        public void ExtractAssetsByNamesToDirectory(IEnumerable<String> names, String directory)
+        {
+            foreach (Pack pack in Packs.Values)
+            {
+                foreach (String name in names)
+                {
+                    pack.ExtractAssetsByNameToDirectory(names, directory);
+                }
+            }
         }
 
         public void ExtractByAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
