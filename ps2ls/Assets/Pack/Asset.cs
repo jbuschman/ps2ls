@@ -73,6 +73,11 @@ namespace ps2ls.Assets.Pack
             Type = Types.Unknown;
         }
 
+        static Asset()
+        {
+            createTypeImages();
+        }
+
         public static Asset LoadBinary(Pack pack, Stream stream)
         {
             BinaryReaderBigEndian reader = new BinaryReaderBigEndian(stream);
@@ -106,40 +111,45 @@ namespace ps2ls.Assets.Pack
             return Name;
         }
 
-        private static Dictionary<Types, System.Drawing.Image> imageCache;
+        private static Dictionary<Types, System.Drawing.Image> typeImages;
+
         public static System.Drawing.Image GetImageFromType(Asset.Types type)
         {
-            if (imageCache == null)
+            return typeImages[type];
+
+        }
+
+        private static void createTypeImages()
+        {
+            if (typeImages != null)
+                return;
+
+            typeImages = new Dictionary<Types, System.Drawing.Image>();
+
+            foreach (Types type in Enum.GetValues(typeof(Types)))
             {
-                // populate the image cache
-                imageCache = new Dictionary<Types, System.Drawing.Image>();   
-                foreach (Types val in Enum.GetValues(typeof(Types)))
+                switch (type)
                 {
-                    switch (val)
-                    {
-                        case Asset.Types.DME:
-                            imageCache[val] = Properties.Resources.tree;
-                            break;
-                        case Asset.Types.DDS:
-                            imageCache[val] =  Properties.Resources.image;
-                            break;
-                        case Asset.Types.TXT:
-                            imageCache[val] =  Properties.Resources.document_tex;
-                            break;
-                        case Asset.Types.XML:
-                            imageCache[val] =  Properties.Resources.document_xaml;
-                            break;
-                        case Asset.Types.FSB:
-                            imageCache[val] =  Properties.Resources.music;
-                            break;
-                        default:
-                            imageCache[val] = Properties.Resources.question;
-                            break;
-                    }
+                    case Asset.Types.DME:
+                        typeImages[type] = Properties.Resources.tree;
+                        break;
+                    case Asset.Types.DDS:
+                        typeImages[type] = Properties.Resources.image;
+                        break;
+                    case Asset.Types.TXT:
+                        typeImages[type] = Properties.Resources.document_tex;
+                        break;
+                    case Asset.Types.XML:
+                        typeImages[type] = Properties.Resources.document_xaml;
+                        break;
+                    case Asset.Types.FSB:
+                        typeImages[type] = Properties.Resources.music;
+                        break;
+                    default:
+                        typeImages[type] = Properties.Resources.question;
+                        break;
                 }
             }
-            return imageCache[type];
-
         }
 
         [BrowsableAttribute(false)]
@@ -161,7 +171,7 @@ namespace ps2ls.Assets.Pack
                 return x.Name.CompareTo(y.Name);
             }
         }
-        public class LengthComparer : Comparer<Asset>
+        public class SizeComparer : Comparer<Asset>
         {
             public override int Compare(Asset x, Asset y)
             {
