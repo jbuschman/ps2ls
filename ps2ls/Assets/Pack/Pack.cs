@@ -17,7 +17,7 @@ namespace ps2ls.Assets.Pack
         public string Path { get; private set; }
 
         [BrowsableAttribute(false)]
-        public Dictionary<Int32, Asset> Assets { get; private set; }
+        public List<Asset> Assets { get; private set; }
 
         [DescriptionAttribute("The number of assets contained in this pack file.")]
         [ReadOnlyAttribute(true)]
@@ -31,7 +31,7 @@ namespace ps2ls.Assets.Pack
             {
                 UInt32 assetSize = 0;
 
-                foreach(Asset asset in Assets.Values)
+                foreach(Asset asset in Assets)
                 {
                     assetSize += asset.Size;
                 }
@@ -46,10 +46,12 @@ namespace ps2ls.Assets.Pack
             get { return System.IO.Path.GetFileName(Path); }
         }
 
+        public Dictionary<Int32, Asset> assetLookupCache = new Dictionary<Int32, Asset>();
+
         private Pack(String path)
         {
             Path = path;
-            Assets = new Dictionary<Int32, Asset>();
+            Assets = new List<Asset>();
         }
 
         public static Pack LoadBinary(string path)
@@ -82,7 +84,8 @@ namespace ps2ls.Assets.Pack
                 for (UInt32 i = 0; i < fileCount; ++i)
                 {
                     Asset file = Asset.LoadBinary(pack, binaryReader.BaseStream);
-                    pack.Assets.Add(file.Name.GetHashCode(), file);
+                    pack.assetLookupCache.Add(file.Name.GetHashCode(), file);
+                    pack.Assets.Add(file);
                 }
             }
             while (nextChunkAbsoluteOffset != 0);
@@ -105,15 +108,15 @@ namespace ps2ls.Assets.Pack
                 return false;
             }
 
-            foreach (KeyValuePair<Int32, Asset> asset in Assets)
+            foreach (Asset asset in Assets)
             {
-                byte[] buffer = new byte[(int)asset.Value.Size];
+                byte[] buffer = new byte[(int)asset.Size];
 
-                fileStream.Seek(asset.Value.AbsoluteOffset, SeekOrigin.Begin);
-                fileStream.Read(buffer, 0, (int)asset.Value.Size);
+                fileStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
+                fileStream.Read(buffer, 0, (int)asset.Size);
 
-                FileStream file = new FileStream(directory + @"\" + asset.Value.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
-                file.Write(buffer, 0, (int)asset.Value.Size);
+                FileStream file = new FileStream(directory + @"\" + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
+                file.Write(buffer, 0, (int)asset.Size);
                 file.Close();
             }
 
@@ -141,7 +144,7 @@ namespace ps2ls.Assets.Pack
             {
                 Asset asset = null;
                 
-                if(false == Assets.TryGetValue(name.GetHashCode(), out asset))
+                if(false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
                 {
                     // could not find file, skip.
                     continue;
@@ -179,7 +182,7 @@ namespace ps2ls.Assets.Pack
 
             Asset asset = null;
 
-            if (false == Assets.TryGetValue(name.GetHashCode(), out asset))
+            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
             {
                 fileStream.Close();
 
@@ -204,7 +207,7 @@ namespace ps2ls.Assets.Pack
         {
             Asset asset = null;
 
-            if (false == Assets.TryGetValue(name.GetHashCode(), out asset))
+            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
             {
                 return null;
             }

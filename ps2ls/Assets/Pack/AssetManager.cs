@@ -27,8 +27,11 @@ namespace ps2ls.Assets.Pack
         public static AssetManager Instance { get { return instance; } }
         #endregion
 
-        public Dictionary<Int32, Pack> Packs { get; private set; }
+        public List<Pack> Packs { get; private set; }
         public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
+
+        // Internal cache to check whether a pack has already been loaded
+        public Dictionary<Int32, Pack> packLookupCache = new Dictionary<Int32, Pack>();
 
         private GenericLoadingForm loadingForm;
         private BackgroundWorker loadBackgroundWorker;
@@ -37,7 +40,7 @@ namespace ps2ls.Assets.Pack
 
         private AssetManager()
         {
-            Packs = new Dictionary<Int32, Pack>();
+            Packs = new List<Pack>();
             AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
 
             loadBackgroundWorker = new BackgroundWorker();
@@ -120,15 +123,16 @@ namespace ps2ls.Assets.Pack
                 String path = paths.ElementAt(i);
                 Pack pack = null;
 
-                if (Packs.TryGetValue(path.GetHashCode(), out pack) == false)
+                if (packLookupCache.TryGetValue(path.GetHashCode(), out pack) == false)
                 {
                     pack = Pack.LoadBinary(path);
 
                     if (pack != null)
                     {
-                        Packs.Add(path.GetHashCode(), pack);
+                        packLookupCache.Add(path.GetHashCode(), pack);
+                        Packs.Add(pack);
 
-                        foreach (Asset asset in pack.Assets.Values)
+                        foreach (Asset asset in pack.Assets)
                         {
                             if (false == AssetsByType.ContainsKey(asset.Type))
                             {
@@ -166,7 +170,7 @@ namespace ps2ls.Assets.Pack
 
             for (Int32 i = 0; i < Packs.Count; ++i)
             {
-                Pack pack = Packs.Values.ElementAt(i);
+                Pack pack = Packs.ElementAt(i);
 
                 pack.ExtractAllAssetsToDirectory(directory);
 
@@ -193,7 +197,7 @@ namespace ps2ls.Assets.Pack
 
         public void ExtractAssetsByNamesToDirectory(IEnumerable<String> names, String directory)
         {
-            foreach (Pack pack in Packs.Values)
+            foreach (Pack pack in Packs)
             {
                 foreach (String name in names)
                 {
@@ -250,7 +254,7 @@ namespace ps2ls.Assets.Pack
         {
             MemoryStream memoryStream = null;
 
-            foreach (Pack pack in Packs.Values)
+            foreach (Pack pack in Packs)
             {
                 memoryStream = pack.CreateAssetMemoryStreamByName(name);
 
