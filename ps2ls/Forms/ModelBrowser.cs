@@ -88,8 +88,6 @@ namespace ps2ls.Forms
             //Clear items after construction.
             modelsListBox.Items.Clear();
 
-            ModelExportForm.CreateInstance();
-
             Dock = DockStyle.Fill;
 
             backgroundColorDialog.Color = Color.FromArgb(32, 32, 32);
@@ -545,8 +543,9 @@ void main(void)
                 fileNames.Add(asset.Name);
             }
 
-            ModelExportForm.Instance.FileNames = fileNames;
-            ModelExportForm.Instance.ShowDialog();
+            ModelExportForm modelExportForm = new ModelExportForm();
+            modelExportForm.FileNames = fileNames;
+            modelExportForm.ShowDialog();
         }
 
         private void snapCameraToModel()
