@@ -16,6 +16,9 @@ namespace ps2ls.Graphics.Materials
         public static void CreateInstance()
         {
             instance = new MaterialDefinitionManager();
+
+            StringReader stringReader = new StringReader(Properties.Resources.materials_3);
+            instance.loadFromStringReader(stringReader);
         }
 
         public static void DeleteInstance()
@@ -35,16 +38,16 @@ namespace ps2ls.Graphics.Materials
             VertexLayouts = new Dictionary<UInt32, VertexLayout>();
         }
 
-        public void LoadFromStream(Stream stream)
+        private void loadFromStringReader(StringReader stringReader)
         {
-            if (stream == null)
+            if (stringReader == null)
                 return;
 
             XPathDocument document = null;
 
             try
             {
-                document = new XPathDocument(stream);
+                document = new XPathDocument(stringReader);
             }
             catch (Exception)
             {
@@ -109,6 +112,22 @@ namespace ps2ls.Graphics.Materials
                     VertexLayouts.Add(vertexLayout.NameHash, vertexLayout);
                 }
             }
+        }
+
+        public MaterialDefinition GetMaterialDefinitionFromHash(UInt32 materialDefinitionHash)
+        {
+            MaterialDefinition materialDefinition = null;
+
+            try
+            {
+                MaterialDefinitions.TryGetValue(materialDefinitionHash, out materialDefinition);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Material definition could not be found.");
+            }
+
+            return materialDefinition;
         }
     }
 }

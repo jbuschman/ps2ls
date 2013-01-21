@@ -7,9 +7,9 @@ namespace ps2ls.Assets.Dma
 {
     public static class Dma
     {
-        public static void LoadFromStream(Stream stream, ICollection<Material> materials)
+        public static void LoadFromStream(Stream stream, ICollection<String> textures, ICollection<Material> materials)
         {
-            if (stream == null || materials == null)
+            if (stream == null || textures == null || materials == null)
                 return;
 
             BinaryReader binaryReader = new BinaryReader(stream);
@@ -40,6 +40,8 @@ namespace ps2ls.Assets.Dma
 
                     String textureName = new String(buffer, startIndex, length);
                     startIndex = i + 1;
+
+                    textures.Add(textureName);
                 }
             }
 

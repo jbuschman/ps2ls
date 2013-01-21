@@ -6,12 +6,13 @@ using System.Globalization;
 using OpenTK;
 using System.IO;
 using ps2ls.Graphics.Materials;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls.Assets.Dme
 {
     public class ModelExporter
     {
-        public enum ExportFormats
+        public enum ModelExportFormats
         {
             OBJ,
             STL
@@ -32,31 +33,55 @@ namespace ps2ls.Assets.Dme
 
         public struct ExportFormatOptions
         {
-            public ExportFormats Format;
+            public ModelExportFormats Format;
             public String Name;
             public ExportCapabilities Capabilities;
             public ExportOptions Options;
         }
 
-        public struct ExportOptions
+        public class ExportOptions
         {
             public Axes UpAxis;
             public Axes LeftAxis;
-            public Boolean FlipX;
-            public Boolean FlipY;
-            public Boolean FlipZ;
             public Boolean Normals;
             public Boolean TextureCoordinates;
             public Vector3 Scale;
+            public Boolean Textures;
+            public Boolean Package;
         }
 
-        private static Dictionary<ModelExporter.ExportFormats, ModelExporter.ExportFormatOptions> exportFormatOptions;
+        public struct ModelAxesPreset
+        {
+            public String Name;
+            public ModelExporter.Axes UpAxis;
+            public ModelExporter.Axes LeftAxis;
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        };
+
+        private static Axes getForwardAxis(Axes leftAxis, Axes upAxis)
+        {
+            if (leftAxis != Axes.X && upAxis != Axes.X)
+                return Axes.X;
+            else if (leftAxis != Axes.Y && upAxis != Axes.Y)
+                return Axes.Y;
+            else
+                return Axes.Z;
+        }
+
+        private static Dictionary<ModelExporter.ModelExportFormats, ModelExporter.ExportFormatOptions> exportFormatOptions;
+
+        public static List<ModelAxesPreset> ModelAxesPresets { get; private set; }
 
         static ModelExporter()
         {
-            exportFormatOptions = new Dictionary<ExportFormats, ExportFormatOptions>();
+            exportFormatOptions = new Dictionary<ModelExportFormats, ExportFormatOptions>();
 
             createExportFormatOptions();
+            createModelAxesPresets();
         }
 
         private static void createExportFormatOptions()
@@ -64,43 +89,81 @@ namespace ps2ls.Assets.Dme
             ModelExporter.ExportFormatOptions options = new ModelExporter.ExportFormatOptions();
 
             //obj
-            options.Format = ModelExporter.ExportFormats.OBJ;
+            options.Format = ModelExporter.ModelExportFormats.OBJ;
             options.Name = "Wavefront OBJ (*.obj)";
-            options.Capabilities.Normals = true;
+            options.Capabilities.Normals = false;
             options.Capabilities.TextureCoordinates = true;
+            options.Options = new ExportOptions();
             options.Options.Scale = Vector3.One;
-            options.Options.Normals = true;
+            options.Options.Normals = false;
             options.Options.TextureCoordinates = true;
-            exportFormatOptions.Add(ModelExporter.ExportFormats.OBJ, options);
+            options.Options.Package = false;
+            options.Options.Textures = false;
+            exportFormatOptions.Add(ModelExporter.ModelExportFormats.OBJ, options);
 
             //stl
-            options.Format = ModelExporter.ExportFormats.STL;
+            options.Format = ModelExporter.ModelExportFormats.STL;
             options.Name = "Stereolithography (*.stl)";
             options.Capabilities.Normals = false;
             options.Capabilities.TextureCoordinates = false;
+            options.Options = new ExportOptions();
             options.Options.Scale = Vector3.One;
             options.Options.Normals = true;
             options.Options.TextureCoordinates = false;
-            exportFormatOptions.Add(ModelExporter.ExportFormats.STL, options);
+            options.Options.Package = false;
+            options.Options.Textures = false;
+            exportFormatOptions.Add(ModelExporter.ModelExportFormats.STL, options);
         }
 
-        public static void ExportToDirectory(Model model, string directory, ExportFormatOptions formatOptions)
+        private static void createModelAxesPresets()
+        {
+            ModelAxesPresets = new List<ModelAxesPreset>();
+
+            ModelAxesPreset modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Default";
+            modelAxesPreset.UpAxis = Axes.Y;
+            modelAxesPreset.LeftAxis = Axes.X;
+            ModelAxesPresets.Add(modelAxesPreset);
+
+            modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Autodesk® 3ds Max";
+            modelAxesPreset.UpAxis = Axes.Z;
+            modelAxesPreset.LeftAxis = Axes.Y;
+            ModelAxesPresets.Add(modelAxesPreset);
+        }
+
+        public static void ExportModelToDirectory(Model model, string directory, ExportFormatOptions formatOptions)
         {
             switch (formatOptions.Format)
             {
-                case ExportFormats.OBJ:
-                    exportAsOBJToDirectory(model, directory, formatOptions.Options);
+                case ModelExportFormats.OBJ:
+                    exportModelAsOBJToDirectory(model, directory, formatOptions.Options);
                     break;
-                case ExportFormats.STL:
-                    exportAsSTLToDirectory(model, directory, formatOptions.Options);
+                case ModelExportFormats.STL:
+                    exportModelAsSTLToDirectory(model, directory, formatOptions.Options);
                     break;
             }
         }
 
-        private static void exportAsOBJToDirectory(Model model, string directory, ExportOptions options)
+        private static void exportModelAsOBJToDirectory(Model model, string directory, ExportOptions options)
         {
             NumberFormatInfo format = new NumberFormatInfo();
             format.NumberDecimalSeparator = ".";
+
+            if (options.Package)
+            {
+                try
+                {
+                    DirectoryInfo directoryInfo = Directory.CreateDirectory(directory + @"\" + Path.GetFileNameWithoutExtension(model.Name));
+                    directory = directoryInfo.FullName;
+                }
+                catch (Exception) { }
+            }
+
+            if (options.Textures)
+            {
+                AssetManager.Instance.ExtractAssetsByNamesToDirectory(model.Textures, directory);
+            }
 
             String path = directory + @"\" + Path.GetFileNameWithoutExtension(model.Name) + ".obj";
 
@@ -127,22 +190,54 @@ namespace ps2ls.Assets.Dme
                 {
                     Vector3 position;
 
-                    position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
-                    position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
-                    position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
+                    position.X = BitConverter.ToSingle(positionStream.Data, positionOffset + (positionStream.BytesPerVertex * j) + 0);
+                    position.Y = BitConverter.ToSingle(positionStream.Data, positionOffset + (positionStream.BytesPerVertex * j) + 4);
+                    position.Z = BitConverter.ToSingle(positionStream.Data, positionOffset + (positionStream.BytesPerVertex * j) + 8);
+
+                    switch (options.LeftAxis)
+                    {
+                        case Axes.X:
+                            position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
+                            break;
+                        case Axes.Y:
+                            position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
+                            break;
+                        case Axes.Z:
+                            position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
+                            break;
+                    }
+
+                    switch (options.UpAxis)
+                    {
+                        case Axes.X:
+                            position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
+                            break;
+                        case Axes.Y:
+                            position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
+                            break;
+                        case Axes.Z:
+                            position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
+                            break;
+                    }
+
+                    Axes forwardAxis = getForwardAxis(options.LeftAxis, options.UpAxis);
+
+                    switch (forwardAxis)
+                    {
+                        case Axes.X:
+                            position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
+                            break;
+                        case Axes.Y:
+                            position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
+                            break;
+                        case Axes.Z:
+                            position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
+                            break;
+                    }
 
                     position.X *= options.Scale.X;
                     position.Y *= options.Scale.Y;
                     position.Z *= options.Scale.Z;
-
-                    if (options.FlipX)
-                        position.X *= -1;
-
-                    if (options.FlipY)
-                        position.Y *= -1;
-
-                    if (options.FlipZ)
-                        position.Z *= -1;
 
                     streamWriter.WriteLine("v " + position.X.ToString(format) + " " + position.Y.ToString(format) + " " + position.Z.ToString(format));
                 }
@@ -242,7 +337,7 @@ namespace ps2ls.Assets.Dme
             streamWriter.Close();
         }
 
-        private static void exportAsSTLToDirectory(Model model, string directory, ExportOptions options)
+        private static void exportModelAsSTLToDirectory(Model model, string directory, ExportOptions options)
         {
             //NumberFormatInfo format = new NumberFormatInfo();
             //format.NumberDecimalSeparator = ".";
@@ -282,7 +377,7 @@ namespace ps2ls.Assets.Dme
             //streamWriter.Close();
         }
 
-        public static ExportFormatOptions GetExportFormatOptionsByFormat(ExportFormats format)
+        public static ExportFormatOptions GetExportFormatOptionsByFormat(ModelExportFormats format)
         {
             return exportFormatOptions[format];
         }

@@ -50,13 +50,23 @@ namespace ps2ls.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PackBrowser.CreateInstance();
+            AssetBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
-            MaterialBrowser.CreateInstance();
 
-            tabControl1.TabPages[0].Controls.Add(PackBrowser.Instance);
-            tabControl1.TabPages[1].Controls.Add(ModelBrowser.Instance);
-            tabControl1.TabPages[2].Controls.Add(MaterialBrowser.Instance);
+            ImageList imageList = new ImageList();
+            imageList.Images.Add(Properties.Resources.box_small);
+            imageList.Images.Add(Properties.Resources.tree_small);
+            tabControl1.ImageList = imageList;
+
+            TabPage assetBrowserTabPage = new TabPage("Asset Browser");
+            assetBrowserTabPage.Controls.Add(AssetBrowser.Instance);
+            assetBrowserTabPage.ImageIndex = 0;
+            tabControl1.TabPages.Add(assetBrowserTabPage);
+
+            TabPage modelBrowserTabPage = new TabPage("Model Browser");
+            modelBrowserTabPage.Controls.Add(ModelBrowser.Instance);
+            modelBrowserTabPage.ImageIndex = 1;
+            tabControl1.TabPages.Add(modelBrowserTabPage);
         }
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)

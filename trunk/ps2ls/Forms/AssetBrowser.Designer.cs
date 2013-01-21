@@ -1,6 +1,6 @@
 ﻿namespace ps2ls.Forms
 {
-    partial class PackBrowser
+    partial class AssetBrowser
     {
         /// <summary> 
         /// Required designer variable.

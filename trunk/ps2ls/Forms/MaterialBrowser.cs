@@ -169,7 +169,7 @@ namespace ps2ls.Forms
             List<Asset> assets = new List<Asset>();
             List<Asset> dmas = null;
 
-            PackManager.Instance.AssetsByType.TryGetValue(Asset.Types.DMA, out dmas);
+            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DMA, out dmas);
 
             if (dmas != null)
             {
