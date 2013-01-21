@@ -71,7 +71,7 @@ namespace ps2ls.Forms
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(PS2LS.Instance.ProjectNewIssueURL);
+            System.Diagnostics.Process.Start(Properties.Settings.Default.ProjectNewIssueURL);
         }
     }
 }
