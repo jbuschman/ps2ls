@@ -34,7 +34,7 @@ namespace ps2ls.Forms
         {
             InitializeComponent();
 
-            packOpenFileDialog.InitialDirectory = Properties.Settings.Default.AssetLocation;
+            packOpenFileDialog.InitialDirectory = Properties.Settings.Default.AssetDirectory;
 
             Dock = DockStyle.Fill;
         }
@@ -159,11 +159,11 @@ namespace ps2ls.Forms
         {
             filesMaxComboBox.SelectedIndex = 3; //infinity
 
-            if (Properties.Settings.Default.AssetLocation != String.Empty)
+            if (Properties.Settings.Default.AssetDirectory != String.Empty)
             {
-                if (DialogResult.Yes == MessageBox.Show(@"Would you like to load all *.pak files located in " + Properties.Settings.Default.AssetLocation + "?", "ps2ls", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
+                if (DialogResult.Yes == MessageBox.Show(@"Would you like to load all *.pak files located in " + Properties.Settings.Default.AssetDirectory + "?", "ps2ls", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
                 {
-                    AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetLocation);
+                    AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
                 }
             }
         }

@@ -61,7 +61,7 @@ namespace ps2ls.Assets.Pack
 
         public void LoadBinaryFromDirectory(string directory)
         {
-            IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetLocation, "*.pack", SearchOption.TopDirectoryOnly);
+            IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetDirectory, "*.pack", SearchOption.TopDirectoryOnly);
 
             LoadBinaryFromPaths(files);
         }
