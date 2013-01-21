@@ -16,23 +16,7 @@ namespace ps2ls.Forms
 {
     public partial class ModelExportForm : Form
     {
-        #region Singleton
-        private static ModelExportForm instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new ModelExportForm();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static ModelExportForm Instance { get { return instance; } }
-        #endregion
-
-        private ModelExportForm()
+        public ModelExportForm()
         {
             InitializeComponent();
         }
@@ -191,7 +175,7 @@ namespace ps2ls.Forms
             leftAxisComboBox.SelectedIndex = 0;
             textureFormatComboBox.SelectedIndex = 0;
 
-            packageToolTip.SetToolTip(packageCheckBox, "When checked, all exported assets will be exported to their own directory.");
+            packageToolTip.SetToolTip(packageCheckBox, "When checked, assets will be exported into their own directory.");
         }
 
         private void loadModelFormatComboBox()

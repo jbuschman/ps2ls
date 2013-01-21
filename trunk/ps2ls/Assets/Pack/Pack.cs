@@ -137,7 +137,6 @@ namespace ps2ls.Assets.Pack
                 return false;
             }
 
-
             foreach(String name in names)
             {
                 Asset asset = null;
