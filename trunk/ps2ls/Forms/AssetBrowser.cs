@@ -70,10 +70,7 @@ namespace ps2ls.Forms
                     }
                     catch (Exception) { continue; }
 
-                    foreach (Asset file in pack.Assets.Values)
-                    {
-                        assets.Add(file);
-                    }
+                    assets.AddRange(pack.Assets);
                 }
 
                 AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
@@ -188,46 +185,41 @@ namespace ps2ls.Forms
                 rowMax = Int32.MaxValue;
             }
 
-            Int32 fileCount = 0;
+            Int32 totalFileCount = 0;
 
             // Rather than adding the rows one at a time, do it in a batch
             List<System.Windows.Forms.DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
 
-            for (Int32 j = 0; j < packs.Count; ++j)
+            foreach (Pack pack in packs)
             {
-                Pack pack = null;
+                totalFileCount += pack.Assets.Count;
 
-                try
+                foreach (Asset asset in pack.Assets)
                 {
-                    pack = (Pack)packs[j];
-                }
-                catch (InvalidCastException) { continue; }
-
-                for (Int32 i = 0; i < pack.Assets.Values.Count; ++i)
-                {
-                    if (fileCount >= rowMax)
-                    {
-                        break;
-                    }
-
-                    ++fileCount;
-
-                    Asset file = pack.Assets.Values.ElementAt(i);
-
-                    if (file.Name.ToLower().Contains(searchTextBox.Text.ToLower()) == false)
+                    if (asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()) == false)
                     {
                         continue;
                     }
 
-                    String extension = System.IO.Path.GetExtension(file.Name);
+                    String extension = System.IO.Path.GetExtension(asset.Name);
 
-                    Image icon = Asset.GetImageFromType(file.Type);
+                    Image icon = Asset.GetImageFromType(asset.Type);
 
                     DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(assetsDataGridView, new object[] { icon, file.Name, file.Type, file.Size / 1024 });
-                    row.Tag = file;
+                    row.CreateCells(assetsDataGridView, new object[] { icon, asset.Name, asset.Type, asset.Size / 1024 });
+                    row.Tag = asset;
 
                     rowsToBeAdded.Add(row);
+
+                    if (rowsToBeAdded.Count >= rowMax)
+                    {
+                        break;
+                    }
+                }
+
+                if (rowsToBeAdded.Count >= rowMax)
+                {
+                    break;
                 }
             }
 
@@ -236,7 +228,7 @@ namespace ps2ls.Forms
             assetsDataGridView.ResumeLayout();
             Cursor.Current = Cursors.Default;
 
-            fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + fileCount;
+            fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + totalFileCount;
             packCountLabel.Text = packs.Count + "/" + AssetManager.Instance.Packs.Count;
         }
 
@@ -275,9 +267,9 @@ namespace ps2ls.Forms
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
 
-            foreach (KeyValuePair<Int32, Pack> pack in AssetManager.Instance.Packs)
+            foreach (Pack pack in AssetManager.Instance.Packs)
             {
-                packsListBox.Items.Add(pack.Value);
+                packsListBox.Items.Add(pack);
             }
         }
     }
