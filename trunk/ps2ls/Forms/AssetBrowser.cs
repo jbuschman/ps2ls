@@ -170,6 +170,7 @@ namespace ps2ls.Forms
 
         private void refreshAssetsDataGridView()
         {
+            Cursor.Current = Cursors.WaitCursor;
             assetsDataGridView.SuspendLayout();
 
             assetsDataGridView.Rows.Clear();
@@ -189,6 +190,9 @@ namespace ps2ls.Forms
 
             Int32 fileCount = 0;
 
+            // Rather than adding the rows one at a time, do it in a batch
+            List<System.Windows.Forms.DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
+
             for (Int32 j = 0; j < packs.Count; ++j)
             {
                 Pack pack = null;
@@ -203,7 +207,7 @@ namespace ps2ls.Forms
                 {
                     if (fileCount >= rowMax)
                     {
-                        continue;
+                        break;
                     }
 
                     ++fileCount;
@@ -223,11 +227,14 @@ namespace ps2ls.Forms
                     row.CreateCells(assetsDataGridView, new object[] { icon, file.Name, file.Type, file.Size / 1024 });
                     row.Tag = file;
 
-                    assetsDataGridView.Rows.Add(row);
+                    rowsToBeAdded.Add(row);
                 }
             }
 
+            assetsDataGridView.Rows.AddRange(rowsToBeAdded.ToArray());
+
             assetsDataGridView.ResumeLayout();
+            Cursor.Current = Cursors.Default;
 
             fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + fileCount;
             packCountLabel.Text = packs.Count + "/" + AssetManager.Instance.Packs.Count;
