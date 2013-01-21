@@ -161,7 +161,7 @@ namespace ps2ls.Forms
 
             if (PS2LS.Instance.GameDirectory != String.Empty)
             {
-                if (DialogResult.Yes == MessageBox.Show(@"Do you want to load all *.pak files located in " + PS2LS.Instance.GameDirectory + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
+                if (DialogResult.Yes == MessageBox.Show(@"Would you like to load all *.pak files located in " + PS2LS.Instance.GameDirectory + "?", "ps2ls", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
                 {
                     AssetManager.Instance.LoadBinaryFromDirectory(PS2LS.Instance.GameDirectory);
                 }
