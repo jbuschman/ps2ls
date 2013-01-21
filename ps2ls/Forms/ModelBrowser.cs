@@ -242,7 +242,8 @@ void main(void)
                 GL.End();
             }
 
-            if (model != null)
+            //TODO: Decide what to do with non-version 4 models.
+            if (model != null && model.Version == 4)
             {
                 GL.PushMatrix();
 

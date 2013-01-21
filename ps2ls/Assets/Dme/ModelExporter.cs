@@ -15,7 +15,7 @@ namespace ps2ls.Assets.Dme
         public enum ModelExportFormats
         {
             OBJ,
-            STL
+            //STL
         }
 
         public enum Axes
@@ -101,18 +101,19 @@ namespace ps2ls.Assets.Dme
             options.Options.Textures = false;
             exportFormatOptions.Add(ModelExporter.ModelExportFormats.OBJ, options);
 
-            //stl
-            options.Format = ModelExporter.ModelExportFormats.STL;
-            options.Name = "Stereolithography (*.stl)";
-            options.Capabilities.Normals = false;
-            options.Capabilities.TextureCoordinates = false;
-            options.Options = new ExportOptions();
-            options.Options.Scale = Vector3.One;
-            options.Options.Normals = true;
-            options.Options.TextureCoordinates = false;
-            options.Options.Package = false;
-            options.Options.Textures = false;
-            exportFormatOptions.Add(ModelExporter.ModelExportFormats.STL, options);
+            //TODO: Add STL support back once we can reliably get normals.
+            ////stl
+            //options.Format = ModelExporter.ModelExportFormats.STL;
+            //options.Name = "Stereolithography (*.stl)";
+            //options.Capabilities.Normals = false;
+            //options.Capabilities.TextureCoordinates = false;
+            //options.Options = new ExportOptions();
+            //options.Options.Scale = Vector3.One;
+            //options.Options.Normals = true;
+            //options.Options.TextureCoordinates = false;
+            //options.Options.Package = false;
+            //options.Options.Textures = false;
+            //exportFormatOptions.Add(ModelExporter.ModelExportFormats.STL, options);
         }
 
         private static void createModelAxesPresets()
@@ -139,14 +140,20 @@ namespace ps2ls.Assets.Dme
                 case ModelExportFormats.OBJ:
                     exportModelAsOBJToDirectory(model, directory, formatOptions.Options);
                     break;
-                case ModelExportFormats.STL:
-                    exportModelAsSTLToDirectory(model, directory, formatOptions.Options);
-                    break;
+                //case ModelExportFormats.STL:
+                //    exportModelAsSTLToDirectory(model, directory, formatOptions.Options);
+                //    break;
             }
         }
 
         private static void exportModelAsOBJToDirectory(Model model, string directory, ExportOptions options)
         {
+            //TODO: Figure out what to do with non-version 4 models.
+            if (model != null && model.Version != 4)
+            {
+                return;
+            }
+
             NumberFormatInfo format = new NumberFormatInfo();
             format.NumberDecimalSeparator = ".";
 

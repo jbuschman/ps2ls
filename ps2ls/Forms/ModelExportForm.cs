@@ -121,15 +121,17 @@ namespace ps2ls.Forms
 
         private void exportButton_Click(object sender, EventArgs e)
         {
+            exportCurrentStateToExportOptions();
+
             if (exportFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                ModelExporter.ExportFormatOptions exportOptions = ModelExporter.GetExportFormatOptionsByFormat((ModelExporter.ModelExportFormats)modelFormatComboBox.SelectedIndex);
+                ModelExporter.ExportFormatOptions exportFormatOptions = ModelExporter.GetExportFormatOptionsByFormat((ModelExporter.ModelExportFormats)modelFormatComboBox.SelectedIndex);
 
                 List<object> argument = new List<object>()
                 {
                     exportFolderBrowserDialog.SelectedPath,
                     FileNames,
-                    exportOptions
+                    exportFormatOptions
                 };
 
                 loadingForm = new GenericLoadingForm();
@@ -281,6 +283,19 @@ namespace ps2ls.Forms
         {
             leftAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.LeftAxis;
             upAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.UpAxis;
+        }
+
+        private void exportCurrentStateToExportOptions()
+        {
+            exportOptions.LeftAxis = (ModelExporter.Axes)leftAxisComboBox.SelectedIndex;
+            exportOptions.Normals = normalsCheckBox.Checked;
+            exportOptions.Package = packageCheckBox.Checked;
+            exportOptions.Scale.X = (Single)xScaleNumericUpDown.Value;
+            exportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
+            exportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
+            exportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
+            exportOptions.Textures = texturesCheckBox.Checked;
+            exportOptions.UpAxis = (ModelExporter.Axes)upAxisComboBox.SelectedIndex;
         }
     }
 }
