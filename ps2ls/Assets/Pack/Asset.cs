@@ -106,23 +106,40 @@ namespace ps2ls.Assets.Pack
             return Name;
         }
 
+        private static Dictionary<Types, System.Drawing.Image> imageCache;
         public static System.Drawing.Image GetImageFromType(Asset.Types type)
         {
-            switch (type)
+            if (imageCache == null)
             {
-                case Asset.Types.DME:
-                    return Properties.Resources.tree;
-                case Asset.Types.DDS:
-                    return Properties.Resources.image;
-                case Asset.Types.TXT:
-                    return Properties.Resources.document_tex;
-                case Asset.Types.XML:
-                    return Properties.Resources.document_xaml;
-                case Asset.Types.FSB:
-                    return Properties.Resources.music;
+                // populate the image cache
+                imageCache = new Dictionary<Types, System.Drawing.Image>();   
+                foreach (Types val in Enum.GetValues(typeof(Types)))
+                {
+                    switch (val)
+                    {
+                        case Asset.Types.DME:
+                            imageCache[val] = Properties.Resources.tree;
+                            break;
+                        case Asset.Types.DDS:
+                            imageCache[val] =  Properties.Resources.image;
+                            break;
+                        case Asset.Types.TXT:
+                            imageCache[val] =  Properties.Resources.document_tex;
+                            break;
+                        case Asset.Types.XML:
+                            imageCache[val] =  Properties.Resources.document_xaml;
+                            break;
+                        case Asset.Types.FSB:
+                            imageCache[val] =  Properties.Resources.music;
+                            break;
+                        default:
+                            imageCache[val] = Properties.Resources.question;
+                            break;
+                    }
+                }
             }
+            return imageCache[type];
 
-            return Properties.Resources.question;
         }
 
         [BrowsableAttribute(false)]
