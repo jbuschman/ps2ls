@@ -10,32 +10,6 @@ namespace ps2ls.Assets.Pack
 {
     public class Asset
     {
-        private static String[] typeStrings =
-        {
-            ".adr",
-            ".agr",
-            ".cdt",
-            ".cnk0",
-            ".cnk1",
-            ".cnk2",
-            ".cnk3",
-            ".crc",
-            ".dds",
-            ".dma",
-            ".dme",
-            ".dmv",
-            ".dsk",
-            ".eco",
-            ".fsb",
-            ".fxo",
-            ".gfx",
-            ".lst",
-            ".nsa",
-            ".txt",
-            ".xml",
-            ".zone"
-        };
-
         public enum Types
         {
             ADR,
@@ -69,7 +43,6 @@ namespace ps2ls.Assets.Pack
             Name = String.Empty;
             Size = 0;
             AbsoluteOffset = 0;
-            Extension = String.Empty;
             Type = Types.Unknown;
         }
 
@@ -90,18 +63,21 @@ namespace ps2ls.Assets.Pack
             asset.Size = reader.ReadUInt32();
             asset.Crc32 = reader.ReadUInt32();
 
-            String extension = Path.GetExtension(asset.Name);
-
-            for (Int32 i = 0; i < typeStrings.Length; ++i)
+            // Set the type of the asset based on the extension
             {
-                if (extension.ToLower() == typeStrings[i])
+                // First get the extension without the leading '.'
+                string extension = Path.GetExtension(asset.Name).Substring(1);
+                try
                 {
-                    asset.Type = (Asset.Types)(i);
-                    break;
+                    asset.Type = (Asset.Types)Enum.Parse(typeof(Types), extension, true);
+                }
+                catch (System.ArgumentException exception)
+                {
+                    // This extension isn't mapped in the enum
+                    System.Diagnostics.Debug.Write(exception.ToString());
+                    asset.Type = Types.Unknown;
                 }
             }
-
-            asset.Extension = Path.GetExtension(asset.Name).Trim(new char[] { '.' }).ToUpper();
 
             return asset;
         }
@@ -116,7 +92,6 @@ namespace ps2ls.Assets.Pack
         public static System.Drawing.Image GetImageFromType(Asset.Types type)
         {
             return typeImages[type];
-
         }
 
         private static void createTypeImages()
@@ -159,8 +134,6 @@ namespace ps2ls.Assets.Pack
         public UInt32 Size { get; private set; }
         public UInt32 AbsoluteOffset { get; private set; }
         public UInt32 Crc32 { get; private set; }
-
-        public String Extension { get; private set; }
 
         public Asset.Types Type { get; private set; }
 
