@@ -22,7 +22,7 @@ namespace ps2ls
             if (Properties.Settings.Default.AssetLocation == String.Empty)
             {
                 // No valid location, try to work it out from the registry
-                Properties.Settings.Default.AssetLocation = GetDefaultAssetLocation();
+                Properties.Settings.Default.AssetLocation = getDefaultAssetLocation();
                 Properties.Settings.Default.Save();
             }
             else
@@ -49,7 +49,7 @@ namespace ps2ls
         /// <summary>
         /// Try to extract the location of the Pack files by looking in the registry at the 2 different kinds of installations.
         /// </summary>
-        static private string GetDefaultAssetLocation()
+        static private string getDefaultAssetLocation()
         {
             Microsoft.Win32.RegistryKey key = null;
 
