@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using ps2ls.Assets.Pack;
 using ps2ls.Forms;
 using ps2ls.Graphics.Materials;
+using Microsoft.Win32;
 
 namespace ps2ls
 {
@@ -19,19 +20,19 @@ namespace ps2ls
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Setup the asset location
-            if (Properties.Settings.Default.AssetLocation == String.Empty)
+            if (Properties.Settings.Default.AssetDirectory == String.Empty)
             {
                 // No valid location, try to work it out from the registry
-                Properties.Settings.Default.AssetLocation = getDefaultAssetLocation();
+                Properties.Settings.Default.AssetDirectory = getDefaultAssetDirectory();
                 Properties.Settings.Default.Save();
             }
             else
             {
                 // Make sure the saved asset location still exists
-                if (!Directory.Exists(Properties.Settings.Default.AssetLocation))
+                if (!Directory.Exists(Properties.Settings.Default.AssetDirectory))
                 {
-                    // Dir doesn't exist, wipe the setting.
-                    Properties.Settings.Default.AssetLocation = "";
+                    // Directory doesn't exist, wipe the setting.
+                    Properties.Settings.Default.AssetDirectory = "";
                     Properties.Settings.Default.Save();
                 }
             }
@@ -47,43 +48,42 @@ namespace ps2ls
         }
 
         /// <summary>
-        /// Try to extract the location of the Pack files by looking in the registry at the 2 different kinds of installations.
+        /// Try to get the Planetside 2 asset directory by looking in the registry for Planetside 2 installation directories.
         /// </summary>
-        static private string getDefaultAssetLocation()
+        private static string getDefaultAssetDirectory()
         {
-            Microsoft.Win32.RegistryKey key = null;
+            RegistryKey key = null;
 
             // non-steam install
-            key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\App Paths\LaunchPad.exe");
+            key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\App Paths\LaunchPad.exe");
 
             if (key != null && key.GetValue("") != null)
             {
-                string defaultDir;
-                defaultDir = key.GetValue("").ToString();
-                defaultDir = Path.GetDirectoryName(defaultDir) + @"\Resources\Assets";
+                String defaultDirectory;
+                defaultDirectory = key.GetValue("").ToString();
+                defaultDirectory = Path.GetDirectoryName(defaultDirectory) + @"\Resources\Assets";
 
-                if (Directory.Exists(defaultDir))
+                if (Directory.Exists(defaultDirectory))
                 {
-                    return defaultDir;
+                    return defaultDirectory;
                 }
             }
 
             // steam install
-            key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 218230");
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 218230");
 
             if (key != null && key.GetValue("InstallLocation") != null)
             {
-                string defaultDir;
-                defaultDir = key.GetValue("InstallLocation").ToString();
-                defaultDir += @"\Resources\Assets";
+                String defaultDirectory;
+                defaultDirectory = key.GetValue("InstallLocation").ToString();
+                defaultDirectory += @"\Resources\Assets";
 
-                if (Directory.Exists(defaultDir))
+                if (Directory.Exists(defaultDirectory))
                 {
-                    return defaultDir;
+                    return defaultDirectory;
                 }
             }
 
-            // Unable to guess a default dir
             return String.Empty;
         }
     }
