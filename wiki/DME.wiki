@@ -136,6 +136,10 @@ unsigned short* indices;
 == BONE ==
 
 {{{
+unsigned int bone_map_count;
+}}}
+
+{{{
 struct bone_map
 {
     unsigned int unknown_0;
@@ -148,6 +152,10 @@ struct bone_map
     unsigned int unknown_2;
     unsigned int index_count;
 };
+}}}
+
+{{{
+unsigned int bone_map_entry_count;
 }}}
 
 {{{
