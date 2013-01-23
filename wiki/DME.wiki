@@ -133,5 +133,27 @@ unsigned short* indices;
 
 `indices` is a block of contiguous indices of length `mesh_t::index_count * sizeof(unsigned short)` that index into the vertex array.  Each sequential set of 3 indices define a triangle of the mesh in a clockwise winding order.
 ----
-==UNKNOWN1==
-Immediately following the `MESH` entries, there is a block of unknown data of a variable length we will call `UNKNOWN1`.
+== BONE ==
+
+{{{
+struct bone_map
+{
+    unsigned int unknown_0;
+    unsigned int bone_start;
+    unsigned int bone_count;
+    unsigned int delta;
+    unsigned int unknown_1;
+    unsigned int bone_end;
+    unsigned int vertex_count;
+    unsigned int unknown_2;
+    unsigned int index_count;
+};
+}}}
+
+{{{
+struct bone_map_entry
+{
+    unsigned short bone_index;
+    unsigned short global_index;
+};
+}}}
