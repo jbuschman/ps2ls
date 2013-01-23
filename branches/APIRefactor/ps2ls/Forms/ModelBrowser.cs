@@ -517,7 +517,7 @@ void main(void)
             }
             catch (InvalidCastException) { return; }
 
-            System.IO.MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
+            System.IO.MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStream(asset);
 
             model = Model.LoadFromStream(asset.Name, memoryStream);
 

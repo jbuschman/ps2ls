@@ -169,7 +169,16 @@ namespace ps2ls.Assets.Dme
 
             if (options.Textures)
             {
-                AssetManager.Instance.ExtractAssetsByNamesToDirectory(model.Textures, directory);
+                // Build a list of assets from their names
+                IEnumerable<Asset> textureAssets = AssetManager.Instance.AssetsByType[Asset.Types.DDS].Where(a => model.Textures.Contains(a.Name));
+
+                Dictionary<Pack.Pack, IList<Asset>> sortedTextureAssets = Pack.Pack.GetAssetListSortedByPack(textureAssets);
+
+                // Now export all the textures
+                foreach (Pack.Pack pack in sortedTextureAssets.Keys)
+                {
+                    pack.ExtractAssetsToDirectory(sortedTextureAssets[pack], directory);
+                }
             }
 
             String path = directory + @"\" + Path.GetFileNameWithoutExtension(model.Name) + ".obj";
