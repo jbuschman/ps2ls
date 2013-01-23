@@ -138,19 +138,24 @@ namespace ps2ls.Forms
 
             //TODO: Use external shader source files.
             String vertexShaderSource = @"
+varying vec4 color;
+varying vec2 uv;
+
 void main(void)
 {
     gl_Position = ftransform();
 
     gl_TexCoord[0] = gl_MultiTexCoord0;
+
+    color = vec4(gl_TexCoord[0].xy, 0, 1);
 }
 ";
             String fragmentShaderSource = @"
-uniform samler2D colorMap;
+varying vec4 color;
 
 void main(void)
 {
-    gl_FragColor = texture2D(colorMap, gl_TexCoord[0].st);
+    gl_FragColor = color;
 }
 ";
 
@@ -246,7 +251,6 @@ void main(void)
 
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
-                GL.Enable(EnableCap.Texture2D);
                 GL.CullFace(CullFaceMode.Back);
                 GL.FrontFace(FrontFaceDirection.Cw);
 
@@ -518,21 +522,6 @@ void main(void)
             model = Model.LoadFromStream(asset.Name, memoryStream);
 
             ModelBrowserModelStats1.Model = model;
-
-            //TODO: Ghetto as fuck, fix it.
-            String textureString = null;
-            Int32 texture = 0;
-
-            if (model.TextureStrings.Count > 0)
-            {
-                textureString = model.TextureStrings[0];
-
-                MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(textureString);
-
-                texture = TextureManager.LoadFromStream(textureMemoryStream);
-            }
-
-            GL.BindTexture(TextureTarget.Texture2D, texture);
 
             snapCameraToModel();
         }

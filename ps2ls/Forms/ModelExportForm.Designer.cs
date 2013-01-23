@@ -391,16 +391,14 @@
             // textureFormatComboBox
             // 
             this.textureFormatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.textureFormatComboBox.Enabled = false;
             this.textureFormatComboBox.FormattingEnabled = true;
             this.textureFormatComboBox.Items.AddRange(new object[] {
-            "DirectDraw Surface (*.dds)",
-            "Portal Network Graphics (*.png)",
-            "Truevision TGA (*.tga)"});
+            "DirectDraw Surface (*.dds)"});
             this.textureFormatComboBox.Location = new System.Drawing.Point(114, 86);
             this.textureFormatComboBox.Name = "textureFormatComboBox";
             this.textureFormatComboBox.Size = new System.Drawing.Size(174, 21);
             this.textureFormatComboBox.TabIndex = 6;
-            this.textureFormatComboBox.SelectedIndexChanged += new System.EventHandler(this.textureFormatComboBox_SelectedIndexChanged);
             // 
             // packageCheckBox
             // 

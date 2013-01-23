@@ -24,7 +24,7 @@ namespace ps2ls.Assets.Dme
         public Vector3 Max { get { return max; } }
         public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
-        public List<String> TextureStrings { get; private set; }
+        public List<String> Textures { get; private set; }
 
         #region Attributes
         public UInt32 VertexCount
@@ -85,9 +85,9 @@ namespace ps2ls.Assets.Dme
             model.Name = name;
 
             //materials
-            model.TextureStrings = new List<String>();
+            model.Textures = new List<String>();
             model.Materials = new List<Material>();
-            Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.TextureStrings, model.Materials);
+            Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.Textures, model.Materials);
 
             //bounding box
             model.min.X = binaryReader.ReadSingle();
