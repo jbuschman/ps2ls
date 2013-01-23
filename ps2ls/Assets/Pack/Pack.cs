@@ -54,7 +54,7 @@ namespace ps2ls.Assets.Pack
             Assets = new List<Asset>();
         }
 
-        public static Pack LoadBinary(string path)
+        public static Pack LoadPackFromFile(string path)
         {
             Pack pack = new Pack(path);
             FileStream fileStream = null;
@@ -93,79 +93,45 @@ namespace ps2ls.Assets.Pack
             return pack;
         }
 
-        public Boolean ExtractAllAssetsToDirectory(String directory)
+
+        public override string ToString()
         {
-            FileStream fileStream = null;
-
-            try
-            {
-                fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-
-                return false;
-            }
-
-            foreach (Asset asset in Assets)
-            {
-                byte[] buffer = new byte[(int)asset.Size];
-
-                fileStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
-                fileStream.Read(buffer, 0, (int)asset.Size);
-
-                FileStream file = new FileStream(directory + @"\" + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
-                file.Write(buffer, 0, (int)asset.Size);
-                file.Close();
-            }
-
-            fileStream.Close();
-
-            return true;
+            return Name;
         }
 
-        public Boolean ExtractAssetsByNameToDirectory(IEnumerable<String> names, String directory)
+        /// <summary>
+        /// This will the asset object for the given asset name, or null if it doesn't exist in this pack
+        /// It will also pop up a message box if there is a failure.
+        /// </summary>
+        public Asset GetAssetByName(string name)
         {
-            FileStream fileStream = null;
+            return assetLookupCache[name.GetHashCode()];
+        }
 
-            try
+        /// <summary>
+        /// This will the asset object for the given asset name, or null if it doesn't exist in this pack
+        /// It will also pop up a message box if there is a failure.
+        /// REVIEW: Would this be better in AssetManager?
+        /// </summary>
+        public static Dictionary<Pack, IList<Asset>> GetAssetListSortedByPack(IEnumerable<Asset> assets)
+        {
+            Dictionary<Pack, IList<Asset>> sortedAssetList = new Dictionary<Pack, IList<Asset>>();
+            foreach (Asset asset in assets)
             {
-                fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            }
-            catch(Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-
-                return false;
-            }
-
-            foreach(String name in names)
-            {
-                Asset asset = null;
-                
-                if(false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
+                if (!sortedAssetList.Keys.Contains(asset.Pack))
                 {
-                    // could not find file, skip.
-                    continue;
+                    sortedAssetList[asset.Pack] = new List<Asset>();
                 }
-
-                byte[] buffer = new byte[(int)asset.Size];
-
-                fileStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
-                fileStream.Read(buffer, 0, (int)asset.Size);
-
-                FileStream file = new FileStream(directory + @"\" + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
-                file.Write(buffer, 0, (int)asset.Size);
-                file.Close();
+                sortedAssetList[asset.Pack].Add(asset);
             }
-
-            fileStream.Close();
-
-            return true;
+            return sortedAssetList;
         }
 
-        public Boolean ExtractAssetByNameToDirectory(String name, String directory) 
+        /// <summary>
+        /// This will return a FileStream that represents the pack, or null if there is a failure.
+        /// It will also pop up a message box if there is a failure.
+        /// </summary>
+        private FileStream createPackFileStream()
         {
             FileStream fileStream = null;
 
@@ -176,84 +142,82 @@ namespace ps2ls.Assets.Pack
             catch (Exception e)
             {
                 System.Windows.Forms.MessageBox.Show(e.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-
-                return false;
             }
+            return fileStream;
+        }
 
-            Asset asset = null;
-
-            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
-            {
-                fileStream.Close();
-
-                return false;
-            }
-
+        /// <summary>
+        /// The given asset will be extracted from the given file stream (that should represent the asset's pack) a buffer representing it will be returned
+        /// </summary>
+        private static byte[] createAssetByteBufferFromFileStream(Asset asset, FileStream packStream)
+        {
             byte[] buffer = new byte[(int)asset.Size];
 
-            fileStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
-            fileStream.Read(buffer, 0, (int)asset.Size);
+            packStream.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
+            packStream.Read(buffer, 0, (int)asset.Size);
 
-            FileStream file = new FileStream(directory + @"\" + asset.Name, FileMode.Create, FileAccess.Write, FileShare.Write);
-            file.Write(buffer, 0, (int)asset.Size);
-            file.Close();
-
-            fileStream.Close();
-
-            return true;
+            return buffer;
         }
 
-        public MemoryStream CreateAssetMemoryStreamByName(String name)
+        /// <summary>
+        /// Creates a memory stream that represents the given asset
+        /// </summary>
+        public MemoryStream CreateAssetMemoryStream(Asset asset)
         {
-            Asset asset = null;
+            System.Diagnostics.Debug.Assert(asset.Pack == this);
 
-            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
+            FileStream fileStream = createPackFileStream();
+            if (fileStream == null)
             {
                 return null;
             }
 
-            FileStream file = null;
-
-            try
-            {
-                file = File.Open(asset.Pack.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            }
-            catch (Exception e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-
-                return null;
-            }
-
-            byte[] buffer = new byte[asset.Size];
-
-            file.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
-            file.Read(buffer, 0, (Int32)asset.Size);
+            byte[] buffer = createAssetByteBufferFromFileStream(asset, fileStream);
 
             MemoryStream memoryStream = new MemoryStream(buffer);
 
             return memoryStream;
         }
 
-        public Boolean CreateTemporaryFileAndOpen(String name)
+        #region Extraction Functions
+        /// <summary>
+        /// Extract all assets from this pack to the given directory
+        /// </summary>
+        public Boolean ExtractAllAssetsToDirectory(String directory)
         {
-            String tempPath = System.IO.Path.GetTempPath();
+            return ExtractAssetsToDirectory(Assets, directory);
+        }
 
-            if (ExtractAssetByNameToDirectory(name, tempPath))
-            {
-                Process.Start(tempPath + @"\" + name);
-
-                return true;
-            }
-            else
+        /// <summary>
+        /// Extract the given assets from this pack to the given directory
+        /// </summary>
+        public Boolean ExtractAssetsToDirectory(IEnumerable<Asset> assets, String directory)
+        {
+            FileStream fileStream = createPackFileStream();
+            if (fileStream == null)
             {
                 return false;
             }
+
+            foreach (Asset asset in assets)
+            {
+                System.Diagnostics.Debug.Assert(asset.Pack == this);
+
+                byte[] buffer = createAssetByteBufferFromFileStream(asset, fileStream);
+
+                string filePath = directory + @"\" + asset.Name;
+                FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Write);
+                file.Write(buffer, 0, buffer.Length);
+                file.Close();
+
+            }
+
+            fileStream.Close();
+
+            return true;
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        #endregion //Extraction Functions
+
     }
 }

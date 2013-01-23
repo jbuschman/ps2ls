@@ -62,6 +62,19 @@ namespace ps2ls.Assets.Pack
             extractSelectionBackgroundWorker.DoWork += new DoWorkEventHandler(extractSelectionDoWork);
         }
 
+        public Asset GetAssetByName(string name)
+        {
+            foreach (Pack pack in Packs)
+            {
+                Asset asset = pack.GetAssetByName(name);
+                if (asset != null)
+                {
+                    return asset;
+                }
+            }
+            return null;
+        }
+
         public void LoadBinaryFromDirectory(string directory)
         {
             IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetDirectory, "*.pack", SearchOption.TopDirectoryOnly);
@@ -125,7 +138,7 @@ namespace ps2ls.Assets.Pack
 
                 if (packLookupCache.TryGetValue(path.GetHashCode(), out pack) == false)
                 {
-                    pack = Pack.LoadBinary(path);
+                    pack = Pack.LoadPackFromFile(path);
 
                     if (pack != null)
                     {
@@ -195,17 +208,6 @@ namespace ps2ls.Assets.Pack
             extractAllToDirectory(sender, args.Argument);
         }
 
-        public void ExtractAssetsByNamesToDirectory(IEnumerable<String> names, String directory)
-        {
-            foreach (Pack pack in Packs)
-            {
-                foreach (String name in names)
-                {
-                    pack.ExtractAssetsByNameToDirectory(names, directory);
-                }
-            }
-        }
-
         public void ExtractByAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
         {
             loadingForm = new GenericLoadingForm();
@@ -223,14 +225,16 @@ namespace ps2ls.Assets.Pack
             IEnumerable<Asset> assets = (IEnumerable<Asset>)args[0];
             String directory = (String)args[1];
 
-            for (Int32 i = 0; i < assets.Count(); ++i)
+            Dictionary<Pack, IList<Asset>> sortedAssetList = Pack.GetAssetListSortedByPack(assets);
+
+            Int32 numAssetsExported = 0;
+            foreach (Pack pack in sortedAssetList.Keys)
             {
-                Asset file = assets.ElementAt(i);
-
-                file.Pack.ExtractAssetByNameToDirectory(file.Name, directory);
-
-                Single percent = (Single)(i + 1) / (Single)assets.Count();
-                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(file.Name));
+                IList<Asset> assetsByPack = sortedAssetList[pack];
+                pack.ExtractAssetsToDirectory(assetsByPack, directory);
+                numAssetsExported += assetsByPack.Count;
+                Single percent = numAssetsExported / (Single)assets.Count();
+                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(pack.Name));
             }
         }
 
@@ -250,21 +254,5 @@ namespace ps2ls.Assets.Pack
             extractByAssetsToDirectory(sender, args.Argument);
         }
 
-        public MemoryStream CreateAssetMemoryStreamByName(String name)
-        {
-            MemoryStream memoryStream = null;
-
-            foreach (Pack pack in Packs)
-            {
-                memoryStream = pack.CreateAssetMemoryStreamByName(name);
-
-                if (memoryStream != null)
-                {
-                    break;
-                }
-            }
-
-            return memoryStream;
-        }
     }
 }
