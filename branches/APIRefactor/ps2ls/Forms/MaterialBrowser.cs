@@ -43,6 +43,8 @@ namespace ps2ls.Forms
             texturesListBox.Items.Clear();
 
             Dock = DockStyle.Fill;
+
+            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         private void MaterialBrowserControl_Load(object sender, EventArgs e)
@@ -159,6 +161,11 @@ namespace ps2ls.Forms
         {
             base.Refresh();
 
+            refreshTexturesListBox();
+        }
+
+        public void loadPacksCompleted(object sender, EventArgs args)
+        {
             refreshTexturesListBox();
         }
 

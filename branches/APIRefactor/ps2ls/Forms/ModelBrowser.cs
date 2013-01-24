@@ -94,6 +94,8 @@ namespace ps2ls.Forms
 
             renderModeButtons.Add(renderModeWireframeButton);
             renderModeButtons.Add(renderModeSmoothButton);
+
+            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         //TODO: move this elsehwere
@@ -406,6 +408,7 @@ void main(void)
 
         private void applicationIdle(object sender, EventArgs e)
         {
+            // REVIEW: This seems to have a significant impact on the speed of (e.g.) batch pack loading.Finesse this?
             while (glControl1.Context != null && glControl1.IsIdle)
             {
                 update();
@@ -432,6 +435,11 @@ void main(void)
         {
             base.Refresh();
 
+            refreshModelsListBox();
+        }
+
+        public void loadPacksCompleted(object sender, EventArgs args)
+        {
             refreshModelsListBox();
         }
 

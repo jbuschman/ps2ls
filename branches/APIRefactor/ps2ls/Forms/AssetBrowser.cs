@@ -37,6 +37,8 @@ namespace ps2ls.Forms
             packOpenFileDialog.InitialDirectory = Properties.Settings.Default.AssetDirectory;
 
             Dock = DockStyle.Fill;
+
+            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         private void addPacksButton_Click(object sender, EventArgs e)
@@ -45,7 +47,7 @@ namespace ps2ls.Forms
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                AssetManager.Instance.LoadBinaryFromPaths(packOpenFileDialog.FileNames);
+                AssetManager.Instance.LoadPacksFromPathsASync(packOpenFileDialog.FileNames);
             }
         }
 
@@ -73,7 +75,7 @@ namespace ps2ls.Forms
                     assets.AddRange(pack.Assets);
                 }
 
-                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -101,7 +103,7 @@ namespace ps2ls.Forms
                     assets.Add(file);
                 }
 
-                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -160,7 +162,9 @@ namespace ps2ls.Forms
             {
                 if (DialogResult.Yes == MessageBox.Show(@"Would you like to load all *.pak files located in " + Properties.Settings.Default.AssetDirectory + "?", "ps2ls", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
                 {
-                    AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
+                    IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetDirectory, "*.pack", SearchOption.TopDirectoryOnly);
+
+                    AssetManager.Instance.LoadPacksFromPathsASync(files);
                 }
             }
         }
@@ -260,6 +264,11 @@ namespace ps2ls.Forms
         private void extractPacksToolStripMenuItem_Click(object sender, EventArgs e)
         {
             extractSelectedPacks();
+        }
+
+        public void loadPacksCompleted(object sender, EventArgs args)
+        {
+            RefreshPacksListBox();
         }
 
         public void RefreshPacksListBox()
