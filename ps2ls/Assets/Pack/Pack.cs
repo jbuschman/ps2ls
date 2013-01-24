@@ -101,10 +101,10 @@ namespace ps2ls.Assets.Pack
 
         /// <summary>
         /// This will the asset object for the given asset name, or null if it doesn't exist in this pack
-        /// It will also pop up a message box if there is a failure.
         /// </summary>
         public Asset GetAssetByName(string name)
         {
+            // TODO: Use TryGetValue
             return assetLookupCache[name.GetHashCode()];
         }
 
@@ -118,6 +118,7 @@ namespace ps2ls.Assets.Pack
             Dictionary<Pack, IList<Asset>> sortedAssetList = new Dictionary<Pack, IList<Asset>>();
             foreach (Asset asset in assets)
             {
+                // TODO: Use TryGetValue
                 if (!sortedAssetList.Keys.Contains(asset.Pack))
                 {
                     sortedAssetList[asset.Pack] = new List<Asset>();

@@ -33,33 +33,15 @@ namespace ps2ls.Assets.Pack
         // Internal cache to check whether a pack has already been loaded
         public Dictionary<Int32, Pack> packLookupCache = new Dictionary<Int32, Pack>();
 
+        public EventHandler LoadPacksComplete = null;
+        public EventHandler ExtractAssetsComplete = null;
+
         private GenericLoadingForm loadingForm;
-        private BackgroundWorker loadBackgroundWorker;
-        private BackgroundWorker extractAllBackgroundWorker;
-        private BackgroundWorker extractSelectionBackgroundWorker;
 
         private AssetManager()
         {
             Packs = new List<Pack>();
             AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
-
-            loadBackgroundWorker = new BackgroundWorker();
-            loadBackgroundWorker.WorkerReportsProgress = true;
-            loadBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(loadProgressChanged);
-            loadBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadRunWorkerCompleted);
-            loadBackgroundWorker.DoWork += new DoWorkEventHandler(loadDoWork);
-
-            extractAllBackgroundWorker = new BackgroundWorker();
-            extractAllBackgroundWorker.WorkerReportsProgress = true;
-            extractAllBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(extractAllProgressChanged);
-            extractAllBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractAllRunWorkerCompleted);
-            extractAllBackgroundWorker.DoWork += new DoWorkEventHandler(extractAllDoWork);
-
-            extractSelectionBackgroundWorker = new BackgroundWorker();
-            extractSelectionBackgroundWorker.WorkerReportsProgress = true;
-            extractSelectionBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(extractSelectionProgressChanged);
-            extractSelectionBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractSelectionRunWorkerCompleted);
-            extractSelectionBackgroundWorker.DoWork += new DoWorkEventHandler(extractSelectionDoWork);
         }
 
         public Asset GetAssetByName(string name)
@@ -75,61 +57,47 @@ namespace ps2ls.Assets.Pack
             return null;
         }
 
-        public void LoadBinaryFromDirectory(string directory)
-        {
-            IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetDirectory, "*.pack", SearchOption.TopDirectoryOnly);
-
-            LoadBinaryFromPaths(files);
-        }
-
-        public void LoadBinaryFromPaths(IEnumerable<string> paths)
+        public void LoadPacksFromPathsASync(IEnumerable<string> paths)
         {
             loadingForm = new GenericLoadingForm();
             loadingForm.Show();
 
-            loadBackgroundWorker.RunWorkerAsync(paths);
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker.DoWork += new DoWorkEventHandler(loadPacksDoWork);
+            backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerProgressChanged);
+            backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(loadPacksRunWorkerCompleted);
+
+            backgroundWorker.RunWorkerAsync(paths);
         }
 
-        private void loadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
+        public void ExtractAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
         {
-            loadingForm.Close();
+            loadingForm = new GenericLoadingForm();
+            loadingForm.Show();
 
-            if (AssetBrowser.Instance != null)
-            {
-                AssetBrowser.Instance.RefreshPacksListBox();
-            }
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker.DoWork += new DoWorkEventHandler(extractSAssetsDoWork);
+            backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerProgressChanged);
+            backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(extractAssetsRunWorkerCompleted);
 
-            if (ModelBrowser.Instance != null)
-            {
-                ModelBrowser.Instance.Refresh();
-            }
-
-            if (MaterialBrowser.Instance != null)
-            {
-                MaterialBrowser.Instance.Refresh();
-            }
-
-            //if (memoryStream != null)
-            //{
-            //    MaterialDefinitionManager.Instance.LoadFromStream(memoryStream);
-            //}
+            object[] args = new object[] { assets, directory };
+            backgroundWorker.RunWorkerAsync(args);
         }
 
-        private void loadProgressChanged(object sender, ProgressChangedEventArgs args)
+        private void backgroundWorkerProgressChanged(object sender, ProgressChangedEventArgs args)
         {
             loadingForm.SetProgressBarPercent(args.ProgressPercentage);
             loadingForm.SetLabelText((String)args.UserState);
         }
 
-        private void loadDoWork(object sender, DoWorkEventArgs args)
-        {
-            loadBinaryFromPaths(sender, args.Argument);
-        }
+        #region Load Packs Background Worker
 
-        private void loadBinaryFromPaths(object sender, object arg)
+        private void loadPacksDoWork(object sender, DoWorkEventArgs args)
         {
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            IEnumerable<string> paths = (IEnumerable<string>)arg;
+            IEnumerable<string> paths = (IEnumerable<string>)args.Argument;
 
             for (Int32 i = 0; i < paths.Count(); ++i)
             {
@@ -162,66 +130,24 @@ namespace ps2ls.Assets.Pack
             }
         }
 
-        public void ExtractAllToDirectory(string directory)
+        private void loadPacksRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
-            extractAllBackgroundWorker.RunWorkerAsync(directory);
-        }
-
-        private void extractAllToDirectory(object sender, object arg)
-        {
-            BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            String directory = String.Empty;
-
-            try
+            if (LoadPacksComplete != null)
             {
-                directory = (String)arg;
+                LoadPacksComplete.Invoke(this, null);
             }
-            catch (InvalidCastException) { return; }
 
-            for (Int32 i = 0; i < Packs.Count; ++i)
-            {
-                Pack pack = Packs.ElementAt(i);
-
-                pack.ExtractAllAssetsToDirectory(directory);
-
-                Single percent = (Single)(i + 1) / (Single)Packs.Count;
-                backgroundWorker.ReportProgress((Int32)(percent * 100.0f), System.IO.Path.GetFileName(pack.Path));
-            }
-        }
-
-        private void extractAllRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
-        {
             loadingForm.Close();
         }
 
-        private void extractAllProgressChanged(object sender, ProgressChangedEventArgs args)
-        {
-            loadingForm.SetProgressBarPercent(args.ProgressPercentage);
-            loadingForm.SetLabelText((String)args.UserState);
-        }
+        #endregion // Load Packs Background Worker
 
-        private void extractAllDoWork(object sender, DoWorkEventArgs args)
-        {
-            extractAllToDirectory(sender, args.Argument);
-        }
+        #region Extract Assets Background Worker
 
-        public void ExtractByAssetsToDirectoryAsync(IEnumerable<Asset> assets, string directory)
-        {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
-            object[] args = new object[] { assets, directory };
-
-            extractSelectionBackgroundWorker.RunWorkerAsync(args);
-        }
-
-        private void extractByAssetsToDirectory(object sender, object arg)
+        private void extractSAssetsDoWork(object sender, DoWorkEventArgs eventArgs)
         {
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
-            object[] args = (object[])arg;
+            object[] args = (object[])eventArgs.Argument;
             IEnumerable<Asset> assets = (IEnumerable<Asset>)args[0];
             String directory = (String)args[1];
 
@@ -238,21 +164,17 @@ namespace ps2ls.Assets.Pack
             }
         }
 
-        private void extractSelectionRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
+        private void extractAssetsRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
+            if (ExtractAssetsComplete != null)
+            {
+                ExtractAssetsComplete.Invoke(this, null);
+            }
+
             loadingForm.Close();
         }
 
-        private void extractSelectionProgressChanged(object sender, ProgressChangedEventArgs args)
-        {
-            loadingForm.SetProgressBarPercent(args.ProgressPercentage);
-            loadingForm.SetLabelText((String)args.UserState);
-        }
-
-        private void extractSelectionDoWork(object sender, DoWorkEventArgs args)
-        {
-            extractByAssetsToDirectory(sender, args.Argument);
-        }
+        #endregion //Extract Assets Background Worker
 
     }
 }
