@@ -9,7 +9,6 @@ using OpenTK;
 
 namespace ps2ls.Assets.Dme
 {
-
     public class Mesh
     {
         public class VertexStream
@@ -47,49 +46,30 @@ namespace ps2ls.Assets.Dme
         {
         }
 
-        public static Mesh LoadFromStreamWithVersion(Stream stream, UInt32 version, ICollection<Dma.Material> materials)
+        public static Mesh LoadFromStream(Stream stream, ICollection<Dma.Material> materials)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
             Mesh mesh = new Mesh();
 
             UInt32 bytesPerVertex = 0;
-            UInt32 vertexStreamCount = 1;
+            UInt32 vertexStreamCount = 0;
 
             mesh.MaterialIndex = binaryReader.ReadUInt32();
             mesh.Unknown1 = binaryReader.ReadUInt32();
             mesh.Unknown2 = binaryReader.ReadUInt32();
             mesh.Unknown3 = binaryReader.ReadUInt32();
-
-            //switch on mesh header
-            if (version == 3)
-            {
-                bytesPerVertex = binaryReader.ReadUInt32();
-                mesh.VertexCount = binaryReader.ReadUInt32();
-                mesh.IndexSize = binaryReader.ReadUInt32();
-                mesh.IndexCount = binaryReader.ReadUInt32();
-            }
-            else if (version == 4)
-            {
-                vertexStreamCount = binaryReader.ReadUInt32();
-                mesh.IndexSize = binaryReader.ReadUInt32();
-                mesh.IndexCount = binaryReader.ReadUInt32();
-                mesh.VertexCount = binaryReader.ReadUInt32();
-            }
-            else
-            {
-                return null;
-            }
+            vertexStreamCount = binaryReader.ReadUInt32();
+            mesh.IndexSize = binaryReader.ReadUInt32();
+            mesh.IndexCount = binaryReader.ReadUInt32();
+            mesh.VertexCount = binaryReader.ReadUInt32();
 
             mesh.VertexStreams = new VertexStream[(Int32)vertexStreamCount];
 
             // read vertex streams
             for (Int32 j = 0; j < vertexStreamCount; ++j)
             {
-                if (version == 4)
-                {
-                    bytesPerVertex = binaryReader.ReadUInt32();
-                }
+                bytesPerVertex = binaryReader.ReadUInt32();
 
                 VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (Int32)mesh.VertexCount, (Int32)bytesPerVertex);
 

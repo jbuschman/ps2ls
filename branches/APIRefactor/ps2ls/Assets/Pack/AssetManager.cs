@@ -15,7 +15,7 @@ namespace ps2ls.Assets.Pack
         public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
 
         // Internal cache to check whether a pack has already been loaded
-        public Dictionary<Int32, Pack> packLookupCache = new Dictionary<Int32, Pack>();
+        private Dictionary<Int32, Pack> packLookupCache = new Dictionary<Int32, Pack>();
 
         public EventHandler LoadPacksComplete = null;
         public EventHandler ExtractAssetsComplete = null;

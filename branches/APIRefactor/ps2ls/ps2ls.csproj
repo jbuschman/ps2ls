@@ -79,7 +79,9 @@
   <ItemGroup>
     <Compile Include="Assets\Adr\Adr.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
-    <Compile Include="Assets\Dme\ModelExporter.cs" />
+    <Compile Include="Assets\Dme\BoneMap.cs" />
+    <Compile Include="IO\ModelExporter.cs" />
+    <Compile Include="IO\ModelExporterStatic.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
     <Compile Include="Forms\Controls\CustomListBox.cs">
       <SubType>Component</SubType>
@@ -158,6 +160,8 @@
     <Compile Include="Forms\MaterialBrowserGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="IO\ObjModelExporter.cs" />
+    <Compile Include="IO\TextureExporter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -165,36 +169,46 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TextureManager.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Forms\Controls\CustomListBox.resx">
       <DependentUpon>CustomListBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MaterialBrowser.resx">
       <DependentUpon>MaterialBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenericLoadingForm.resx">
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelBrowser.resx">
       <DependentUpon>ModelBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelBrowserGLControl.resx">
       <DependentUpon>ModelBrowserGLControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelBrowserModelStats.resx">
       <DependentUpon>ModelBrowserModelStats.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModelExportForm.resx">
       <DependentUpon>ModelExportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AssetBrowser.resx">
       <DependentUpon>AssetBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -338,10 +352,16 @@
     <None Include="Resources\grid.png" />
     <None Include="Resources\gear.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\devil-net\DevILNet\DevILNet.csproj">
+      <Project>{578fd0d9-41aa-4fa4-8d9b-4021978fa48d}</Project>
+      <Name>DevILNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\DevIL.dll .
+xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\ILU.dll .</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

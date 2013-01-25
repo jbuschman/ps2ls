@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ps2ls.Assets.Adr
 {
-    //Based on work by Herber Harrison @ http://sktest.aruarose.com/binxml.h
+    //Based on work by Herbert Harrison @ http://sktest.aruarose.com/binxml.h
     public class Adr
     {
         public class Tag
