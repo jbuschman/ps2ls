@@ -14,23 +14,7 @@ namespace ps2ls.Forms
 {
     public partial class AssetBrowser : UserControl
     {
-        #region Singleton
-        private static AssetBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new AssetBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static AssetBrowser Instance { get { return instance; } }
-        #endregion
-
-        private AssetBrowser()
+        public AssetBrowser()
         {
             InitializeComponent();
 
@@ -38,7 +22,7 @@ namespace ps2ls.Forms
 
             Dock = DockStyle.Fill;
 
-            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
+            Program.AssetManager.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         private void addPacksButton_Click(object sender, EventArgs e)
@@ -47,7 +31,7 @@ namespace ps2ls.Forms
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                AssetManager.Instance.LoadPacksFromPathsASync(packOpenFileDialog.FileNames);
+                Program.AssetManager.LoadPacksFromPathsASync(packOpenFileDialog.FileNames);
             }
         }
 
@@ -75,7 +59,7 @@ namespace ps2ls.Forms
                     assets.AddRange(pack.Assets);
                 }
 
-                AssetManager.Instance.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                Program.AssetManager.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -103,7 +87,7 @@ namespace ps2ls.Forms
                     assets.Add(file);
                 }
 
-                AssetManager.Instance.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                Program.AssetManager.ExtractAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
             }
         }
 
@@ -164,7 +148,7 @@ namespace ps2ls.Forms
                 {
                     IEnumerable<string> files = Directory.EnumerateFiles(Properties.Settings.Default.AssetDirectory, "*.pack", SearchOption.TopDirectoryOnly);
 
-                    AssetManager.Instance.LoadPacksFromPathsASync(files);
+                    Program.AssetManager.LoadPacksFromPathsASync(files);
                 }
             }
         }
@@ -233,7 +217,7 @@ namespace ps2ls.Forms
             Cursor.Current = Cursors.Default;
 
             fileCountLabel.Text = assetsDataGridView.Rows.Count + "/" + totalFileCount;
-            packCountLabel.Text = packs.Count + "/" + AssetManager.Instance.Packs.Count;
+            packCountLabel.Text = packs.Count + "/" + Program.AssetManager.Packs.Count;
         }
 
         private void assetsDataGridView_SelectionChanged(object sender, EventArgs e)
@@ -276,7 +260,7 @@ namespace ps2ls.Forms
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
 
-            foreach (Pack pack in AssetManager.Instance.Packs)
+            foreach (Pack pack in Program.AssetManager.Packs)
             {
                 packsListBox.Items.Add(pack);
             }

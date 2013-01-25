@@ -21,22 +21,6 @@ namespace ps2ls.Forms
 {
     public partial class ModelBrowser : UserControl
     {
-        #region Singleton
-        private static ModelBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new ModelBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static ModelBrowser Instance { get { return instance; } }
-        #endregion
-
         private Model model = null;
         private ColorDialog backgroundColorDialog = new ColorDialog();
         private Int32 shaderProgram = 0;
@@ -80,7 +64,7 @@ namespace ps2ls.Forms
                              };
         #endregion
 
-        private ModelBrowser()
+        public ModelBrowser()
         {
             InitializeComponent();
 
@@ -95,7 +79,7 @@ namespace ps2ls.Forms
             renderModeButtons.Add(renderModeWireframeButton);
             renderModeButtons.Add(renderModeSmoothButton);
 
-            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
+            Program.AssetManager.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         //TODO: move this elsehwere
@@ -450,7 +434,7 @@ void main(void)
             List<Asset> assets = new List<Asset>();
             List<Asset> dmes = null;
 
-            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
+            Program.AssetManager.AssetsByType.TryGetValue(Asset.Types.DME, out dmes);
 
             if (dmes != null)
             {

@@ -18,22 +18,6 @@ namespace ps2ls.Forms
 {
     public partial class MaterialBrowser : UserControl
     {
-        #region Singleton
-        private static MaterialBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new MaterialBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static MaterialBrowser Instance { get { return instance; } }
-        #endregion
-
         private MaterialBrowser()
         {
             InitializeComponent();
@@ -44,7 +28,7 @@ namespace ps2ls.Forms
 
             Dock = DockStyle.Fill;
 
-            AssetManager.Instance.LoadPacksComplete += new EventHandler(loadPacksCompleted);
+            Program.AssetManager.LoadPacksComplete += new EventHandler(loadPacksCompleted);
         }
 
         private void MaterialBrowserControl_Load(object sender, EventArgs e)
@@ -176,7 +160,7 @@ namespace ps2ls.Forms
             List<Asset> assets = new List<Asset>();
             List<Asset> dmas = null;
 
-            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DMA, out dmas);
+            Program.AssetManager.AssetsByType.TryGetValue(Asset.Types.DMA, out dmas);
 
             if (dmas != null)
             {

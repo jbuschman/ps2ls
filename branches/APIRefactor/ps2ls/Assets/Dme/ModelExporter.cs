@@ -170,7 +170,7 @@ namespace ps2ls.Assets.Dme
             if (options.Textures)
             {
                 // Build a list of assets from their names
-                IEnumerable<Asset> textureAssets = AssetManager.Instance.AssetsByType[Asset.Types.DDS].Where(a => model.Textures.Contains(a.Name));
+                IEnumerable<Asset> textureAssets = Program.AssetManager.AssetsByType[Asset.Types.DDS].Where(a => model.Textures.Contains(a.Name));
 
                 Dictionary<Pack.Pack, IList<Asset>> sortedTextureAssets = Pack.Pack.GetAssetListSortedByPack(textureAssets);
 
