@@ -104,8 +104,9 @@ namespace ps2ls.Assets.Pack
         /// </summary>
         public Asset GetAssetByName(string name)
         {
-            // TODO: Use TryGetValue
-            return assetLookupCache[name.GetHashCode()];
+            Asset retVal = null;
+            assetLookupCache.TryGetValue(name.GetHashCode(), out retVal);
+            return retVal;
         }
 
         /// <summary>
@@ -118,12 +119,14 @@ namespace ps2ls.Assets.Pack
             Dictionary<Pack, IList<Asset>> sortedAssetList = new Dictionary<Pack, IList<Asset>>();
             foreach (Asset asset in assets)
             {
-                // TODO: Use TryGetValue
-                if (!sortedAssetList.Keys.Contains(asset.Pack))
+                IList<Asset> assetList = null;
+                
+                if (!sortedAssetList.TryGetValue(asset.Pack, out assetList))
                 {
-                    sortedAssetList[asset.Pack] = new List<Asset>();
+                    assetList = new List<Asset>();
+                    sortedAssetList[asset.Pack] = assetList;
                 }
-                sortedAssetList[asset.Pack].Add(asset);
+                assetList.Add(asset);
             }
             return sortedAssetList;
         }
