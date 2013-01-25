@@ -108,8 +108,14 @@ namespace ps2ls.Forms
         {
             exportCurrentStateToExportOptions();
 
+            // REVIEW: http://www.codeproject.com/Articles/44914/Select-file-or-folder-from-the-same-dialog
+            // There's a code project that has a nicer UI for browsing for folders than the windows default. We could consider using that
+            exportFolderBrowserDialog.SelectedPath = Properties.Settings.Default.LastExportDirectory;
             if (exportFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                Properties.Settings.Default.LastExportDirectory = exportFolderBrowserDialog.SelectedPath;
+                Properties.Settings.Default.Save();
+
                 ModelExporter.ExportFormatOptions exportFormatOptions = ModelExporter.GetExportFormatOptionsByFormat((ModelExporter.ModelExportFormats)modelFormatComboBox.SelectedIndex);
 
                 List<object> argument = new List<object>()
@@ -162,8 +168,6 @@ namespace ps2ls.Forms
 
         private void ModelExportForm_Load(object sender, EventArgs e)
         {
-            exportFolderBrowserDialog.SelectedPath = Application.StartupPath;
-
             exportBackgroundWorker.WorkerReportsProgress = true;
             exportBackgroundWorker.ProgressChanged += new ProgressChangedEventHandler(exportProgressChanged);
             exportBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(exportRunWorkerCompleted);
