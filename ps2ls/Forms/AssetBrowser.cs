@@ -42,8 +42,12 @@ namespace ps2ls.Forms
 
         private void extractSelectedPacks()
         {
+            packFolderBrowserDialog.SelectedPath = Properties.Settings.Default.LastExtractDirectory;
             if (packFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                Properties.Settings.Default.LastExtractDirectory = packFolderBrowserDialog.SelectedPath;
+                Properties.Settings.Default.Save();
+                
                 List<Asset> assets = new List<Asset>();
 
                 foreach (object item in packsListBox.SelectedItems)
@@ -70,8 +74,12 @@ namespace ps2ls.Forms
 
         private void extractSelectedAssetsButton_Click(object sender, EventArgs e)
         {
+            packFolderBrowserDialog.SelectedPath = Properties.Settings.Default.LastExtractDirectory;
             if (packFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                Properties.Settings.Default.LastExtractDirectory = packFolderBrowserDialog.SelectedPath;
+                Properties.Settings.Default.Save();
+
                 List<Asset> assets = new List<Asset>();
 
                 foreach (DataGridViewRow row in assetsDataGridView.SelectedRows)
