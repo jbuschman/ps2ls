@@ -13,12 +13,12 @@ namespace ps2ls
     {
         private static Dictionary<Int32, Int32> textures = new Dictionary<int, int>();
 
-        private static ImageImporter imageImporter = new ImageImporter();
-
         public static Int32 LoadFromStream(Stream stream)
         {
             if (stream == null)
                 return 0;
+
+            ImageImporter imageImporter = new ImageImporter();
 
             Image image = imageImporter.LoadImageFromStream(stream);
 
