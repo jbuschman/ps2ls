@@ -106,9 +106,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(SolutionDir)\Libs\$(Platform)\DevIL.dll" "$(TargetDir)DevIL.dll"
-copy /Y "$(SolutionDir)\Libs\$(Platform)\ILU.dll" "$(TargetDir)ILU.dll"
-copy /Y "$(SolutionDir)\Libs\DevIL_License.txt" "$(TargetDir)DevIL_License.txt"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(ProjectDir)\..\Libs\$(Platform)\DevIL.dll" "$(TargetDir)DevIL.dll"
+copy /Y "$(ProjectDir)\..\Libs\$(Platform)\ILU.dll" "$(TargetDir)ILU.dll"
+copy /Y "$(ProjectDir)\..\Libs\DevIL_License.txt" "$(TargetDir)DevIL_License.txt"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

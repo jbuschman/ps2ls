@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Assets\Adr\Adr.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
+    <Compile Include="Assets\Dme\BoneMap.cs" />
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="IO\ModelExporterStatic.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
@@ -352,15 +353,15 @@
     <None Include="Resources\gear.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\devil-net\DevILNet\DevILNet.csproj">
+    <ProjectReference Include="..\devil-net\DevILNet\DevILNet.csproj">
       <Project>{578fd0d9-41aa-4fa4-8d9b-4021978fa48d}</Project>
       <Name>DevILNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\DevIL.dll .
+xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\ILU.dll .</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
