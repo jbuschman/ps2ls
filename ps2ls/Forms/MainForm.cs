@@ -50,21 +50,18 @@ namespace ps2ls.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            AssetBrowser.CreateInstance();
-            ModelBrowser.CreateInstance();
-
             ImageList imageList = new ImageList();
             imageList.Images.Add(Properties.Resources.box_small);
             imageList.Images.Add(Properties.Resources.tree_small);
             tabControl1.ImageList = imageList;
 
             TabPage assetBrowserTabPage = new TabPage("Asset Browser");
-            assetBrowserTabPage.Controls.Add(AssetBrowser.Instance);
+            assetBrowserTabPage.Controls.Add(new AssetBrowser());
             assetBrowserTabPage.ImageIndex = 0;
             tabControl1.TabPages.Add(assetBrowserTabPage);
 
             TabPage modelBrowserTabPage = new TabPage("Model Browser");
-            modelBrowserTabPage.Controls.Add(ModelBrowser.Instance);
+            modelBrowserTabPage.Controls.Add(new ModelBrowser());
             modelBrowserTabPage.ImageIndex = 1;
             tabControl1.TabPages.Add(modelBrowserTabPage);
         }

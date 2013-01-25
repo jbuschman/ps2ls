@@ -11,22 +11,6 @@ namespace ps2ls.Assets.Pack
 {
     class AssetManager
     {
-        #region Singleton
-        private static AssetManager instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new AssetManager();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static AssetManager Instance { get { return instance; } }
-        #endregion
-
         public List<Pack> Packs { get; private set; }
         public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
 
@@ -38,7 +22,7 @@ namespace ps2ls.Assets.Pack
 
         private GenericLoadingForm loadingForm;
 
-        private AssetManager()
+        public AssetManager()
         {
             Packs = new List<Pack>();
             AssetsByType = new Dictionary<Asset.Types, List<Asset>>();

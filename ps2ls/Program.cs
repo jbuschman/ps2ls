@@ -37,7 +37,7 @@ namespace ps2ls
                 }
             }
 
-            AssetManager.CreateInstance();
+            AssetManager = new AssetManager();
 
             AboutBox.CreateInstance();
             MainForm.CreateInstance();
@@ -46,6 +46,8 @@ namespace ps2ls
 
             Application.Run(MainForm.Instance);
         }
+
+        public static AssetManager AssetManager { get; private set;}
 
         /// <summary>
         /// Try to get the Planetside 2 asset directory by looking in the registry for Planetside 2 installation directories.

@@ -77,7 +77,7 @@ namespace ps2ls.Forms
             {
                 String fileName = fileNames[i];
 
-                Asset asset = AssetManager.Instance.GetAssetByName(fileName);
+                Asset asset = Program.AssetManager.GetAssetByName(fileName);
                 MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStream(asset);
 
                 if (memoryStream == null)
