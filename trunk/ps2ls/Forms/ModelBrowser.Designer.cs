@@ -51,6 +51,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.renderModeWireframeButton = new System.Windows.Forms.ToolStripButton();
             this.renderModeSmoothButton = new System.Windows.Forms.ToolStripButton();
+            this.materialSelectionComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -235,7 +236,8 @@
             this.showBoundingBoxButton,
             this.toolStripSeparator3,
             this.renderModeWireframeButton,
-            this.renderModeSmoothButton});
+            this.renderModeSmoothButton,
+            this.materialSelectionComboBox});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(522, 25);
@@ -298,6 +300,14 @@
             this.renderModeSmoothButton.ToolTipText = "Smooth (F6)";
             this.renderModeSmoothButton.CheckedChanged += new System.EventHandler(this.renderModeSmoothButton_CheckedChanged);
             // 
+            // materialSelectionComboBox
+            // 
+            this.materialSelectionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.materialSelectionComboBox.Name = "materialSelectionComboBox";
+            this.materialSelectionComboBox.Size = new System.Drawing.Size(400, 25);
+            this.materialSelectionComboBox.Sorted = true;
+            this.materialSelectionComboBox.SelectedIndexChanged += new System.EventHandler(this.materialSelectionComboBox_Changed);
+            // 
             // searchModelsTimer
             // 
             this.searchModelsTimer.Interval = 500;
@@ -350,5 +360,6 @@
         private ModelBrowserModelStats ModelBrowserModelStats1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton showAutoLODModelsButton;
+        private System.Windows.Forms.ToolStripComboBox materialSelectionComboBox;
     }
 }

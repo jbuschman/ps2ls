@@ -519,20 +519,13 @@ void main(void)
 
             ModelBrowserModelStats1.Model = model;
 
-            //TODO: Ghetto as fuck, fix it.
-            String textureString = null;
-            Int32 texture = 0;
-
-            if (model.TextureStrings.Count > 0)
+            materialSelectionComboBox.Items.Clear();
+            foreach (string textureName in model.TextureStrings)
             {
-                textureString = model.TextureStrings[0];
-
-                MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(textureString);
-
-                texture = TextureManager.LoadFromStream(textureMemoryStream);
+                materialSelectionComboBox.Items.Add(textureName);
             }
+            materialSelectionComboBox.SelectedIndex = 0;
 
-            GL.BindTexture(TextureTarget.Texture2D, texture);
 
             snapCameraToModel();
         }
@@ -650,6 +643,17 @@ void main(void)
         private void showAutoLODModelsButton_CheckedChanged(object sender, EventArgs e)
         {
             refreshModelsListBox();
+        }
+
+        private void materialSelectionComboBox_Changed(object sender, EventArgs e)
+        {
+            // Set the new texture
+            Int32 texture = 0;
+
+            MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(materialSelectionComboBox.Text);
+            texture = TextureManager.LoadFromStream(textureMemoryStream);
+
+            GL.BindTexture(TextureTarget.Texture2D, texture);
         }
     }
 }
