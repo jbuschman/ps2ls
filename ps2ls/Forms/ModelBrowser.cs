@@ -146,16 +146,29 @@ void main(void)
 }
 ";
             String fragmentShaderSource = @"
-uniform samler2D colorMap;
+uniform sampler2D colorMap;
 
 void main(void)
 {
-    gl_FragColor = texture2D(colorMap, gl_TexCoord[0].st);
+   vec4 col = texture2D(colorMap, gl_TexCoord[0].st);
+   if(col.a <= 0) discard;
+   gl_FragColor = texture2D(colorMap, gl_TexCoord[0].st);
 }
 ";
 
             compileShader(vertexShader, vertexShaderSource);
+            int res = 0;
+            GL.GetShader(vertexShader, ShaderParameter.CompileStatus, out res);
+            if ((All)res == All.False)
+            {
+                throw new Exception(GL.GetShaderInfoLog(vertexShader));
+            }
             compileShader(fragmentShader, fragmentShaderSource);
+            GL.GetShader(fragmentShader, ShaderParameter.CompileStatus, out res);
+            if ((All)res == All.False)
+            {
+                throw new Exception(GL.GetShaderInfoLog(vertexShader));
+            }
 
             GL.AttachShader(shaderProgram, fragmentShader);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
@@ -166,6 +179,7 @@ void main(void)
 
             String info;
             GL.GetProgramInfoLog(shaderProgram, out info);
+            
             Console.WriteLine(info);
 
             if (fragmentShader != 0)
@@ -247,8 +261,16 @@ void main(void)
                 GL.Enable(EnableCap.DepthTest);
                 GL.Enable(EnableCap.CullFace);
                 GL.Enable(EnableCap.Texture2D);
+                GL.Enable(EnableCap.Blend);
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
                 GL.CullFace(CullFaceMode.Back);
                 GL.FrontFace(FrontFaceDirection.Cw);
+
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, currentTexture);
+
+                int loc = GL.GetUniformLocation(shaderProgram, "colorMap");
+                GL.Uniform1(loc, 0);
 
                 for (Int32 i = 0; i < model.Meshes.Length; ++i)
                 {
@@ -334,6 +356,8 @@ void main(void)
                         GL.TexCoordPointer(2, texCoord0PointerType, mesh.VertexStreams[texCoord0Stream].BytesPerVertex, texCoord0Data + texCoord0Offset);
                     }
 
+
+                   
                     //indices
                     GCHandle indexDataHandle = GCHandle.Alloc(mesh.IndexData, GCHandleType.Pinned);
                     IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
@@ -644,16 +668,22 @@ void main(void)
         {
             refreshModelsListBox();
         }
-
+        Int32 currentTexture = 0;
         private void materialSelectionComboBox_Changed(object sender, EventArgs e)
         {
             // Set the new texture
             Int32 texture = 0;
 
             MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(materialSelectionComboBox.Text);
-            texture = TextureManager.LoadFromStream(textureMemoryStream);
+            currentTexture = TextureManager.LoadFromStream(textureMemoryStream);
 
-            GL.BindTexture(TextureTarget.Texture2D, texture);
+            
+           
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
         }
     }
 }
