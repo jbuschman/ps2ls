@@ -12,6 +12,7 @@ using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using ps2ls.Assets;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls.Forms
 {
@@ -52,6 +53,9 @@ namespace ps2ls.Forms
         {
             AssetBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
+            MaterialBrowser.CreateInstance();
+            ImageBrowser.CreateInstance();
+            SoundBrowser.CreateInstance();
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(Properties.Resources.box_small);
@@ -67,11 +71,34 @@ namespace ps2ls.Forms
             modelBrowserTabPage.Controls.Add(ModelBrowser.Instance);
             modelBrowserTabPage.ImageIndex = 1;
             tabControl1.TabPages.Add(modelBrowserTabPage);
+
+            TabPage materialBrowserTabPage = new TabPage("Material Browser");
+            materialBrowserTabPage.Controls.Add(MaterialBrowser.Instance);
+            materialBrowserTabPage.ImageIndex = 2;
+            tabControl1.TabPages.Add(materialBrowserTabPage);
+
+            TabPage imageBrowser = new TabPage("Image Browser");
+            imageBrowser.Controls.Add(ImageBrowser.Instance);
+            imageBrowser.ImageIndex = 3;
+            tabControl1.TabPages.Add(imageBrowser);
+
+            TabPage soundBrowser = new TabPage("Sound Browser");
+            soundBrowser.Controls.Add(SoundBrowser.Instance);
+            soundBrowser.ImageIndex = 4;
+            soundBrowser.Enter += SoundBrowser.Instance.onEnter;
+            tabControl1.TabPages.Add(soundBrowser);
+
+            
         }
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Properties.Settings.Default.ProjectNewIssueURL);
+        }
+
+        private void compareToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AssetManager.Instance.WriteFileListingToFile("FileListing.txt");
         }
     }
 }
