@@ -1,4 +1,15 @@
 #labels fsb,file
+=== FSB ===
+
+FSBs are Fmod Sound Banks, holding the sound data for Forgelight
+
+=== FSB Format ===
+
+Binary format in big endian order.
+
+
+
+
 WIP Reversing of FSBs
 
 FSB stands for Fmod Sound Bank.  
