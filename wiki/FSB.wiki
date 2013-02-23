@@ -7,7 +7,7 @@ SOE has a propietary tag in the least signifiant bit of one set of flags in the 
 
 
 WIP Header work:
-
+{{{
 Header = {
     4 bytes         Signature "FSB5"
     4 bytes         Unknown0 (0x00000001)
@@ -37,3 +37,4 @@ HdrData = {
     1 byte          DataType?
     <SomeDataLen>   SomeData
 }
+}}}
