@@ -8,12 +8,6 @@ FSBs are Fmod Sound Banks, holding the sound data for Forgelight
 Binary format in big endian order.
 
 
-
-
-WIP Reversing of FSBs
-
-FSB stands for Fmod Sound Bank.  
-
 SOE has a propietary tag in the least signifiant bit of one set of flags in the header.  Set the LSB to 0 and the sounds can be played with Fmod.
 
 
