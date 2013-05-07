@@ -53,13 +53,14 @@ namespace ps2ls.Forms
         {
             AssetBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
-            MaterialBrowser.CreateInstance();
             ImageBrowser.CreateInstance();
             SoundBrowser.CreateInstance();
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(Properties.Resources.box_small);
             imageList.Images.Add(Properties.Resources.tree_small);
+            imageList.Images.Add(Properties.Resources.image);
+            imageList.Images.Add(Properties.Resources.music);
             tabControl1.ImageList = imageList;
 
             TabPage assetBrowserTabPage = new TabPage("Asset Browser");
@@ -72,19 +73,14 @@ namespace ps2ls.Forms
             modelBrowserTabPage.ImageIndex = 1;
             tabControl1.TabPages.Add(modelBrowserTabPage);
 
-            TabPage materialBrowserTabPage = new TabPage("Material Browser");
-            materialBrowserTabPage.Controls.Add(MaterialBrowser.Instance);
-            materialBrowserTabPage.ImageIndex = 2;
-            tabControl1.TabPages.Add(materialBrowserTabPage);
-
             TabPage imageBrowser = new TabPage("Image Browser");
             imageBrowser.Controls.Add(ImageBrowser.Instance);
-            imageBrowser.ImageIndex = 3;
+            imageBrowser.ImageIndex = 2;
             tabControl1.TabPages.Add(imageBrowser);
 
             TabPage soundBrowser = new TabPage("Sound Browser");
             soundBrowser.Controls.Add(SoundBrowser.Instance);
-            soundBrowser.ImageIndex = 4;
+            soundBrowser.ImageIndex = 3;
             soundBrowser.Enter += SoundBrowser.Instance.onEnter;
             tabControl1.TabPages.Add(soundBrowser);
 

@@ -17,7 +17,6 @@ namespace ps2ls.Forms
 {
     public partial class SoundBrowser : UserControl
     {
-
         #region Singleton
         private static SoundBrowser instance = null;
 
@@ -42,18 +41,14 @@ namespace ps2ls.Forms
 
             Dock = DockStyle.Fill;
         }
-        FMOD.System system;
-        FMOD.Sound fsb = null;
 
-        FMOD.Channel channel = null;
-        
-           
+        private FMOD.System fmodSystem;
+        private FMOD.Sound fsb = null;
+        private FMOD.Channel channel = null;
+        private FMOD.Sound subsound = null;
 
-      
-
-
-        private FMOD.SOUND_PCMREADCALLBACK pcmreadcallback = new FMOD.SOUND_PCMREADCALLBACK(PCMREADCALLBACK);
-        private FMOD.SOUND_PCMSETPOSCALLBACK pcmsetposcallback = new FMOD.SOUND_PCMSETPOSCALLBACK(PCMSETPOSCALLBACK);
+        private FMOD.SOUND_PCMREADCALLBACK pcmReadCallback = new FMOD.SOUND_PCMREADCALLBACK(PCMREADCALLBACK);
+        private FMOD.SOUND_PCMSETPOSCALLBACK pcmSetPosCallback = new FMOD.SOUND_PCMSETPOSCALLBACK(PCMSETPOSCALLBACK);
 
         private static float t1 = 0, t2 = 0;        // time
         private static float v1 = 0, v2 = 0;        // velocity
@@ -89,13 +84,13 @@ namespace ps2ls.Forms
             return FMOD.RESULT.OK;
         }
 
-
         private FMOD.FILE_OPENCALLBACK myopen = new FMOD.FILE_OPENCALLBACK(OPENCALLBACK);
         private FMOD.FILE_CLOSECALLBACK myclose = new FMOD.FILE_CLOSECALLBACK(CLOSECALLBACK);
         private FMOD.FILE_READCALLBACK myread = new FMOD.FILE_READCALLBACK(READCALLBACK);
         private FMOD.FILE_SEEKCALLBACK myseek = new FMOD.FILE_SEEKCALLBACK(SEEKCALLBACK);
 
         static MemoryStream ms;
+
         private static FMOD.RESULT OPENCALLBACK([MarshalAs(UnmanagedType.LPWStr)]string name, int unicode, ref uint filesize, ref IntPtr handle, ref IntPtr userdata)
         {
             ms = AssetManager.Instance.CreateAssetMemoryStreamByName(name);
@@ -117,6 +112,7 @@ namespace ps2ls.Forms
             byte[] readbuffer = new byte[sizebytes];
 
             bytesread = (uint)ms.Read(readbuffer, 0, (int)sizebytes);
+
             if (bytesread == 0)
             {
                 return FMOD.RESULT.ERR_FILE_EOF;
@@ -133,22 +129,13 @@ namespace ps2ls.Forms
             return FMOD.RESULT.OK;
         }
 
-
-
         private void initFmod()
         {
-            FMOD.RESULT res;
+            FMOD.RESULT result = FMOD.Factory.System_Create(ref fmodSystem);
 
-            res = FMOD.Factory.System_Create(ref system);
-
-            system.init(32, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
-
-            system.setFileSystem(myopen, myclose, myread, myseek, null, null, 2048);
-
-            system.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
-
-
-
+            fmodSystem.init(32, FMOD.INITFLAGS.NORMAL, (IntPtr)null);
+            fmodSystem.setFileSystem(myopen, myclose, myread, myseek, null, null, 2048);
+            fmodSystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
         }
 
         private void loadSound(string name)
@@ -157,62 +144,49 @@ namespace ps2ls.Forms
             {
                 bool playing = false;
                 channel.isPlaying(ref playing);
+
                 if (playing)
                 {
                     channel.stop();
                 }
+
                 subsound.release();
                 fsb.release();
-               
             }
 
-           FMOD.RESULT res =  system.createSound(name, (FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), ref fsb);
-            
-          
-         
-           if (res != FMOD.RESULT.OK)
-           {
-               MessageBox.Show("Cannot load file.  Reason: " + res.ToString(), "FMOD Load Error", MessageBoxButtons.OK);
-           }
+            FMOD.RESULT createSoundResult = fmodSystem.createSound(name, (FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), ref fsb);
 
+            if (createSoundResult != FMOD.RESULT.OK)
+            {
+                MessageBox.Show("Cannot load file.  Reason: " + createSoundResult.ToString(), "FMOD Load Error", MessageBoxButtons.OK);
+            }
         }
 
         private void refreshListBox()
         {
-            
             soundListBox.Items.Clear();
 
             List<Asset> assets = new List<Asset>();
-            List<Asset> images = null;
+            List<Asset> sounds = null;
 
-            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.FSB, out images);
+            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.FSB, out sounds);
 
-            if (images != null)
+            if (sounds != null)
             {
-                assets.AddRange(images);
+                assets.AddRange(sounds);
             }
 
             assets.Sort(new Asset.NameComparer());
 
             if (assets != null)
             {
-
-                int i = 0;
                 foreach (Asset asset in assets)
                 {
-                    i++;
-                    if (i >= 1000)
-                    {
-                        i = 0;
-                        this.Update();
-                    }
                     if (asset.Name.IndexOf(searchBox.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         soundListBox.Items.Add(asset);
-                    }                   
-                      
+                    }
                 }
-               
             }
 
             int count = soundListBox.Items.Count;
@@ -235,7 +209,6 @@ namespace ps2ls.Forms
             {
                 searchBox.BackColor = Color.Yellow;
                 SearchBoxClear.Enabled = true;
-
             }
             else
             {
@@ -245,12 +218,10 @@ namespace ps2ls.Forms
 
             refreshTimer.Stop();
             refreshListBox();
-            
         }
 
         public void onEnter(object sender, EventArgs e)
         {
-           
         }
 
         private void SearchBoxClear_Click(object sender, EventArgs e)
@@ -263,26 +234,21 @@ namespace ps2ls.Forms
             refreshTimer.Stop();
             refreshTimer.Start();
         }
-        FMOD.Sound subsound = null;
            
         private void PlayPause_Click(object sender, EventArgs e)
         {
             fsb.getSubSound(0, ref subsound);
-            FMOD.RESULT res = system.playSound(FMOD.CHANNELINDEX.FREE, subsound, false, ref channel);
+            FMOD.RESULT res = fmodSystem.playSound(FMOD.CHANNELINDEX.FREE, subsound, false, ref channel);
           
             if (res != FMOD.RESULT.OK)
             {
                 MessageBox.Show("Cannot Play file.  Reason: " + res.ToString(), "FMOD Load Error", MessageBoxButtons.OK);
             }
-
-
         }
-
 
         private void onIdle(object sender, EventArgs e)
         {
-            system.update();           
-          
+            fmodSystem.update();
         }
 
         private void soundListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -303,11 +269,14 @@ namespace ps2ls.Forms
             if(channel != null)
             {
                 bool playing = false;
+
                 channel.isPlaying(ref playing);
+
                 if (playing)
                 {
                     channel.stop();
                 }
+
                 subsound.release();
             }
         }
@@ -328,12 +297,6 @@ namespace ps2ls.Forms
 
                 fileNames.Add(asset.Name);
             }
-
-           // SoundExportForm modelExportForm = new SoundExportForm();
-           // modelExportForm.FileNames = fileNames;
-           // modelExportForm.ShowDialog();
         }
-
-        
     }
 }

@@ -44,13 +44,6 @@ namespace ps2ls.IO
             textureFormat.ImageType = ImageType.Dds;
             textureFormats.Add(textureFormat);
 
-            //Microsoft Windows Bitmap (*.bmp)
-            textureFormat = new TextureFormatInfo();
-            textureFormat.Name = "Windows Bitmap";
-            textureFormat.Extension = "bmp";
-            textureFormat.ImageType = ImageType.Bmp;
-            textureFormats.Add(textureFormat);
-
             //Portal Network Graphics (*.png)
             textureFormat = new TextureFormatInfo();
             textureFormat.Name = "Portable Network Graphics";

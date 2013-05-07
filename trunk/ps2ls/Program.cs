@@ -37,11 +37,10 @@ namespace ps2ls
                 }
             }
 
+            TextureManager.CreateInstance();
             AssetManager.CreateInstance();
-
             AboutBox.CreateInstance();
             MainForm.CreateInstance();
-
             MaterialDefinitionManager.CreateInstance();
 
             Application.Run(MainForm.Instance);

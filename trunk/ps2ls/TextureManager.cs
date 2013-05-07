@@ -6,16 +6,31 @@ using System.IO;
 using DevIL;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
-using SD = System.Drawing;
-using SDI = System.Drawing.Imaging;
 
 namespace ps2ls
 {
     public class TextureManager
     {
-        private static Dictionary<Int32, Int32> textures = new Dictionary<int, int>();
+        #region Singleton
+        private static TextureManager instance = null;
 
-        public static Int32 LoadFromStream(Stream stream)
+        public static void CreateInstance()
+        {
+            instance = new TextureManager();
+        }
+
+        public static void DeleteInstance()
+        {
+            instance = null;
+        }
+
+        public static TextureManager Instance { get { return instance; } }
+        #endregion
+
+
+        private static List<int> textures = new List<int>();
+
+        public Int32 LoadFromStream(Stream stream)
         {
             if (stream == null)
                 return 0;
@@ -39,25 +54,17 @@ namespace ps2ls
 
             imageDataGCHandle.Free();
 
+            textures.Add(glTextureHandle);
+
             return glTextureHandle;
         }
 
-        public static System.Drawing.Image LoadDrawingImageFromStream(Stream stream)
+        public void Clear()
         {
-            ImageImporter importer = new ImageImporter();         
-            Image img = importer.LoadImageFromStream(stream);
-
-            DevIL.Unmanaged.ImageInfo data = img.GetImageInfo();
-            SD.Bitmap bitmap = new SD.Bitmap(data.Width, data.Height, SDI.PixelFormat.Format32bppArgb);
-            SD.Rectangle rect = new SD.Rectangle(0, 0, data.Width, data.Height);
-            SDI.BitmapData bdata = bitmap.LockBits(rect, SDI.ImageLockMode.WriteOnly, SDI.PixelFormat.Format32bppArgb);
-
-            DevIL.Unmanaged.IL.CopyPixels(0, 0, 0, data.Width, data.Height, 1, DataFormat.BGRA, DevIL.DataType.UnsignedByte, bdata.Scan0);
-
-            bitmap.UnlockBits(bdata);
-
-            return (SD.Image)bitmap;          
-
+            foreach (Int32 texture in textures)
+            {
+                GL.DeleteTexture(texture);
+            }
         }
     }
 }

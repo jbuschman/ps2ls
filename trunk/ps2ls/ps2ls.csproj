@@ -40,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -81,6 +82,13 @@
     <Compile Include="Assets\Adr\Adr.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
+    <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
+    <Compile Include="Forms\Controls\SearchTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\SearchToolStripTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\ImageBrowser.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -100,7 +108,6 @@
       <DependentUpon>SoundExportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="IO\ModelExporter.cs" />
-    <Compile Include="IO\ModelExporterStatic.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
     <Compile Include="Forms\Controls\CustomListBox.cs">
       <SubType>Component</SubType>
@@ -126,12 +133,6 @@
     <Compile Include="Assets\Dme\Mesh.cs" />
     <Compile Include="Assets\Dme\Model.cs" />
     <Compile Include="Assets\Dme\Vertex.cs" />
-    <Compile Include="Forms\MaterialBrowser.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\MaterialBrowser.Designer.cs">
-      <DependentUpon>MaterialBrowser.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,9 +177,6 @@
     <Compile Include="Forms\AssetBrowser.Designer.cs">
       <DependentUpon>AssetBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MaterialBrowserGLControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="IO\ObjModelExporter.cs" />
     <Compile Include="IO\TextureExporter.cs" />
     <Compile Include="Program.cs" />
@@ -200,10 +198,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImageBrowser.resx">
       <DependentUpon>ImageBrowser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MaterialBrowser.resx">
-      <DependentUpon>MaterialBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -349,6 +343,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\clipboard-list.png" />
     <None Include="Resources\materials_3.xml" />
     <None Include="Resources\robot.png" />
     <None Include="Resources\robotic-arm.png" />
@@ -394,12 +389,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\DevIL.dll .
-xcopy /Y $(SolutionDir)devil-net\Libs\$(Platform)\ILU.dll .
-xcopy /Y $(SolutionDir)fmodNET\fmodex.dll .
-xcopy /Y $(SolutionDir)fmodNET\fmodex64.dll .
-xcopy /Y $(SolutionDir)fmodNET\fmodexL.dll .
-xcopy /Y $(SolutionDir)fmodNET\fmodexL64.dll .</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(SolutionDir)devil-net\Libs\$(Platform)\*.dll" .
+xcopy /Y "$(SolutionDir)fmodNET\*.dll" .</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

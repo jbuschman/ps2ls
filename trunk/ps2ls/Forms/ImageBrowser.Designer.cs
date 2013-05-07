@@ -28,22 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.searchText = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.searchText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
+            this.clearSearchTextButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.pictureWindow = new System.Windows.Forms.PictureBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.imagesCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.searchTextTimer = new System.Windows.Forms.Timer(this.components);
             this.imageListbox = new ps2ls.Forms.Controls.CustomListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.ImageStrechButton = new System.Windows.Forms.ToolStripButton();
-            this.ImageCenterButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureWindow)).BeginInit();
             this.statusStrip2.SuspendLayout();
@@ -51,15 +46,15 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
             // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.searchText,
-            this.toolStripButton2,
+            this.clearSearchTextButton,
             this.toolStripSeparator1,
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -79,19 +74,21 @@
             // 
             // searchText
             // 
+            this.searchText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchText.Name = "searchText";
             this.searchText.Size = new System.Drawing.Size(100, 25);
-            this.searchText.TextChanged += new System.EventHandler(this.searchText_TextChanged);
+            this.searchText.CustomTextChanged += new System.EventHandler(this.searchText_CustomTextChanged);
             // 
-            // toolStripButton2
+            // clearSearchTextButton
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = global::ps2ls.Properties.Resources.ui_text_field_clear_button;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "clearSearchText";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.clearSearchTextButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.clearSearchTextButton.Enabled = false;
+            this.clearSearchTextButton.Image = global::ps2ls.Properties.Resources.ui_text_field_clear_button;
+            this.clearSearchTextButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.clearSearchTextButton.Name = "clearSearchTextButton";
+            this.clearSearchTextButton.Size = new System.Drawing.Size(23, 22);
+            this.clearSearchTextButton.Text = "clearSearchText";
+            this.clearSearchTextButton.Click += new System.EventHandler(this.clearSearchTextButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -110,7 +107,7 @@
             // pictureWindow
             // 
             this.pictureWindow.BackColor = System.Drawing.Color.Black;
-            this.pictureWindow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureWindow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureWindow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureWindow.InitialImage = null;
             this.pictureWindow.Location = new System.Drawing.Point(0, 0);
@@ -118,7 +115,6 @@
             this.pictureWindow.Size = new System.Drawing.Size(583, 600);
             this.pictureWindow.TabIndex = 2;
             this.pictureWindow.TabStop = false;
-            this.pictureWindow.Click += new System.EventHandler(this.pictureWindow_Click);
             // 
             // statusStrip2
             // 
@@ -136,11 +132,6 @@
             this.imagesCountLabel.Name = "imagesCountLabel";
             this.imagesCountLabel.Size = new System.Drawing.Size(40, 17);
             this.imagesCountLabel.Text = "0/0";
-            // 
-            // searchTextTimer
-            // 
-            this.searchTextTimer.Interval = 500;
-            this.searchTextTimer.Tick += new System.EventHandler(this.searchTextTimer_Tick);
             // 
             // imageListbox
             // 
@@ -171,42 +162,10 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
             this.splitContainer1.Panel2.Controls.Add(this.pictureWindow);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
             this.splitContainer1.SplitterDistance = 213;
             this.splitContainer1.TabIndex = 5;
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ImageStrechButton,
-            this.ImageCenterButton});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(583, 25);
-            this.toolStrip2.TabIndex = 3;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // ImageStrechButton
-            // 
-            this.ImageStrechButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ImageStrechButton.Image = global::ps2ls.Properties.Resources.axes;
-            this.ImageStrechButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ImageStrechButton.Name = "ImageStrechButton";
-            this.ImageStrechButton.Size = new System.Drawing.Size(23, 22);
-            this.ImageStrechButton.Text = "toolStripButton4";
-            this.ImageStrechButton.ToolTipText = "Stretch";
-            // 
-            // ImageCenterButton
-            // 
-            this.ImageCenterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ImageCenterButton.Image = global::ps2ls.Properties.Resources.box_small;
-            this.ImageCenterButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ImageCenterButton.Name = "ImageCenterButton";
-            this.ImageCenterButton.Size = new System.Drawing.Size(23, 22);
-            this.ImageCenterButton.Text = "toolStripButton5";
-            this.ImageCenterButton.ToolTipText = "Center";
             // 
             // ImageBrowser
             // 
@@ -224,11 +183,8 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -238,17 +194,13 @@
         private Controls.CustomListBox imageListbox;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripTextBox searchText;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private Controls.SearchToolStripTextBox searchText;
+        private System.Windows.Forms.ToolStripButton clearSearchTextButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStripStatusLabel imagesCountLabel;
-        private System.Windows.Forms.Timer searchTextTimer;
         private System.Windows.Forms.PictureBox pictureWindow;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripButton ImageStrechButton;
-        private System.Windows.Forms.ToolStripButton ImageCenterButton;
     }
 }

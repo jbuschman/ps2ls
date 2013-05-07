@@ -34,10 +34,14 @@ namespace ps2ls.IO
             get { return true; }
         }
 
-        public void ExportModelToDirectoryWithExportOptions(Model model, String directory, ExportOptions exportOptions)
+        public override string ToString()
         {
-            //TODO: Figure out what to do with non-version 4 models.
-            if (model != null && model.Version != 4)
+            return Name + " (*." + Extension + ")";
+        }
+
+        public void ExportModelToDirectoryWithExportOptions(Model model, String directory, ModelExportOptions exportOptions)
+        {
+            if (model == null || directory == null || exportOptions == null )
             {
                 return;
             }
@@ -203,7 +207,7 @@ namespace ps2ls.IO
             streamWriter.Close();
         }
 
-        private static Vector3 readVector3(ExportOptions exportOptions, Int32 offset, Mesh.VertexStream vertexStream, Int32 index)
+        private static Vector3 readVector3(ModelExportOptions exportOptions, Int32 offset, Mesh.VertexStream vertexStream, Int32 index)
         {
             Vector3 vector3 = new Vector3();
 

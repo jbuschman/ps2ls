@@ -83,7 +83,7 @@ namespace ps2ls.Assets.Pack
 
             if (AssetBrowser.Instance != null)
             {
-                AssetBrowser.Instance.RefreshPacksListBox();
+                AssetBrowser.Instance.Refresh();
             }
 
             if (ModelBrowser.Instance != null)
@@ -91,9 +91,9 @@ namespace ps2ls.Assets.Pack
                 ModelBrowser.Instance.Refresh();
             }
 
-            if (MaterialBrowser.Instance != null)
+            if (ModelBrowser.Instance != null)
             {
-                MaterialBrowser.Instance.Refresh();
+                ImageBrowser.Instance.Refresh();
             }
         }
 
@@ -274,7 +274,6 @@ namespace ps2ls.Assets.Pack
                     }
                 }
             }
-
         }
 
     }
