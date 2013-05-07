@@ -109,30 +109,6 @@ namespace ps2ls.Forms
         {
         }
 
-        private void searchTextBox_TextChanged(object sender, EventArgs e)
-        {
-            searchAssetsTimer.Stop();
-            searchAssetsTimer.Start();
-        }
-
-        private void searchAssetsTimer_Tick(object sender, EventArgs e)
-        {
-            if (searchTextBox.Text.Length > 0)
-            {
-                searchTextBox.BackColor = Color.Yellow;
-                clearSearchButton.Enabled = true;
-            }
-            else
-            {
-                searchTextBox.BackColor = Color.White;
-                clearSearchButton.Enabled = false;
-            }
-
-            refreshAssetsDataGridView();
-
-            searchAssetsTimer.Stop();
-        }
-
         private void packsListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
@@ -262,7 +238,7 @@ namespace ps2ls.Forms
             extractSelectedPacks();
         }
 
-        public void RefreshPacksListBox()
+        private void refreshPacksListBox()
         {
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
@@ -271,6 +247,26 @@ namespace ps2ls.Forms
             {
                 packsListBox.Items.Add(pack);
             }
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            refreshPacksListBox();
+        }
+
+        private void searchTextBox1_CustomTextChanged(object sender, EventArgs e)
+        {
+            refreshAssetsDataGridView();
+
+            clearSearchButton.Enabled = searchTextBox.Text.Length > 0;
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            AssetManifestWriter writer = new AssetManifestWriter();
+            writer.Write(@"C:\Users\Colin\Desktop\" + 0 + @".ps2lsmanifest");
         }
     }
 }

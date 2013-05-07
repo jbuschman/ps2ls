@@ -14,7 +14,7 @@ namespace ps2ls.IO
         Z
     }
 
-    public class ExportOptions
+    public class ModelExportOptions
     {
         public Axes UpAxis;
         public Axes LeftAxis;
@@ -49,6 +49,6 @@ namespace ps2ls.IO
         Boolean CanExportNormals { get; }
         Boolean CanExportTextureCoordinates { get; }
 
-        void ExportModelToDirectoryWithExportOptions(Model model, String directory, ExportOptions exportOptions);
+        void ExportModelToDirectoryWithExportOptions(Model model, String directory, ModelExportOptions exportOptions);
     }
 }

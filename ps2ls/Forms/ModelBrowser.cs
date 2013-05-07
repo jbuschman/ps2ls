@@ -41,6 +41,7 @@ namespace ps2ls.Forms
         private ColorDialog backgroundColorDialog = new ColorDialog();
         private Int32 shaderProgram = 0;
         private List<ToolStripButton> renderModeButtons = new List<ToolStripButton>();
+        Int32 currentTexture = 0;
 
         #region Mesh Colors
         // a series of nice pastel colors we'll use to color meshes
@@ -249,7 +250,6 @@ void main(void)
                 GL.End();
             }
 
-            //TODO: Decide what to do with non-version 4 models.
             if (model != null && model.Version == 4)
             {
                 GL.PushMatrix();
@@ -356,8 +356,6 @@ void main(void)
                         GL.TexCoordPointer(2, texCoord0PointerType, mesh.VertexStreams[texCoord0Stream].BytesPerVertex, texCoord0Data + texCoord0Offset);
                     }
 
-
-                   
                     //indices
                     GCHandle indexDataHandle = GCHandle.Alloc(mesh.IndexData, GCHandleType.Pinned);
                     IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
@@ -496,30 +494,6 @@ void main(void)
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
         }
 
-        private void searchModelsText_TextChanged(object sender, EventArgs e)
-        {
-            searchModelsTimer.Stop();
-            searchModelsTimer.Start();
-        }
-
-        private void searchModelsTimer_Tick(object sender, EventArgs e)
-        {
-            if (searchModelsText.Text.Length > 0)
-            {
-                searchModelsText.BackColor = Color.Yellow;
-                clearSearchModelsText.Enabled = true;
-            }
-            else
-            {
-                searchModelsText.BackColor = Color.White;
-                clearSearchModelsText.Enabled = false;
-            }
-
-            searchModelsTimer.Stop();
-
-            refreshModelsListBox();
-        }
-
         private void clearSearchModelsText_Click(object sender, EventArgs e)
         {
             searchModelsText.Clear();
@@ -544,12 +518,16 @@ void main(void)
             ModelBrowserModelStats1.Model = model;
 
             materialSelectionComboBox.Items.Clear();
-            foreach (string textureName in model.TextureStrings)
-            {
-                materialSelectionComboBox.Items.Add(textureName);
-            }
-            materialSelectionComboBox.SelectedIndex = 0;
 
+            if (model != null)
+            {
+                foreach (string textureName in model.TextureStrings)
+                {
+                    materialSelectionComboBox.Items.Add(textureName);
+                }
+            }
+
+            materialSelectionComboBox.SelectedIndex = materialSelectionComboBox.Items.Count > 0 ? 0 : -1;
 
             snapCameraToModel();
         }
@@ -668,20 +646,21 @@ void main(void)
         {
             refreshModelsListBox();
         }
-        Int32 currentTexture = 0;
+
         private void materialSelectionComboBox_Changed(object sender, EventArgs e)
         {
-            // Set the new texture
-            Int32 texture = 0;
-
             MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(materialSelectionComboBox.Text);
-            currentTexture = TextureManager.LoadFromStream(textureMemoryStream);
-
-            
-           
+            currentTexture = TextureManager.Instance.LoadFromStream(textureMemoryStream);
         }
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        private void searchModelsText_CustomTextChanged(object sender, EventArgs e)
+        {
+            refreshModelsListBox();
+
+            clearSearchModelsText.Enabled = searchModelsText.Text.Length > 0;
+        }
+
+        private void materialSelectionComboBox_Click(object sender, EventArgs e)
         {
 
         }

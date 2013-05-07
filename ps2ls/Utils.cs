@@ -26,20 +26,24 @@ namespace ps2ls
 
         public static MemoryStream FixSoundHeader(MemoryStream stream)
         {
-
             for (int i = 0; i < knownLocations.Length; i++)
             {
                 int loc = knownLocations[i];
+
                 stream.Seek(loc + 0x03, SeekOrigin.Begin);
+
                  byte c = (byte)stream.ReadByte();
 
                  if (c == 0x16)
                  {
                      stream.Seek(loc, SeekOrigin.Begin);
+
                      byte b = (byte)stream.ReadByte();
                      b = (byte)(b - 1);
+
                      stream.Seek(loc, SeekOrigin.Begin);
                      stream.WriteByte(b);
+
                      break;
                  }
             }

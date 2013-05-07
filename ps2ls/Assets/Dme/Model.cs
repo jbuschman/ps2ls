@@ -18,14 +18,16 @@ namespace ps2ls.Assets.Dme
         public UInt32 Unknown0 { get; private set; }
         public UInt32 Unknown1 { get; private set; }
         public UInt32 Unknown2 { get; private set; }
-        private Vector3 min;
-        public Vector3 Min { get { return min; } }
-        private Vector3 max;
-        public Vector3 Max { get { return max; } }
+        public Vector3 Min { get; private set; }
+        public Vector3 Max { get; private set; }
         public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
-        public List<String> TextureStrings { get; private set; }
+        public List<String> TextureStrings  { get; private set; }
         public BoneMap[] BoneMaps { get; private set; }
+        public Matrix4[] Bones { get; private set; }
+        public Vector3[] BonesMins { get; private set; }
+        public Vector3[] BonesMaxs { get; private set; }
+        public UInt32[] BoneHashes { get; private set; }
 
         #region Attributes
         public UInt32 VertexCount
@@ -85,19 +87,24 @@ namespace ps2ls.Assets.Dme
 
             model.Name = name;
 
-            //materials
+            //textures & materials
             model.TextureStrings = new List<String>();
             model.Materials = new List<Material>();
+
             Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.TextureStrings, model.Materials);
 
             //bounding box
-            model.min.X = binaryReader.ReadSingle();
-            model.min.Y = binaryReader.ReadSingle();
-            model.min.Z = binaryReader.ReadSingle();
-
-            model.max.X = binaryReader.ReadSingle();
-            model.max.Y = binaryReader.ReadSingle();
-            model.max.Z = binaryReader.ReadSingle();
+            Vector3 min = new Vector3();
+            min.X = binaryReader.ReadSingle();
+            min.Y = binaryReader.ReadSingle();
+            min.Z = binaryReader.ReadSingle();
+            model.Min = min;
+            
+            Vector3 max = new Vector3();
+            max.X = binaryReader.ReadSingle();
+            max.Y = binaryReader.ReadSingle();
+            max.Z = binaryReader.ReadSingle();
+            model.Max = max;
 
             //meshes
             UInt32 meshCount = binaryReader.ReadUInt32();
@@ -122,11 +129,7 @@ namespace ps2ls.Assets.Dme
             for (Int32 i = 0; i < boneMapCount; ++i)
             {
                 BoneMap boneMap = BoneMap.LoadFromStream(binaryReader.BaseStream);
-
-                if (boneMap != null)
-                {
-                    model.BoneMaps[i] = boneMap;
-                }
+                model.BoneMaps[i] = boneMap;
             }
 
             //bone map entries
@@ -139,6 +142,81 @@ namespace ps2ls.Assets.Dme
                 BoneMapEntry boneMapEntry = BoneMapEntry.LoadFromStream(binaryReader.BaseStream);
 
                 boneMapEntries[i] = boneMapEntry;
+            }
+
+            for (Int32 i = 0; i < model.BoneMaps.Length; ++i)
+            {
+                UInt32 end = 0;
+
+                if (model.BoneMaps[i].BoneCount > 0)
+                {
+                    for (Int32 j = 0; j < model.BoneMaps[i].BoneCount; ++j)
+                    {
+                        if (boneMapEntries[j].GlobalIndex + model.BoneMaps[i].Delta > end)
+                        {
+                            end = boneMapEntries[j].GlobalIndex + model.BoneMaps[i].Delta;
+                        }
+                    }
+                }
+
+                model.BoneMaps[i].BoneEnd = end;
+            }
+
+            UInt32 boneCount = binaryReader.ReadUInt32();
+
+            model.Bones = new Matrix4[boneCount];
+            model.BonesMins = new Vector3[boneCount];
+            model.BonesMaxs = new Vector3[boneCount];
+            model.BoneHashes = new UInt32[boneCount];
+
+            if (boneCount > 0)
+            {
+                for (Int32 i = 0; i < boneCount; ++i)
+                {
+                    Matrix4 boneMatrix = Matrix4.Identity;
+
+                    boneMatrix.M11 = binaryReader.ReadSingle();
+                    boneMatrix.M12 = binaryReader.ReadSingle();
+                    boneMatrix.M13 = binaryReader.ReadSingle();
+
+                    boneMatrix.M21 = binaryReader.ReadSingle();
+                    boneMatrix.M22 = binaryReader.ReadSingle();
+                    boneMatrix.M23 = binaryReader.ReadSingle();
+
+                    boneMatrix.M31 = binaryReader.ReadSingle();
+                    boneMatrix.M32 = binaryReader.ReadSingle();
+                    boneMatrix.M33 = binaryReader.ReadSingle();
+
+                    boneMatrix.M41 = binaryReader.ReadSingle();
+                    boneMatrix.M42 = binaryReader.ReadSingle();
+                    boneMatrix.M43 = binaryReader.ReadSingle();
+
+                    boneMatrix.Invert();
+
+                    model.Bones[i] = boneMatrix;
+                }
+                
+                //bones bounding box
+                for(Int32 i = 0; i < boneCount; ++i)
+                {
+                    Vector3 boneMin = new Vector3();
+                    boneMin.X = binaryReader.ReadSingle();
+                    boneMin.Y = binaryReader.ReadSingle();
+                    boneMin.Z = binaryReader.ReadSingle();
+                    model.BonesMins[i] = boneMin;
+
+                    Vector3 boneMax = new Vector3();
+                    boneMax.X = binaryReader.ReadSingle();
+                    boneMax.Y = binaryReader.ReadSingle();
+                    boneMax.Z = binaryReader.ReadSingle();
+                    model.BonesMaxs[i] = boneMax;
+                }
+
+                //bone hashes
+                for (Int32 i = 0; i < boneCount; ++i)
+                {
+                    model.BoneHashes[i] = binaryReader.ReadUInt32();
+                }
             }
 
             return model;

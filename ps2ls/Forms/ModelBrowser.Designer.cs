@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -36,8 +35,8 @@
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.modelsCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.searchModelsText = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.searchModelsText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.showAutoLODModelsButton = new System.Windows.Forms.ToolStripButton();
@@ -51,8 +50,9 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.renderModeWireframeButton = new System.Windows.Forms.ToolStripButton();
             this.renderModeSmoothButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.materialSelectionComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.searchModelsTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -83,7 +83,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
             this.splitContainer1.SplitterDistance = 274;
             this.splitContainer1.TabIndex = 1;
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // modelsListBox
             // 
@@ -122,7 +121,7 @@
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel3,
+            this.toolStripButton1,
             this.searchModelsText,
             this.clearSearchModelsText,
             this.toolStripSeparator2,
@@ -135,21 +134,21 @@
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
-            // toolStripLabel3
+            // toolStripButton1
             // 
-            this.toolStripLabel3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripLabel3.Image = global::ps2ls.Properties.Resources.magnifier;
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(16, 22);
-            this.toolStripLabel3.Text = "toolStripLabel1";
-            this.toolStripLabel3.ToolTipText = "Search";
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::ps2ls.Properties.Resources.magnifier;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // searchModelsText
             // 
             this.searchModelsText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchModelsText.Name = "searchModelsText";
             this.searchModelsText.Size = new System.Drawing.Size(100, 25);
-            this.searchModelsText.TextChanged += new System.EventHandler(this.searchModelsText_TextChanged);
+            this.searchModelsText.CustomTextChanged += new System.EventHandler(this.searchModelsText_CustomTextChanged);
             // 
             // clearSearchModelsText
             // 
@@ -171,7 +170,7 @@
             // 
             this.showAutoLODModelsButton.CheckOnClick = true;
             this.showAutoLODModelsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showAutoLODModelsButton.Image = global::ps2ls.Properties.Resources.robot;
+            this.showAutoLODModelsButton.Image = global::ps2ls.Properties.Resources.cube_medium;
             this.showAutoLODModelsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showAutoLODModelsButton.Name = "showAutoLODModelsButton";
             this.showAutoLODModelsButton.Size = new System.Drawing.Size(23, 22);
@@ -238,7 +237,9 @@
             this.toolStripSeparator3,
             this.renderModeWireframeButton,
             this.renderModeSmoothButton,
-            this.materialSelectionComboBox});
+            this.toolStripSeparator4,
+            this.materialSelectionComboBox,
+            this.toolStripSeparator5});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(522, 25);
@@ -301,18 +302,24 @@
             this.renderModeSmoothButton.ToolTipText = "Smooth (F6)";
             this.renderModeSmoothButton.CheckedChanged += new System.EventHandler(this.renderModeSmoothButton_CheckedChanged);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
             // materialSelectionComboBox
             // 
             this.materialSelectionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.materialSelectionComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.materialSelectionComboBox.Name = "materialSelectionComboBox";
-            this.materialSelectionComboBox.Size = new System.Drawing.Size(400, 25);
+            this.materialSelectionComboBox.Size = new System.Drawing.Size(200, 25);
             this.materialSelectionComboBox.Sorted = true;
             this.materialSelectionComboBox.SelectedIndexChanged += new System.EventHandler(this.materialSelectionComboBox_Changed);
             // 
-            // searchModelsTimer
+            // toolStripSeparator5
             // 
-            this.searchModelsTimer.Interval = 500;
-            this.searchModelsTimer.Tick += new System.EventHandler(this.searchModelsTimer_Tick);
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
             // ModelBrowser
             // 
@@ -343,10 +350,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.ToolStripTextBox searchModelsText;
+        private Controls.SearchToolStripTextBox searchModelsText;
         private System.Windows.Forms.ToolStripButton clearSearchModelsText;
-        private System.Windows.Forms.Timer searchModelsTimer;
         private ps2ls.Forms.Controls.CustomListBox modelsListBox;
         private System.Windows.Forms.ToolStripStatusLabel modelsCountToolStripStatusLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
@@ -362,5 +367,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton showAutoLODModelsButton;
         private System.Windows.Forms.ToolStripComboBox materialSelectionComboBox;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }

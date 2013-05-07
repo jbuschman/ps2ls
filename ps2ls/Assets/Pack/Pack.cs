@@ -25,18 +25,18 @@ namespace ps2ls.Assets.Pack
 
         [DescriptionAttribute("The total size in bytes of all assets contained in this pack file.")]
         [ReadOnlyAttribute(true)]
-        public UInt32 AssetSize
+        public UInt32 Size
         {
             get
             {
-                UInt32 assetSize = 0;
+                UInt32 size = 0;
 
                 foreach(Asset asset in Assets)
                 {
-                    assetSize += asset.Size;
+                    size += asset.Size;
                 }
 
-                return assetSize;
+                return size;
             }
         }
 

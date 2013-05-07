@@ -21,7 +21,6 @@ namespace ps2ls.Forms
 
         public List<String> FileNames { get; set; }
 
-        private GenericLoadingForm loadingForm;
         private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
 
         private FMOD.FILE_OPENCALLBACK myopen = new FMOD.FILE_OPENCALLBACK(OPENCALLBACK);
@@ -81,11 +80,6 @@ namespace ps2ls.Forms
             system.init(32, FMOD.INITFLAGS.STREAM_FROM_UPDATE, (IntPtr)null);
 
             system.setFileSystem(myopen, myclose, myread, myseek, null, null, 2048);
-
-         
-
-
-
         }
 
         private void loadSound(string name)
@@ -96,7 +90,6 @@ namespace ps2ls.Forms
             {
                 MessageBox.Show("Cannot load file.  Reason: " + res.ToString(), "FMOD Load Error", MessageBoxButtons.OK);
             }
-
         }
 
 
@@ -114,16 +107,7 @@ namespace ps2ls.Forms
 
             Int32 result = 0;
 
-
-
-
-
             return result;
         }
-
-
-
-
-       
     }
 }

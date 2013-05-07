@@ -11,6 +11,18 @@ namespace ps2ls.Forms
 {
     public partial class ModelExportForm : Form
     {
+        public struct ModelAxesPreset
+        {
+            public String Name;
+            public Axes UpAxis;
+            public Axes LeftAxis;
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
         public ModelExportForm()
         {
             InitializeComponent();
@@ -20,7 +32,31 @@ namespace ps2ls.Forms
 
         private GenericLoadingForm loadingForm;
         private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
-        private ModelExporterStatic.ExportOptions exportOptions = new ModelExporterStatic.ExportOptions();
+        private ModelExportOptions modelExportOptions = new ModelExportOptions();
+
+        private static List<ModelAxesPreset> modelAxesPresets = new List<ModelAxesPreset>();
+
+        private static void createModelAxesPresets()
+        {
+            modelAxesPresets = new List<ModelAxesPreset>();
+
+            ModelAxesPreset modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Default";
+            modelAxesPreset.UpAxis = Axes.Y;
+            modelAxesPreset.LeftAxis = Axes.X;
+            modelAxesPresets.Add(modelAxesPreset);
+
+            modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Autodesk® 3ds Max";
+            modelAxesPreset.UpAxis = Axes.Z;
+            modelAxesPreset.LeftAxis = Axes.Y;
+            modelAxesPresets.Add(modelAxesPreset);
+        }
+
+        static ModelExportForm()
+        {
+            createModelAxesPresets();
+        }
 
         private void exportDoWork(object sender, DoWorkEventArgs e)
         {
@@ -49,9 +85,10 @@ namespace ps2ls.Forms
         {
             List<object> arguments = (List<object>)argument;
 
-            String directory = (String)arguments[0];
-            List<String> fileNames = (List<String>)arguments[1];
-            ModelExporterStatic.ExportOptions exportOptions = (ModelExporterStatic.ExportOptions)arguments[2];
+            ModelExporter modelExporter = (ModelExporter)arguments[0];
+            String directory = (String)arguments[1];
+            List<String> fileNames = (List<String>)arguments[2];
+            ModelExportOptions exportOptions = (ModelExportOptions)arguments[3];
 
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
 
@@ -75,7 +112,7 @@ namespace ps2ls.Forms
                     continue;
                 }
 
-                ModelExporterStatic.ExportModelToDirectory(model, directory, exportOptions);
+                modelExporter.ExportModelToDirectoryWithExportOptions(model, directory, exportOptions);
 
                 Int32 percent = (Int32)(((Single)i / (Single)fileNames.Count) * 100);
 
@@ -87,32 +124,20 @@ namespace ps2ls.Forms
             return result;
         }
 
-        private void applyExportFormatInfo(ModelExporterStatic.ExportFormatInfo exportFormat)
+        private void applyModelExporterOptions(ModelExporter modelExporter)
         {
-            normalsCheckBox.Checked = exportFormat.CanExportNormals;
-            normalsCheckBox.Enabled = exportFormat.CanExportNormals;
+            normalsCheckBox.Checked = modelExporter.CanExportNormals;
+            normalsCheckBox.Enabled = modelExporter.CanExportNormals;
 
-            textureCoordinatesCheckBox.Checked = exportFormat.CanExportTextureCoordinates;
-            textureCoordinatesCheckBox.Enabled = exportFormat.CanExportTextureCoordinates;
-        }
-
-        private void loadModelFormatComboBox()
-        {
-            modelFormatComboBox.Items.Clear();
-
-            foreach (ModelExporterStatic.ExportFormatInfo exportFormatInfo in ModelExporterStatic.ExportFormatInfos.Values)
-            {
-                modelFormatComboBox.Items.Add(exportFormatInfo);
-            }
-
-            modelFormatComboBox.SelectedIndex = modelFormatComboBox.Items.Count > 0 ? 0 : -1;
+            textureCoordinatesCheckBox.Checked = modelExporter.CanExportTextureCoordinates;
+            textureCoordinatesCheckBox.Enabled = modelExporter.CanExportTextureCoordinates;
         }
 
         private void loadModelAxesPresetComboBox()
         {
             modelAxesPresetComboBox.Items.Clear();
 
-            foreach (ModelExporterStatic.ModelAxesPreset modelAxesPreset in ModelExporterStatic.ModelAxesPresets)
+            foreach (ModelAxesPreset modelAxesPreset in modelAxesPresets)
             {
                 modelAxesPresetComboBox.Items.Add(modelAxesPreset);
             }
@@ -130,6 +155,14 @@ namespace ps2ls.Forms
             }
 
             textureFormatComboBox.SelectedIndex = textureFormatComboBox.Items.Count > 0 ? 0 : -1;
+        }
+
+        private void loadModelExportFormatComboBox()
+        {
+            modelFormatComboBox.Items.Clear();
+            modelFormatComboBox.Items.Add(new ObjModelExporter());
+
+            modelFormatComboBox.SelectedIndex = modelFormatComboBox.Items.Count > 0 ? 0 : -1;
         }
 
         private void scaleLinkAxesCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -152,9 +185,10 @@ namespace ps2ls.Forms
             {
                 List<object> argument = new List<object>()
                 {
+                    modelFormatComboBox.SelectedItem,
                     exportFolderBrowserDialog.SelectedPath,
                     FileNames,
-                    exportOptions
+                    modelExportOptions
                 };
 
                 loadingForm = new GenericLoadingForm();
@@ -169,10 +203,9 @@ namespace ps2ls.Forms
             if (modelFormatComboBox.SelectedItem == null)
                 return;
 
-            ModelExporterStatic.ExportFormatInfo exportFormatInfo = (ModelExporterStatic.ExportFormatInfo)modelFormatComboBox.SelectedItem;
+            ModelExporter modelExporter = (ModelExporter)modelFormatComboBox.SelectedItem;
 
-            applyExportFormatInfo(exportFormatInfo);
-
+            applyModelExporterOptions(modelExporter);
         }
 
         private void ModelExportForm_Load(object sender, EventArgs e)
@@ -184,40 +217,35 @@ namespace ps2ls.Forms
             exportBackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(exportRunWorkerCompleted);
             exportBackgroundWorker.DoWork += new DoWorkEventHandler(exportDoWork);
 
-            loadModelFormatComboBox();
+            loadModelExportFormatComboBox();
             loadModelAxesPresetComboBox();
             loadTextureFormatComboBox();
-
-            upAxisComboBox.SelectedIndex = 1;
-            leftAxisComboBox.SelectedIndex = 0;
-
-            packageToolTip.SetToolTip(packageCheckBox, "When checked, assets will be exported into their own directory.");
         }
 
         private void exportTexturesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             textureFormatComboBox.Enabled = texturesCheckBox.Checked;
-            exportOptions.Textures = texturesCheckBox.Checked;
+            modelExportOptions.Textures = texturesCheckBox.Checked;
         }
 
         private void normalsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            exportOptions.Normals = normalsCheckBox.Checked;
+            modelExportOptions.Normals = normalsCheckBox.Checked;
         }
 
         private void textureCoordinatesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            exportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
+            modelExportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
         }
 
         private void upAxisComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            exportOptions.UpAxis = (Axes)upAxisComboBox.SelectedIndex;
+            modelExportOptions.UpAxis = (Axes)upAxisComboBox.SelectedIndex;
         }
 
         private void leftAxisComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            exportOptions.LeftAxis = (Axes)leftAxisComboBox.SelectedIndex;
+            modelExportOptions.LeftAxis = (Axes)leftAxisComboBox.SelectedIndex;
         }
 
         private void xScaleNumericUpDown_ValueChanged(object sender, EventArgs e)
@@ -228,54 +256,48 @@ namespace ps2ls.Forms
                 zScaleNumericUpDown.Value = xScaleNumericUpDown.Value;
             }
 
-            exportOptions.Scale.X = (Single)xScaleNumericUpDown.Value;
+            modelExportOptions.Scale.X = (Single)xScaleNumericUpDown.Value;
         }
 
         private void yScaleNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            exportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
+            modelExportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
         }
 
         private void zScaleNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            exportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
+            modelExportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
         }
 
         private void packageCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            exportOptions.Package = packageCheckBox.Checked;
+            modelExportOptions.Package = packageCheckBox.Checked;
         }
 
         private void modelAxesPresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ModelExporterStatic.ModelAxesPreset modelAxesPreset = ModelExporterStatic.ModelAxesPresets[modelAxesPresetComboBox.SelectedIndex];
-
-            applyModelAxesPreset(modelAxesPreset);
-        }
-
-        private void applyModelAxesPreset(ModelExporterStatic.ModelAxesPreset modelAxesPreset)
-        {
+            ModelAxesPreset modelAxesPreset = (ModelAxesPreset)modelAxesPresetComboBox.SelectedItem;
             leftAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.LeftAxis;
             upAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.UpAxis;
         }
 
         private void applyCurrentStateToExportOptions()
         {
-            exportOptions.LeftAxis = (Axes)leftAxisComboBox.SelectedIndex;
-            exportOptions.Normals = normalsCheckBox.Checked;
-            exportOptions.Package = packageCheckBox.Checked;
-            exportOptions.Scale.X = (Single)xScaleNumericUpDown.Value;
-            exportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
-            exportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
-            exportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
-            exportOptions.Textures = texturesCheckBox.Checked;
-            exportOptions.UpAxis = (Axes)upAxisComboBox.SelectedIndex;
-            exportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
+            modelExportOptions.LeftAxis = (Axes)leftAxisComboBox.SelectedIndex;
+            modelExportOptions.Normals = normalsCheckBox.Checked;
+            modelExportOptions.Package = packageCheckBox.Checked;
+            modelExportOptions.Scale.X = (Single)xScaleNumericUpDown.Value;
+            modelExportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
+            modelExportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
+            modelExportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
+            modelExportOptions.Textures = texturesCheckBox.Checked;
+            modelExportOptions.UpAxis = (Axes)upAxisComboBox.SelectedIndex;
+            modelExportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
         }
 
         private void textureFormatComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            exportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
+            modelExportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
         }
     }
 }

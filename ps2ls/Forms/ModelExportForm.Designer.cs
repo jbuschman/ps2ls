@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelExportForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -58,7 +57,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.textureFormatComboBox = new System.Windows.Forms.ComboBox();
             this.packageCheckBox = new System.Windows.Forms.CheckBox();
-            this.packageToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.zScaleNumericUpDown)).BeginInit();
@@ -409,9 +407,9 @@
             this.packageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.packageCheckBox.Location = new System.Drawing.Point(12, 410);
             this.packageCheckBox.Name = "packageCheckBox";
-            this.packageCheckBox.Size = new System.Drawing.Size(69, 17);
+            this.packageCheckBox.Size = new System.Drawing.Size(103, 17);
             this.packageCheckBox.TabIndex = 8;
-            this.packageCheckBox.Text = "Package";
+            this.packageCheckBox.Text = "Package Assets";
             this.packageCheckBox.UseVisualStyleBackColor = true;
             this.packageCheckBox.CheckedChanged += new System.EventHandler(this.packageCheckBox_CheckedChanged);
             // 
@@ -484,6 +482,5 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox modelAxesPresetComboBox;
         private System.Windows.Forms.CheckBox packageCheckBox;
-        private System.Windows.Forms.ToolTip packageToolTip;
     }
 }

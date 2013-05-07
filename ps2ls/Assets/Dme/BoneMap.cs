@@ -24,27 +24,20 @@ namespace ps2ls.Assets.Dme
         }
     }
 
-    public class BoneMap
+    public struct BoneMap
     {
-        public UInt32 Unknown0 { get; private set; }
-        public UInt32 BoneStart { get; private set; }
-        public UInt32 BoneCount { get; private set; }
-        public UInt32 Delta { get; private set; }
-        public UInt32 Unknown1 { get; private set; }
-        public UInt32 BoneEnd { get; private set; }
-        public UInt32 VertexCount { get; private set; }
-        public UInt32 Unknown2 { get; private set; }
-        public UInt32 IndexCount { get; private set; }
-
-        private BoneMap()
-        {
-        }
+        public UInt32 Unknown0;
+        public UInt32 BoneStart;
+        public UInt32 BoneCount;
+        public UInt32 Delta;
+        public UInt32 Unknown1;
+        public UInt32 BoneEnd;
+        public UInt32 VertexCount;
+        public UInt32 Unknown2;
+        public UInt32 IndexCount;
 
         public static BoneMap LoadFromStream(Stream stream)
         {
-            if (stream == null)
-                return null;
-
             BinaryReader binaryReader = new BinaryReader(stream);
 
             BoneMap boneMap = new BoneMap();

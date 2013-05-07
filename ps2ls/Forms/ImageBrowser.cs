@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ps2ls.Assets.Pack;
+using System.IO;
+using DevIL;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ps2ls.Forms
 {
     public partial class ImageBrowser : UserControl
     {
-
         #region Singleton
         private static ImageBrowser instance = null;
 
@@ -36,18 +39,18 @@ namespace ps2ls.Forms
             imageListbox.Items.Clear();
 
             Dock = DockStyle.Fill;
-
         }
-
 
         private void refreshImageListBox()
         {
             imageListbox.Items.Clear();
 
-            List<Asset> assets = new List<Asset>();
             List<Asset> images = null;
-
             AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DDS, out images);
+
+            int imageCount = images != null ? images.Count : 0;
+
+            List<Asset> assets = new List<Asset>(imageCount);
 
             if (images != null)
             {
@@ -87,59 +90,50 @@ namespace ps2ls.Forms
 
             System.IO.MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
 
-            Image i = TextureManager.LoadDrawingImageFromStream(memoryStream);
+            System.Drawing.Image image = LoadDrawingImageFromStream(memoryStream);
 
-            pictureWindow.BackgroundImage = i;
-            BackgroundImageLayout = ImageLayout.Stretch;
+            pictureWindow.BackgroundImage = image;
             pictureWindow.Show();
-            
-
-
         }
 
-       
-         private void searchText_TextChanged(object sender, EventArgs e)
+        private void ImageBrowser_Load(object sender, EventArgs e)
         {
-            searchTextTimer.Stop();
-            searchTextTimer.Start();
         }
 
-      
+        public override void Refresh()
+        {
+            base.Refresh();
 
-         private void searchTextTimer_Tick(object sender, EventArgs e)
-         {
-             if (searchText.Text.Length > 0)
-             {
-                 searchText.BackColor = Color.Yellow;
-                 toolStripButton2.Enabled = true;
+            refreshImageListBox();
+        }
 
-             }
-             else
-             {
-                 searchText.BackColor = Color.White;
-                 toolStripButton2.Enabled = false;
-             }
+        private void searchText_CustomTextChanged(object sender, EventArgs e)
+        {
+            refreshImageListBox();
 
-             searchTextTimer.Stop();
-             refreshImageListBox();
-         }
+            clearSearchTextButton.Enabled = searchText.Text.Length > 0;
+        }
 
-         private void toolStripButton2_Click(object sender, EventArgs e)
-         {
-             searchText.Clear();
-         }
+        private void clearSearchTextButton_Click(object sender, EventArgs e)
+        {
+            searchText.Clear();
+        }
 
-         private void pictureWindow_Click(object sender, EventArgs e)
-         {
+        public static System.Drawing.Image LoadDrawingImageFromStream(Stream stream)
+        {
+            ImageImporter importer = new ImageImporter();
+            DevIL.Image img = importer.LoadImageFromStream(stream);
 
-         }
+            DevIL.Unmanaged.ImageInfo data = img.GetImageInfo();
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(data.Width, data.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, data.Width, data.Height);
+            System.Drawing.Imaging.BitmapData bdata = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-         private void ImageBrowser_Load(object sender, EventArgs e)
-         {
-             searchTextTimer.Stop();
-             searchTextTimer.Start();
-         }
+            DevIL.Unmanaged.IL.CopyPixels(0, 0, 0, data.Width, data.Height, 1, DataFormat.BGRA, DevIL.DataType.UnsignedByte, bdata.Scan0);
 
+            bitmap.UnlockBits(bdata);
 
+            return (System.Drawing.Image)bitmap;
+        }
     }
 }
