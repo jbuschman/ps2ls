@@ -30,20 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.soundListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.searchBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchBoxClear = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.soundsMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.filesListed = new System.Windows.Forms.ToolStripStatusLabel();
             this.StopButton = new System.Windows.Forms.Button();
             this.PlayPause = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.soundListBox = new ps2ls.Forms.Controls.CustomListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -63,6 +63,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.soundListBox);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip1);
+            this.splitContainer1.Panel1MinSize = 250;
             // 
             // splitContainer1.Panel2
             // 
@@ -70,8 +71,22 @@
             this.splitContainer1.Panel2.Controls.Add(this.PlayPause);
             this.splitContainer1.Panel2.Controls.Add(this.StatusLabel);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer1.SplitterDistance = 266;
+            this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // soundListBox
+            // 
+            this.soundListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.soundListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
+            this.soundListBox.Items.AddRange(new object[] {
+            "Input a search term to continue"});
+            this.soundListBox.Location = new System.Drawing.Point(0, 25);
+            this.soundListBox.Name = "soundListBox";
+            this.soundListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.soundListBox.Size = new System.Drawing.Size(250, 553);
+            this.soundListBox.TabIndex = 0;
+            this.soundListBox.SelectedIndexChanged += new System.EventHandler(this.soundListBox_SelectedIndexChanged);
             // 
             // toolStrip1
             // 
@@ -82,10 +97,10 @@
             this.SearchBoxClear,
             this.toolStripSeparator1,
             this.toolStripLabel2,
-            this.filesMaxComboBox});
+            this.soundsMaxComboBox});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(266, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(250, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -120,21 +135,43 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripLabel2.Image = global::ps2ls.Properties.Resources.counter;
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(16, 22);
+            this.toolStripLabel2.Text = "File Count Max";
+            this.toolStripLabel2.ToolTipText = "File Count Maximum";
+            // 
+            // soundsMaxComboBox
+            // 
+            this.soundsMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.soundsMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.soundsMaxComboBox.Items.AddRange(new object[] {
+            "100",
+            "1000",
+            "10000",
+            "∞"});
+            this.soundsMaxComboBox.Name = "soundsMaxComboBox";
+            this.soundsMaxComboBox.Size = new System.Drawing.Size(75, 25);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.filesListed});
             this.statusStrip1.Location = new System.Drawing.Point(0, 578);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(266, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(250, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // filesListed
             // 
+            this.filesListed.Image = global::ps2ls.Properties.Resources.music;
             this.filesListed.Name = "filesListed";
-            this.filesListed.Size = new System.Drawing.Size(30, 17);
-            this.filesListed.Text = "0 / 0";
+            this.filesListed.Size = new System.Drawing.Size(40, 17);
+            this.filesListed.Text = "0/0";
             // 
             // StopButton
             // 
@@ -170,41 +207,6 @@
             // 
             this.refreshTimer.Interval = 500;
             this.refreshTimer.Tick += new System.EventHandler(this.refreshTimer_Tick);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripLabel2.Image = global::ps2ls.Properties.Resources.counter;
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(16, 22);
-            this.toolStripLabel2.Text = "File Count Max";
-            this.toolStripLabel2.ToolTipText = "File Count Maximum";
-            // 
-            // filesMaxComboBox
-            // 
-            this.filesMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.filesMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.filesMaxComboBox.Items.AddRange(new object[] {
-            "100",
-            "1000",
-            "10000",
-            "∞"});
-            this.filesMaxComboBox.Name = "filesMaxComboBox";
-            this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
-            // 
-            // soundListBox
-            // 
-            this.soundListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.soundListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
-            this.soundListBox.Items.AddRange(new object[] {
-            "Input a search term to continue"});
-            this.soundListBox.Location = new System.Drawing.Point(0, 25);
-            this.soundListBox.Name = "soundListBox";
-            this.soundListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.soundListBox.Size = new System.Drawing.Size(266, 553);
-            this.soundListBox.TabIndex = 0;
-            this.soundListBox.SelectedIndexChanged += new System.EventHandler(this.soundListBox_SelectedIndexChanged);
             // 
             // SoundBrowser
             // 
@@ -244,6 +246,6 @@
         private System.Windows.Forms.Button StopButton;
         private System.Windows.Forms.Button PlayPause;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
+        private System.Windows.Forms.ToolStripComboBox soundsMaxComboBox;
     }
 }

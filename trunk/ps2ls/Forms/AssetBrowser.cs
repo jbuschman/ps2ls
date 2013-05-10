@@ -268,5 +268,18 @@ namespace ps2ls.Forms
             AssetManifestWriter writer = new AssetManifestWriter();
             writer.Write(@"C:\Users\Colin\Desktop\" + 0 + @".ps2lsmanifest");
         }
+
+        private void assetsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow row = assetsDataGridView.Rows[e.RowIndex];
+
+            if (row == null)
+                return;
+
+            Asset asset = (Asset)row.Tag;
+
+            if(asset != null)
+                asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
+        }
     }
 }
