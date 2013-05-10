@@ -84,6 +84,11 @@ namespace ps2ls.Forms
 
         private void extractSelectedAssetsButton_Click(object sender, EventArgs e)
         {
+            extractSelectedAssets();
+        }
+
+        private void extractSelectedAssets()
+        {
             if (packFolderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 List<Asset> assets = new List<Asset>();
@@ -132,11 +137,34 @@ namespace ps2ls.Forms
         {
             filesMaxComboBox.SelectedIndex = 3; //infinity
 
+
             if (Properties.Settings.Default.AssetDirectory != String.Empty)
             {
-                if (DialogResult.Yes == MessageBox.Show(@"Would you like to load all *.pak files located in " + Properties.Settings.Default.AssetDirectory + "?", "ps2ls", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false))
+                if (Properties.Settings.Default.LoadAssetsOnStartup)
                 {
                     AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
+                }
+                else
+                {
+                    GenericDialog genericDialog = new GenericDialog();
+                    genericDialog.Message =
+                        "ps2ls has detected your PlanetSide 2 assets directory." +
+                        System.Environment.NewLine +
+                        System.Environment.NewLine +
+                        "Would you like to load all asset (*.pak) files found in " + Properties.Settings.Default.AssetDirectory + " ?";
+                    genericDialog.OptionVisible = true;
+                    genericDialog.OptionChecked = false;
+                    genericDialog.OptionText = "Always perform this action (recommended)";
+
+                    if(DialogResult.Yes == genericDialog.ShowDialog())
+                    {
+                        if (genericDialog.OptionChecked)
+                        {
+                            Properties.Settings.Default.LoadAssetsOnStartup = true;
+                            Properties.Settings.Default.Save();
+                        }
+                        AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
+                    }
                 }
             }
         }
@@ -210,15 +238,10 @@ namespace ps2ls.Forms
 
         private void assetsDataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            extractSelectedAssetsButton.Enabled = assetsDataGridView.SelectedRows.Count > 0;
         }
 
         private void packsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            propertyGrid.SelectedObject = packsListBox.SelectedItem;
-
-            extractSelectedPacksButton.Enabled = packsListBox.SelectedItems.Count > 0;
-
             refreshAssetsDataGridView();
         }
 
@@ -229,8 +252,20 @@ namespace ps2ls.Forms
 
         private void packContextMenuStrip_Opening(object sender, CancelEventArgs e)
         {
-            extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + " Pack(s)...";
-            extractPacksToolStripMenuItem.Enabled = packsListBox.SelectedItems.Count > 0;
+            if (packsListBox.SelectedItems.Count == 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (packsListBox.SelectedItems.Count == 1)
+            {
+                extractPacksToolStripMenuItem.Text = "Extract...";
+            }
+            else
+            {
+                extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + "...";
+            }
         }
 
         private void extractPacksToolStripMenuItem_Click(object sender, EventArgs e)
@@ -271,6 +306,9 @@ namespace ps2ls.Forms
 
         private void assetsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
+
             DataGridViewRow row = assetsDataGridView.Rows[e.RowIndex];
 
             if (row == null)
@@ -280,6 +318,65 @@ namespace ps2ls.Forms
 
             if(asset != null)
                 asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
+        }
+
+        private void assetContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            if(assetsDataGridView.SelectedRows.Count == 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (assetsDataGridView.SelectedRows.Count == 1)
+            {
+                openToolStripMenuItem.Text = "Open";
+                extractToolStripMenuItem.Text = "Extract...";
+            }
+            else
+            {
+                openToolStripMenuItem.Text = "Open " + assetsDataGridView.SelectedRows.Count;
+                extractToolStripMenuItem.Text = "Extract " + assetsDataGridView.SelectedRows.Count + "...";
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openSelectedAssets();
+        }
+
+        private void openSelectedAssets()
+        {
+            if (assetsDataGridView.SelectedRows.Count >= 100)
+            {
+                GenericDialog genericDialog = new GenericDialog();
+                genericDialog.Message = "You are about to open " + assetsDataGridView.SelectedRows.Count + " files simulatenously.  Doing so may cause system instability." +
+                    Environment.NewLine +
+                    Environment.NewLine +
+                    "Are you sure you want to continue?";
+                genericDialog.Image = Properties.Resources.logo_48_warn;
+
+                if (genericDialog.ShowDialog() != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            foreach (DataGridViewRow row in assetsDataGridView.SelectedRows)
+            {
+                if (row == null)
+                    return;
+
+                Asset asset = (Asset)row.Tag;
+
+                if (asset != null)
+                    asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
+            }
+        }
+
+        private void extractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            extractSelectedAssets();
         }
     }
 }

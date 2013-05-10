@@ -53,7 +53,7 @@ namespace ps2ls.Forms
         {
             AssetBrowser.CreateInstance();
             ModelBrowser.CreateInstance();
-            ImageBrowser.CreateInstance();
+            TextureBrowser.CreateInstance();
             SoundBrowser.CreateInstance();
 
             ImageList imageList = new ImageList();
@@ -73,18 +73,16 @@ namespace ps2ls.Forms
             modelBrowserTabPage.ImageIndex = 1;
             tabControl1.TabPages.Add(modelBrowserTabPage);
 
-            TabPage imageBrowser = new TabPage("Image Browser");
-            imageBrowser.Controls.Add(ImageBrowser.Instance);
-            imageBrowser.ImageIndex = 2;
-            tabControl1.TabPages.Add(imageBrowser);
+            TabPage textureBrowser = new TabPage("Texture Browser");
+            textureBrowser.Controls.Add(TextureBrowser.Instance);
+            textureBrowser.ImageIndex = 2;
+            tabControl1.TabPages.Add(textureBrowser);
 
             TabPage soundBrowser = new TabPage("Sound Browser");
             soundBrowser.Controls.Add(SoundBrowser.Instance);
             soundBrowser.ImageIndex = 3;
             soundBrowser.Enter += SoundBrowser.Instance.onEnter;
             tabControl1.TabPages.Add(soundBrowser);
-
-            
         }
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)

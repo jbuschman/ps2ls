@@ -148,6 +148,9 @@
   <data name="document-arrow-drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-arrow-drive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="eye-gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eye-gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="chain-small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\chain-small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -166,11 +169,11 @@
   <data name="cube" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cube.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="clipboard-list" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\clipboard-list.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="box-search-result" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box-search-result.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="materials_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\materials_3.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="box--arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box--arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -190,6 +193,9 @@
   <data name="sphere-aabb2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sphere-aabb2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="box-arrow-drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\box-arrow-drive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ui_text_field_clear_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ui-text-field-clear-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -198,6 +204,9 @@
   </data>
   <data name="tree_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tree-small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo_48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="box_zipper" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box-zipper.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -211,14 +220,17 @@
   <data name="box_document" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box-document.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="document-search-result" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\document-search-result.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="materials_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\materials_3.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="folder-open-document" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder-open-document.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="document_xaml" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-xaml.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="box-arrow-drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\box-arrow-drive.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="question" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\question.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="magnifier" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\magnifier.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -259,8 +271,8 @@
   <data name="counter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\counter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="document-search-result" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\document-search-result.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="textured1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\textured1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -271,10 +283,13 @@
   <data name="box_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\box-small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="question" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\question.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="clipboard-list" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\clipboard-list.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="eye-half" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eye-half.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="logo_48_warn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo_48_warn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

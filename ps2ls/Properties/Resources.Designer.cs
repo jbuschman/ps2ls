@@ -363,6 +363,26 @@ namespace ps2ls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap eye_gear {
+            get {
+                object obj = ResourceManager.GetObject("eye-gear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap eye_half {
+            get {
+                object obj = ResourceManager.GetObject("eye-half", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap folder_horizontal_open {
             get {
                 object obj = ResourceManager.GetObject("folder-horizontal-open", resourceCulture);
@@ -376,6 +396,16 @@ namespace ps2ls.Properties {
         internal static System.Drawing.Bitmap folder_import {
             get {
                 object obj = ResourceManager.GetObject("folder_import", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_open_document {
+            get {
+                object obj = ResourceManager.GetObject("folder-open-document", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -416,6 +446,26 @@ namespace ps2ls.Properties {
         internal static System.Drawing.Bitmap image {
             get {
                 object obj = ResourceManager.GetObject("image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo_48 {
+            get {
+                object obj = ResourceManager.GetObject("logo_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo_48_warn {
+            get {
+                object obj = ResourceManager.GetObject("logo_48_warn", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

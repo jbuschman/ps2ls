@@ -33,22 +33,22 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.packsListBox = new System.Windows.Forms.ListBox();
             this.packContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.extractPacksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.addPacksButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.extractSelectedPacksButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.propertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
+            this.packCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.assetsDataGridView = new System.Windows.Forms.DataGridView();
             this.FileIcon = new System.Windows.Forms.DataGridViewImageColumn();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LengthInKilobytes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.assetContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.searchTextBox = new ps2ls.Forms.Controls.SearchToolStripTextBox();
@@ -56,44 +56,35 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.extractSelectedAssetsButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.fileCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.packFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.packOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.assetContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.packCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
             this.packContextMenuStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.statusStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.assetsDataGridView)).BeginInit();
+            this.assetContextMenuStrip.SuspendLayout();
             this.toolStrip3.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.assetContextMenuStrip.SuspendLayout();
-            this.statusStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Panel1.Controls.Add(this.packsListBox);
+            this.splitContainer2.Panel1.Controls.Add(this.toolStrip1);
+            this.splitContainer2.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer2.Panel1MinSize = 250;
             // 
             // splitContainer2.Panel2
@@ -105,26 +96,6 @@
             this.splitContainer2.SplitterDistance = 250;
             this.splitContainer2.TabIndex = 2;
             // 
-            // splitContainer3
-            // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.Controls.Add(this.statusStrip2);
-            this.splitContainer3.Panel1.Controls.Add(this.packsListBox);
-            this.splitContainer3.Panel1.Controls.Add(this.toolStrip1);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.propertyGrid);
-            this.splitContainer3.Size = new System.Drawing.Size(250, 600);
-            this.splitContainer3.SplitterDistance = 418;
-            this.splitContainer3.TabIndex = 4;
-            // 
             // packsListBox
             // 
             this.packsListBox.ContextMenuStrip = this.packContextMenuStrip;
@@ -134,7 +105,7 @@
             this.packsListBox.Location = new System.Drawing.Point(0, 25);
             this.packsListBox.Name = "packsListBox";
             this.packsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.packsListBox.Size = new System.Drawing.Size(250, 393);
+            this.packsListBox.Size = new System.Drawing.Size(250, 553);
             this.packsListBox.TabIndex = 0;
             this.packsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.packsListBox_DrawItem);
             this.packsListBox.SelectedIndexChanged += new System.EventHandler(this.packsListBox_SelectedIndexChanged);
@@ -150,7 +121,7 @@
             // 
             // extractPacksToolStripMenuItem
             // 
-            this.extractPacksToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box_arrow_drive;
+            this.extractPacksToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
             this.extractPacksToolStripMenuItem.Name = "extractPacksToolStripMenuItem";
             this.extractPacksToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.extractPacksToolStripMenuItem.Text = "Extract 0 Pack(s)...";
@@ -160,11 +131,7 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addPacksButton,
-            this.toolStripSeparator4,
-            this.extractSelectedPacksButton,
-            this.toolStripSeparator5,
-            this.toolStripButton1});
+            this.addPacksButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(250, 25);
@@ -181,45 +148,23 @@
             this.addPacksButton.Text = "Add Packs...";
             this.addPacksButton.Click += new System.EventHandler(this.addPacksButton_Click);
             // 
-            // toolStripSeparator4
+            // statusStrip2
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.packCountLabel});
+            this.statusStrip2.Location = new System.Drawing.Point(0, 578);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.SizingGrip = false;
+            this.statusStrip2.TabIndex = 2;
+            this.statusStrip2.Text = "statusStrip2";
             // 
-            // extractSelectedPacksButton
+            // packCountLabel
             // 
-            this.extractSelectedPacksButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.extractSelectedPacksButton.Enabled = false;
-            this.extractSelectedPacksButton.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.extractSelectedPacksButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.extractSelectedPacksButton.Name = "extractSelectedPacksButton";
-            this.extractSelectedPacksButton.Size = new System.Drawing.Size(23, 22);
-            this.extractSelectedPacksButton.Text = "Extract Selected Packs...";
-            this.extractSelectedPacksButton.Click += new System.EventHandler(this.extractSelectedPacksButton_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::ps2ls.Properties.Resources.clipboard_list;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // propertyGrid
-            // 
-            this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(250, 178);
-            this.propertyGrid.TabIndex = 4;
-            this.propertyGrid.ToolbarVisible = false;
+            this.packCountLabel.Image = global::ps2ls.Properties.Resources.box_search_result;
+            this.packCountLabel.Name = "packCountLabel";
+            this.packCountLabel.Size = new System.Drawing.Size(40, 17);
+            this.packCountLabel.Text = "0/0";
             // 
             // assetsDataGridView
             // 
@@ -243,6 +188,7 @@
             this.FileName,
             this.FileType,
             this.LengthInKilobytes});
+            this.assetsDataGridView.ContextMenuStrip = this.assetContextMenuStrip;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -302,6 +248,37 @@
             this.LengthInKilobytes.Name = "LengthInKilobytes";
             this.LengthInKilobytes.ReadOnly = true;
             // 
+            // assetContextMenuStrip
+            // 
+            this.assetContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.extractToolStripMenuItem});
+            this.assetContextMenuStrip.Name = "assetContextMenuStrip";
+            this.assetContextMenuStrip.Size = new System.Drawing.Size(119, 54);
+            this.assetContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.assetContextMenuStrip_Opening);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = global::ps2ls.Properties.Resources.folder_open_document;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(115, 6);
+            // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.extractToolStripMenuItem.Text = "Extract...";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
+            // 
             // toolStrip3
             // 
             this.toolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -311,9 +288,7 @@
             this.clearSearchButton,
             this.toolStripSeparator2,
             this.toolStripLabel2,
-            this.filesMaxComboBox,
-            this.toolStripSeparator3,
-            this.extractSelectedAssetsButton});
+            this.filesMaxComboBox});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(546, 25);
@@ -325,7 +300,8 @@
             this.toolStripLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripLabel1.Image = global::ps2ls.Properties.Resources.magnifier;
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(16, 22);
+            this.toolStripLabel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.toolStripLabel1.Size = new System.Drawing.Size(22, 22);
             this.toolStripLabel1.Text = "toolStripLabel1";
             this.toolStripLabel1.ToolTipText = "Search";
             // 
@@ -358,7 +334,8 @@
             this.toolStripLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripLabel2.Image = global::ps2ls.Properties.Resources.counter;
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(16, 22);
+            this.toolStripLabel2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.toolStripLabel2.Size = new System.Drawing.Size(22, 22);
             this.toolStripLabel2.Text = "File Count Max";
             this.toolStripLabel2.ToolTipText = "File Count Maximum";
             // 
@@ -374,22 +351,6 @@
             this.filesMaxComboBox.Name = "filesMaxComboBox";
             this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
             this.filesMaxComboBox.SelectedIndexChanged += new System.EventHandler(this.filesMaxComboBox_SelectedIndexChanged);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // extractSelectedAssetsButton
-            // 
-            this.extractSelectedAssetsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.extractSelectedAssetsButton.Enabled = false;
-            this.extractSelectedAssetsButton.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.extractSelectedAssetsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.extractSelectedAssetsButton.Name = "extractSelectedAssetsButton";
-            this.extractSelectedAssetsButton.Size = new System.Drawing.Size(23, 22);
-            this.extractSelectedAssetsButton.Text = "Extract Selected Files...";
-            this.extractSelectedAssetsButton.Click += new System.EventHandler(this.extractSelectedAssetsButton_Click);
             // 
             // statusStrip1
             // 
@@ -414,52 +375,6 @@
             this.packOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
             this.packOpenFileDialog.Multiselect = true;
             // 
-            // assetContextMenuStrip
-            // 
-            this.assetContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.extractToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.removeToolStripMenuItem});
-            this.assetContextMenuStrip.Name = "assetContextMenuStrip";
-            this.assetContextMenuStrip.Size = new System.Drawing.Size(118, 54);
-            // 
-            // extractToolStripMenuItem
-            // 
-            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
-            this.extractToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.extractToolStripMenuItem.Text = "Extract";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(114, 6);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Image = global::ps2ls.Properties.Resources.box__minus;
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
-            this.removeToolStripMenuItem.Text = "Remove";
-            // 
-            // statusStrip2
-            // 
-            this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.packCountLabel});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 396);
-            this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
-            this.statusStrip2.SizingGrip = false;
-            this.statusStrip2.TabIndex = 2;
-            this.statusStrip2.Text = "statusStrip2";
-            // 
-            // packCountLabel
-            // 
-            this.packCountLabel.Image = global::ps2ls.Properties.Resources.box_search_result;
-            this.packCountLabel.Name = "packCountLabel";
-            this.packCountLabel.Size = new System.Drawing.Size(40, 17);
-            this.packCountLabel.Text = "0/0";
-            // 
             // AssetBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -469,26 +384,22 @@
             this.Size = new System.Drawing.Size(800, 600);
             this.Load += new System.EventHandler(this.PackBrowserUserControl_Load);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel1.PerformLayout();
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
             this.packContextMenuStrip.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.statusStrip2.ResumeLayout(false);
+            this.statusStrip2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.assetsDataGridView)).EndInit();
+            this.assetContextMenuStrip.ResumeLayout(false);
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.assetContextMenuStrip.ResumeLayout(false);
-            this.statusStrip2.ResumeLayout(false);
-            this.statusStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -496,13 +407,6 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.ListBox packsListBox;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton addPacksButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton extractSelectedPacksButton;
-        private System.Windows.Forms.PropertyGrid propertyGrid;
         private System.Windows.Forms.DataGridView assetsDataGridView;
         private System.Windows.Forms.DataGridViewImageColumn FileIcon;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
@@ -514,8 +418,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton extractSelectedAssetsButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel fileCountLabel;
         private System.Windows.Forms.FolderBrowserDialog packFolderBrowserDialog;
@@ -524,12 +426,13 @@
         private System.Windows.Forms.ContextMenuStrip assetContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem extractToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractPacksToolStripMenuItem;
         private Controls.SearchToolStripTextBox searchTextBox;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ListBox packsListBox;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton addPacksButton;
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStripStatusLabel packCountLabel;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
     }
 }

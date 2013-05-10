@@ -1,6 +1,6 @@
 ﻿namespace ps2ls.Forms
 {
-    partial class ImageBrowser
+    partial class TextureBrowser
     {
         /// <summary>
         /// Required designer variable.
@@ -32,14 +32,11 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.searchText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchTextButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.pictureWindow = new System.Windows.Forms.PictureBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.imagesCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.imageListbox = new ps2ls.Forms.Controls.CustomListBox();
+            this.textureListbox = new ps2ls.Forms.Controls.CustomListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureWindow)).BeginInit();
             this.statusStrip2.SuspendLayout();
@@ -55,9 +52,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.searchText,
-            this.clearSearchTextButton,
-            this.toolStripSeparator1,
-            this.toolStripButton3});
+            this.clearSearchTextButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(250, 25);
@@ -91,20 +86,6 @@
             this.clearSearchTextButton.Text = "clearSearchText";
             this.clearSearchTextButton.Click += new System.EventHandler(this.clearSearchTextButton_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton3.Text = "toolStripButton3";
-            // 
             // pictureWindow
             // 
             this.pictureWindow.BackColor = System.Drawing.Color.Black;
@@ -120,8 +101,7 @@
             // statusStrip2
             // 
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.imagesCountLabel,
-            this.toolStripProgressBar1});
+            this.imagesCountLabel});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
             this.statusStrip2.Size = new System.Drawing.Size(250, 22);
@@ -136,30 +116,31 @@
             this.imagesCountLabel.Size = new System.Drawing.Size(40, 17);
             this.imagesCountLabel.Text = "0/0";
             // 
-            // imageListbox
+            // textureListbox
             // 
-            this.imageListbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageListbox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.imageListbox.FormattingEnabled = true;
-            this.imageListbox.Image = global::ps2ls.Properties.Resources.image;
-            this.imageListbox.Items.AddRange(new object[] {
+            this.textureListbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textureListbox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.textureListbox.FormattingEnabled = true;
+            this.textureListbox.Image = global::ps2ls.Properties.Resources.image;
+            this.textureListbox.Items.AddRange(new object[] {
             "ImageListBox"});
-            this.imageListbox.Location = new System.Drawing.Point(0, 25);
-            this.imageListbox.Name = "imageListbox";
-            this.imageListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.imageListbox.Size = new System.Drawing.Size(250, 553);
-            this.imageListbox.TabIndex = 0;
-            this.imageListbox.SelectedIndexChanged += new System.EventHandler(this.imageListbox_SelectedIndexChanged);
+            this.textureListbox.Location = new System.Drawing.Point(0, 25);
+            this.textureListbox.Name = "textureListbox";
+            this.textureListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.textureListbox.Size = new System.Drawing.Size(250, 553);
+            this.textureListbox.TabIndex = 0;
+            this.textureListbox.SelectedIndexChanged += new System.EventHandler(this.textureListbox_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.imageListbox);
+            this.splitContainer1.Panel1.Controls.Add(this.textureListbox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
             this.splitContainer1.Panel1MinSize = 250;
@@ -171,17 +152,12 @@
             this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 5;
             // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            // 
-            // ImageBrowser
+            // TextureBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "ImageBrowser";
+            this.Name = "TextureBrowser";
             this.Size = new System.Drawing.Size(800, 600);
             this.Load += new System.EventHandler(this.ImageBrowser_Load);
             this.toolStrip1.ResumeLayout(false);
@@ -200,17 +176,14 @@
 
         #endregion
 
-        private Controls.CustomListBox imageListbox;
+        private Controls.CustomListBox textureListbox;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private Controls.SearchToolStripTextBox searchText;
         private System.Windows.Forms.ToolStripButton clearSearchTextButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStripStatusLabel imagesCountLabel;
         private System.Windows.Forms.PictureBox pictureWindow;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
