@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using ps2ls.Assets.Pack;
 using System.IO;
 using DevIL;
-using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace ps2ls.Forms

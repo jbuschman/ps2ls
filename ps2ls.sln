@@ -1,7 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ps2ls", "ps2ls\ps2ls.csproj", "{EA8DD307-8B70-4B76-A3E4-140D2A5ECB89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D3A5783F-A596-4263-905D-255D59174818} = {D3A5783F-A596-4263-905D-255D59174818}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevILNet", "devil-net\DevILNet\DevILNet.csproj", "{578FD0D9-41AA-4FA4-8D9B-4021978FA48D}"
 EndProject

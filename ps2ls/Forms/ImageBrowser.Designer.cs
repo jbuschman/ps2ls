@@ -39,6 +39,7 @@
             this.imagesCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.imageListbox = new ps2ls.Forms.Controls.CustomListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureWindow)).BeginInit();
             this.statusStrip2.SuspendLayout();
@@ -59,7 +60,7 @@
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(213, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(250, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -112,17 +113,19 @@
             this.pictureWindow.InitialImage = null;
             this.pictureWindow.Location = new System.Drawing.Point(0, 0);
             this.pictureWindow.Name = "pictureWindow";
-            this.pictureWindow.Size = new System.Drawing.Size(583, 600);
+            this.pictureWindow.Size = new System.Drawing.Size(546, 600);
             this.pictureWindow.TabIndex = 2;
             this.pictureWindow.TabStop = false;
             // 
             // statusStrip2
             // 
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.imagesCountLabel});
+            this.imagesCountLabel,
+            this.toolStripProgressBar1});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(213, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 4;
             this.statusStrip2.Text = "statusStrip2";
             // 
@@ -144,7 +147,7 @@
             this.imageListbox.Location = new System.Drawing.Point(0, 25);
             this.imageListbox.Name = "imageListbox";
             this.imageListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.imageListbox.Size = new System.Drawing.Size(213, 553);
+            this.imageListbox.Size = new System.Drawing.Size(250, 553);
             this.imageListbox.TabIndex = 0;
             this.imageListbox.SelectedIndexChanged += new System.EventHandler(this.imageListbox_SelectedIndexChanged);
             // 
@@ -159,13 +162,19 @@
             this.splitContainer1.Panel1.Controls.Add(this.imageListbox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
+            this.splitContainer1.Panel1MinSize = 250;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.pictureWindow);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer1.SplitterDistance = 213;
+            this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 5;
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             // 
             // ImageBrowser
             // 
@@ -202,5 +211,6 @@
         private System.Windows.Forms.ToolStripStatusLabel imagesCountLabel;
         private System.Windows.Forms.PictureBox pictureWindow;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
