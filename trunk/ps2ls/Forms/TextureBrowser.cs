@@ -13,14 +13,14 @@ using System.Drawing.Imaging;
 
 namespace ps2ls.Forms
 {
-    public partial class ImageBrowser : UserControl
+    public partial class TextureBrowser : UserControl
     {
         #region Singleton
-        private static ImageBrowser instance = null;
+        private static TextureBrowser instance = null;
 
         public static void CreateInstance()
         {
-            instance = new ImageBrowser();
+            instance = new TextureBrowser();
         }
 
         public static void DeleteInstance()
@@ -28,21 +28,21 @@ namespace ps2ls.Forms
             instance = null;
         }
 
-        public static ImageBrowser Instance { get { return instance; } }
+        public static TextureBrowser Instance { get { return instance; } }
         #endregion
 
-        public ImageBrowser()
+        public TextureBrowser()
         {
             InitializeComponent();
 
-            imageListbox.Items.Clear();
+            textureListbox.Items.Clear();
 
             Dock = DockStyle.Fill;
         }
 
         private void refreshImageListBox()
         {
-            imageListbox.Items.Clear();
+            textureListbox.Items.Clear();
 
             List<Asset> images = null;
             AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DDS, out images);
@@ -64,26 +64,26 @@ namespace ps2ls.Forms
                 {
                     if (asset.Name.IndexOf(searchText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        imageListbox.Items.Add(asset);
+                        textureListbox.Items.Add(asset);
                     }
 
                 }
             }
 
-            int count = imageListbox.Items.Count;
+            int count = textureListbox.Items.Count;
             int max = assets != null ? assets.Count : 0;
 
             imagesCountLabel.Text = count + "/" + max;
 
         }
 
-        private void imageListbox_SelectedIndexChanged(object sender, EventArgs e)
+        private void textureListbox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Asset asset = null;
 
             try
             {
-                asset = (Asset)imageListbox.SelectedItem;
+                asset = (Asset)textureListbox.SelectedItem;
             }
             catch (InvalidCastException) { return; }
 

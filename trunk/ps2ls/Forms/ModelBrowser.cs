@@ -415,6 +415,8 @@ void main(void)
 
         private void ModelBrowserControl_Load(object sender, EventArgs e)
         {
+            lodFilterComboBox.SelectedIndex = 1;    //LOD 0
+
             glControl1.CreateGraphics();
 
             createShaderProgram();
@@ -473,18 +475,21 @@ void main(void)
             {
                 foreach (Asset asset in assets)
                 {
-                    if (showAutoLODModelsButton.Checked == false)
+                    if (showAutoLODModelsButton.Checked == false && asset.Name.EndsWith("Auto.dme"))
+                        continue;
+
+                    if (lodFilterComboBox.SelectedIndex > 0)
                     {
-                        if (asset.Name.EndsWith("Auto.dme"))
-                        {
+                        String lodString = "lod" + (lodFilterComboBox.SelectedIndex - 1).ToString();
+
+                        if (asset.Name.IndexOf(lodString, 0, StringComparison.OrdinalIgnoreCase) == -1)
                             continue;
-                        }
                     }
 
-                    if (asset.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        modelsListBox.Items.Add(asset);
-                    }
+                    if (searchModelsText.Text.Length > 0 && asset.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) == -1)
+                        continue;
+                        
+                    modelsListBox.Items.Add(asset);
                 }
             }
 
@@ -502,8 +507,6 @@ void main(void)
         private void modelsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Asset asset = null;
-
-            exportSelectedModelsToolStripButton.Enabled = modelsListBox.SelectedItems.Count > 0;
 
             try
             {
@@ -530,28 +533,6 @@ void main(void)
             materialSelectionComboBox.SelectedIndex = materialSelectionComboBox.Items.Count > 0 ? 0 : -1;
 
             snapCameraToModel();
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            List<String> fileNames = new List<string>();
-
-            foreach (object selectedItem in modelsListBox.SelectedItems)
-            {
-                Asset asset = null;
-
-                try
-                {
-                    asset = (Asset)selectedItem;
-                }
-                catch (InvalidCastException) { continue; }
-
-                fileNames.Add(asset.Name);
-            }
-
-            ModelExportForm modelExportForm = new ModelExportForm();
-            modelExportForm.FileNames = fileNames;
-            modelExportForm.ShowDialog();
         }
 
         private void snapCameraToModel()
@@ -663,6 +644,56 @@ void main(void)
         private void materialSelectionComboBox_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void lodFilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshModelsListBox();
+        }
+
+        private void extractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            extractSelectedModels();
+        }
+
+        private void extractSelectedModels()
+        {
+            List<String> fileNames = new List<string>();
+
+            foreach (object selectedItem in modelsListBox.SelectedItems)
+            {
+                Asset asset = null;
+
+                try
+                {
+                    asset = (Asset)selectedItem;
+                }
+                catch (InvalidCastException) { continue; }
+
+                fileNames.Add(asset.Name);
+            }
+
+            ModelExportForm modelExportForm = new ModelExportForm();
+            modelExportForm.FileNames = fileNames;
+            modelExportForm.ShowDialog();
+        }
+
+        private void modelContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            if (modelsListBox.SelectedItems.Count == 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (modelsListBox.SelectedItems.Count == 1)
+            {
+                extractToolStripMenuItem.Text = "Extract...";
+            }
+            else
+            {
+                extractToolStripMenuItem.Text = "Extract " + modelsListBox.SelectedItems.Count + "...";
+            }
         }
     }
 }

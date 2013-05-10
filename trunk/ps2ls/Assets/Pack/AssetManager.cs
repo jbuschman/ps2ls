@@ -93,7 +93,12 @@ namespace ps2ls.Assets.Pack
 
             if (ModelBrowser.Instance != null)
             {
-                ImageBrowser.Instance.Refresh();
+                TextureBrowser.Instance.Refresh();
+            }
+
+            if (SoundBrowser.Instance != null)
+            {
+                SoundBrowser.Instance.Refresh();
             }
         }
 

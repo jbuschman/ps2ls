@@ -46,9 +46,12 @@ namespace ps2ls.Forms
         private FMOD.Sound fsb = null;
         private FMOD.Channel channel = null;
         private FMOD.Sound subsound = null;
-
         private FMOD.SOUND_PCMREADCALLBACK pcmReadCallback = new FMOD.SOUND_PCMREADCALLBACK(PCMREADCALLBACK);
         private FMOD.SOUND_PCMSETPOSCALLBACK pcmSetPosCallback = new FMOD.SOUND_PCMSETPOSCALLBACK(PCMSETPOSCALLBACK);
+        private FMOD.FILE_OPENCALLBACK myopen = new FMOD.FILE_OPENCALLBACK(OPENCALLBACK);
+        private FMOD.FILE_CLOSECALLBACK myclose = new FMOD.FILE_CLOSECALLBACK(CLOSECALLBACK);
+        private FMOD.FILE_READCALLBACK myread = new FMOD.FILE_READCALLBACK(READCALLBACK);
+        private FMOD.FILE_SEEKCALLBACK myseek = new FMOD.FILE_SEEKCALLBACK(SEEKCALLBACK);
 
         private static float t1 = 0, t2 = 0;        // time
         private static float v1 = 0, v2 = 0;        // velocity
@@ -77,17 +80,8 @@ namespace ps2ls.Forms
 
         private static FMOD.RESULT PCMSETPOSCALLBACK(IntPtr soundraw, int subsound, uint pcmoffset, FMOD.TIMEUNIT postype)
         {
-            /*
-                This is useful if the user calls Sound::setTime or Sound::setPosition and you want to seek your data accordingly.
-            */
-
             return FMOD.RESULT.OK;
         }
-
-        private FMOD.FILE_OPENCALLBACK myopen = new FMOD.FILE_OPENCALLBACK(OPENCALLBACK);
-        private FMOD.FILE_CLOSECALLBACK myclose = new FMOD.FILE_CLOSECALLBACK(CLOSECALLBACK);
-        private FMOD.FILE_READCALLBACK myread = new FMOD.FILE_READCALLBACK(READCALLBACK);
-        private FMOD.FILE_SEEKCALLBACK myseek = new FMOD.FILE_SEEKCALLBACK(SEEKCALLBACK);
 
         static MemoryStream ms;
 
@@ -222,6 +216,13 @@ namespace ps2ls.Forms
 
         public void onEnter(object sender, EventArgs e)
         {
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            refreshListBox();
         }
 
         private void SearchBoxClear_Click(object sender, EventArgs e)
