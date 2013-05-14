@@ -39,6 +39,11 @@ namespace ps2ls.Forms
             InitializeComponent();
         }
 
+        private void onAssetsChanged(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -55,6 +60,9 @@ namespace ps2ls.Forms
             ModelBrowser.CreateInstance();
             TextureBrowser.CreateInstance();
             SoundBrowser.CreateInstance();
+
+            //the placement of this event handler is not arbitrary, do not move it!
+            AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
 
             ImageList imageList = new ImageList();
             imageList.Images.Add(Properties.Resources.box_small);
@@ -90,9 +98,17 @@ namespace ps2ls.Forms
             System.Diagnostics.Process.Start(Properties.Settings.Default.ProjectNewIssueURL);
         }
 
-        private void compareToolStripMenuItem_Click(object sender, EventArgs e)
+        public override void Refresh()
         {
-            AssetManager.Instance.WriteFileListingToFile("FileListing.txt");
+            base.Refresh();
+
+            foreach (Control control in tabControl1.SelectedTab.Controls)
+                control.Refresh();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }

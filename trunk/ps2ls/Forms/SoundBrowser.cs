@@ -33,6 +33,8 @@ namespace ps2ls.Forms
         public static SoundBrowser Instance { get { return instance; } }
         #endregion
 
+        private bool assetsDirty = false;
+
         public SoundBrowser()
         {
             InitializeComponent();
@@ -40,6 +42,13 @@ namespace ps2ls.Forms
             soundListBox.Items.Clear();
 
             Dock = DockStyle.Fill;
+
+            AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
+        }
+
+        private void onAssetsChanged(object sender, EventArgs e)
+        {
+            assetsDirty = true;
         }
 
         private FMOD.System fmodSystem;
@@ -222,7 +231,11 @@ namespace ps2ls.Forms
         {
             base.Refresh();
 
-            refreshListBox();
+            if (assetsDirty)
+            {
+                refreshListBox();
+                assetsDirty = false;
+            }
         }
 
         private void SearchBoxClear_Click(object sender, EventArgs e)
@@ -298,6 +311,11 @@ namespace ps2ls.Forms
 
                 fileNames.Add(asset.Name);
             }
+        }
+
+        private void soundsMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshListBox();
         }
     }
 }

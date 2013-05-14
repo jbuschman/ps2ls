@@ -35,9 +35,6 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.searchBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchBoxClear = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.soundsMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.filesListed = new System.Windows.Forms.ToolStripStatusLabel();
             this.StopButton = new System.Windows.Forms.Button();
@@ -81,9 +78,9 @@
             this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
             this.soundListBox.Items.AddRange(new object[] {
             "Input a search term to continue"});
-            this.soundListBox.Location = new System.Drawing.Point(0, 27);
+            this.soundListBox.Location = new System.Drawing.Point(0, 25);
             this.soundListBox.Name = "soundListBox";
-            this.soundListBox.Size = new System.Drawing.Size(250, 551);
+            this.soundListBox.Size = new System.Drawing.Size(250, 553);
             this.soundListBox.TabIndex = 0;
             this.soundListBox.SelectedIndexChanged += new System.EventHandler(this.soundListBox_SelectedIndexChanged);
             // 
@@ -93,13 +90,10 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.searchBox,
-            this.SearchBoxClear,
-            this.toolStripSeparator1,
-            this.toolStripLabel2,
-            this.soundsMaxComboBox});
+            this.SearchBoxClear});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(250, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(250, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -109,14 +103,14 @@
             this.toolStripButton1.Image = global::ps2ls.Properties.Resources.magnifier;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
             // 
             // searchBox
             // 
             this.searchBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(100, 27);
+            this.searchBox.Size = new System.Drawing.Size(100, 25);
             this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
             // SearchBoxClear
@@ -125,35 +119,9 @@
             this.SearchBoxClear.Image = global::ps2ls.Properties.Resources.ui_text_field_clear_button;
             this.SearchBoxClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.SearchBoxClear.Name = "SearchBoxClear";
-            this.SearchBoxClear.Size = new System.Drawing.Size(23, 24);
+            this.SearchBoxClear.Size = new System.Drawing.Size(23, 22);
             this.SearchBoxClear.Text = "toolStripButton2";
             this.SearchBoxClear.Click += new System.EventHandler(this.SearchBoxClear_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripLabel2.Image = global::ps2ls.Properties.Resources.counter;
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(16, 24);
-            this.toolStripLabel2.Text = "File Count Max";
-            this.toolStripLabel2.ToolTipText = "File Count Maximum";
-            // 
-            // soundsMaxComboBox
-            // 
-            this.soundsMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.soundsMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.soundsMaxComboBox.Items.AddRange(new object[] {
-            "100",
-            "1000",
-            "10000",
-            "∞"});
-            this.soundsMaxComboBox.Name = "soundsMaxComboBox";
-            this.soundsMaxComboBox.Size = new System.Drawing.Size(75, 23);
             // 
             // statusStrip1
             // 
@@ -241,10 +209,7 @@
         private System.Windows.Forms.ToolStripButton SearchBoxClear;
         private System.Windows.Forms.Label StatusLabel;
         private System.Windows.Forms.Timer refreshTimer;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button StopButton;
         private System.Windows.Forms.Button PlayPause;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripComboBox soundsMaxComboBox;
     }
 }
