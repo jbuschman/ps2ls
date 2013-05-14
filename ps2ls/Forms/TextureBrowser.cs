@@ -31,6 +31,8 @@ namespace ps2ls.Forms
         public static TextureBrowser Instance { get { return instance; } }
         #endregion
 
+        private bool assetsDirty = false;
+
         public TextureBrowser()
         {
             InitializeComponent();
@@ -38,6 +40,13 @@ namespace ps2ls.Forms
             textureListbox.Items.Clear();
 
             Dock = DockStyle.Fill;
+
+            AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
+        }
+
+        private void onAssetsChanged(object sender, EventArgs e)
+        {
+            assetsDirty = true;
         }
 
         private void refreshImageListBox()
@@ -103,7 +112,11 @@ namespace ps2ls.Forms
         {
             base.Refresh();
 
-            refreshImageListBox();
+            if (assetsDirty)
+            {
+                refreshImageListBox();
+                assetsDirty = false;
+            }
         }
 
         private void searchText_CustomTextChanged(object sender, EventArgs e)

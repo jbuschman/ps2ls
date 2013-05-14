@@ -30,6 +30,8 @@ namespace ps2ls.Forms
         public static AssetBrowser Instance { get { return instance; } }
         #endregion
 
+        private bool assetsDirty = false;
+
         private AssetBrowser()
         {
             InitializeComponent();
@@ -37,6 +39,13 @@ namespace ps2ls.Forms
             packOpenFileDialog.InitialDirectory = Properties.Settings.Default.AssetDirectory;
 
             Dock = DockStyle.Fill;
+
+            AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
+        }
+
+        private void onAssetsChanged(object sender, EventArgs e)
+        {
+            assetsDirty = true;
         }
 
         private void addPacksButton_Click(object sender, EventArgs e)
@@ -136,7 +145,6 @@ namespace ps2ls.Forms
         private void PackBrowserUserControl_Load(object sender, EventArgs e)
         {
             filesMaxComboBox.SelectedIndex = 3; //infinity
-
 
             if (Properties.Settings.Default.AssetDirectory != String.Empty)
             {
@@ -288,7 +296,11 @@ namespace ps2ls.Forms
         {
             base.Refresh();
 
-            refreshPacksListBox();
+            if (assetsDirty)
+            {
+                refreshPacksListBox();
+                assetsDirty = false;
+            }
         }
 
         private void searchTextBox1_CustomTextChanged(object sender, EventArgs e)
@@ -377,6 +389,12 @@ namespace ps2ls.Forms
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
         {
             extractSelectedAssets();
+        }
+
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            AssetManifestWriter assetManifestWriter = new AssetManifestWriter();
+            assetManifestWriter.Write(@"C:\Users\Colin\Desktop\ps2ls.manifest");
         }
     }
 }

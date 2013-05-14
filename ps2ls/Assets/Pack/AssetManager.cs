@@ -38,6 +38,8 @@ namespace ps2ls.Assets.Pack
         private BackgroundWorker extractAllBackgroundWorker;
         private BackgroundWorker extractSelectionBackgroundWorker;
 
+        public event EventHandler AssetsChanged;
+
         private AssetManager()
         {
             Packs = new List<Pack>();
@@ -81,25 +83,7 @@ namespace ps2ls.Assets.Pack
         {
             loadingForm.Close();
 
-            if (AssetBrowser.Instance != null)
-            {
-                AssetBrowser.Instance.Refresh();
-            }
-
-            if (ModelBrowser.Instance != null)
-            {
-                ModelBrowser.Instance.Refresh();
-            }
-
-            if (ModelBrowser.Instance != null)
-            {
-                TextureBrowser.Instance.Refresh();
-            }
-
-            if (SoundBrowser.Instance != null)
-            {
-                SoundBrowser.Instance.Refresh();
-            }
+            AssetsChanged.Invoke(sender, args);
         }
 
         private void loadProgressChanged(object sender, ProgressChangedEventArgs args)

@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Threading;
 using System.ComponentModel;
+using System.IO.Compression;
 
 namespace ps2ls.Assets.Pack
 {
@@ -42,10 +43,9 @@ namespace ps2ls.Assets.Pack
 
         public void Write(string path)
         {
-            loadingForm = new GenericLoadingForm();
-            loadingForm.Show();
-
             writeBackgroundWorker.RunWorkerAsync(path);
+
+            loadingForm.Show();
         }
 
         public void writeToPath(object sender, object arg)
@@ -54,8 +54,10 @@ namespace ps2ls.Assets.Pack
 
             int revision = 0;
 
+            MemoryStream memoryStream = new MemoryStream();
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
+            GZipStream gzipStream = new GZipStream(fileStream, CompressionMode.Compress);
+            BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
             
             char[] header = { 'P', 'S', '2', 'L', 'S', 'A', 'M' };
             binaryWriter.Write(header);
@@ -84,7 +86,12 @@ namespace ps2ls.Assets.Pack
                 }
             }
 
-            binaryWriter.Close();
+            writeBackgroundWorker.ReportProgress(100, "Compressing");
+
+            byte[] buffer = new byte[memoryStream.Length];
+            memoryStream.Read(buffer, 0, buffer.Length);
+            gzipStream.Write(buffer, 0, buffer.Length);
+            gzipStream.Close();
         }
     }
 }

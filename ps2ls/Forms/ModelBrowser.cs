@@ -41,7 +41,8 @@ namespace ps2ls.Forms
         private ColorDialog backgroundColorDialog = new ColorDialog();
         private Int32 shaderProgram = 0;
         private List<ToolStripButton> renderModeButtons = new List<ToolStripButton>();
-        Int32 currentTexture = 0;
+        private Int32 currentTexture = 0;
+        private bool assetsDirty = false;
 
         #region Mesh Colors
         // a series of nice pastel colors we'll use to color meshes
@@ -85,6 +86,8 @@ namespace ps2ls.Forms
         {
             InitializeComponent();
 
+            lodFilterComboBox.SelectedIndex = 1;    //LOD 0
+
             //HACK: Can't load ModelBrowser.cs in design mode unless we have at least one item for some reason.
             //Clear items after construction.
             modelsListBox.Items.Clear();
@@ -95,6 +98,13 @@ namespace ps2ls.Forms
 
             renderModeButtons.Add(renderModeWireframeButton);
             renderModeButtons.Add(renderModeSmoothButton);
+
+            AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
+        }
+
+        private void onAssetsChanged(object sender, EventArgs e)
+        {
+            assetsDirty = true;
         }
 
         //TODO: move this elsehwere
@@ -415,8 +425,6 @@ void main(void)
 
         private void ModelBrowserControl_Load(object sender, EventArgs e)
         {
-            lodFilterComboBox.SelectedIndex = 1;    //LOD 0
-
             glControl1.CreateGraphics();
 
             createShaderProgram();
@@ -452,7 +460,11 @@ void main(void)
         {
             base.Refresh();
 
-            refreshModelsListBox();
+            if (assetsDirty)
+            {
+                refreshModelsListBox();
+                assetsDirty = false;
+            }
         }
 
         private void refreshModelsListBox()
