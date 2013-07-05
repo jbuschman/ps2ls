@@ -46,6 +46,20 @@ namespace ps2ls.Assets.Pack
             get { return System.IO.Path.GetFileName(Path); }
         }
 
+        [BrowsableAttribute(false)]
+        public int Checksum
+        {
+            get
+            {
+                int checksum = 0;
+
+                foreach (Asset asset in Assets)
+                    checksum += asset.Crc32;
+
+                return checksum;
+            }
+        }
+
         public Dictionary<Int32, Asset> assetLookupCache = new Dictionary<Int32, Asset>();
 
         private Pack(String path)

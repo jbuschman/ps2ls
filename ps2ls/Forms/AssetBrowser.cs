@@ -217,7 +217,7 @@ namespace ps2ls.Forms
             {
                 regex = new Regex(searchTextBox.Text, RegexOptions.Compiled);
             }
-            catch (Exception e) { /* invalid regex */ }
+            catch (Exception) { /* invalid regex */ }
 
             foreach (Pack pack in packs)
             {
@@ -425,8 +425,7 @@ namespace ps2ls.Forms
 
         private void toolStripButton1_Click_1(object sender, EventArgs e)
         {
-            AssetManifestWriter assetManifestWriter = new AssetManifestWriter();
-            assetManifestWriter.Write(@"C:\Users\Colin\Desktop\ps2ls.manifest");
+            AssetManager.Instance.WriteManifest(@"C:\Users\Colin\Desktop\ps2ls.manifest");
         }
 
         private void textualToolStripMenuItem_Click(object sender, EventArgs e)

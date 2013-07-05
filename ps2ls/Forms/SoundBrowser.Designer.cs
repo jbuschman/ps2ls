@@ -110,7 +110,7 @@
             // 
             this.searchBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(100, 25);
+            this.searchBox.Size = new System.Drawing.Size(150, 25);
             this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
             // SearchBoxClear

@@ -183,6 +183,16 @@ namespace ps2ls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap camera_lens {
+            get {
+                object obj = ResourceManager.GetObject("camera-lens", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap chain {
             get {
                 object obj = ResourceManager.GetObject("chain", resourceCulture);
@@ -196,6 +206,16 @@ namespace ps2ls.Properties {
         internal static System.Drawing.Bitmap chain_small {
             get {
                 object obj = ResourceManager.GetObject("chain-small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap checkerboard {
+            get {
+                object obj = ResourceManager.GetObject("checkerboard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -363,6 +383,16 @@ namespace ps2ls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap eye {
+            get {
+                object obj = ResourceManager.GetObject("eye", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap eye_gear {
             get {
                 object obj = ResourceManager.GetObject("eye-gear", resourceCulture);
@@ -426,6 +456,16 @@ namespace ps2ls.Properties {
         internal static System.Drawing.Bitmap gear {
             get {
                 object obj = ResourceManager.GetObject("gear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gear1 {
+            get {
+                object obj = ResourceManager.GetObject("gear1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

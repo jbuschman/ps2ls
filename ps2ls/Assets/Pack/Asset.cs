@@ -61,7 +61,7 @@ namespace ps2ls.Assets.Pack
             asset.Name = new String(reader.ReadChars((Int32)count));
             asset.AbsoluteOffset = reader.ReadUInt32();
             asset.Size = reader.ReadUInt32();
-            asset.Crc32 = reader.ReadUInt32();
+            asset.Crc32 = reader.ReadInt32();
 
             //determine asset type from file extension
             string fileExtension = Path.GetExtension(asset.Name).Substring(1);
@@ -137,7 +137,7 @@ namespace ps2ls.Assets.Pack
         public String Name { get; private set; }
         public UInt32 Size { get; private set; }
         public UInt32 AbsoluteOffset { get; private set; }
-        public UInt32 Crc32 { get; private set; }
+        public Int32 Crc32 { get; private set; }
 
         public Asset.Types Type { get; private set; }
 

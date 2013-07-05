@@ -6,6 +6,8 @@ using System.IO;
 using System.ComponentModel;
 using ps2ls.Forms;
 using ps2ls.Graphics.Materials;
+using System.Net;
+using System.Collections.Specialized;
 
 namespace ps2ls.Assets.Pack
 {
@@ -251,19 +253,10 @@ namespace ps2ls.Assets.Pack
             return memoryStream;
         }
 
-        public void WriteFileListingToFile(string path)
+        public void WriteManifest(string path)
         {
-            using (StreamWriter writer = new StreamWriter(path))
-            {
-                foreach (Pack p in Packs)
-                {
-                    foreach (Asset asset in p.Assets)
-                    {
-                        writer.WriteLine(string.Format("{0}\t{1}\t{2}", asset.Name, asset.Size, asset.Crc32));
-                    }
-                }
-            }
+            AssetManifestWriter assetManifestWriter = new AssetManifestWriter();
+            assetManifestWriter.Write(path);
         }
-
     }
 }

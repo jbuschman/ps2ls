@@ -47,15 +47,11 @@ namespace ps2ls.Cameras
         {
             distance = DesiredDistance;
 
-            if (distance < 0.0f)
-            {
-                distance = 0.0f;
-            }
+            distance = Math.Max(Single.Epsilon, distance);
 
             target = DesiredTarget;
 
             Yaw = DesiredYaw;
-
             Pitch = DesiredPitch;
 
             Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);

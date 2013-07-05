@@ -16,6 +16,10 @@ namespace ps2ls
         [STAThread]
         static void Main()
         {
+            uint version = ps2ls.IO.LZHAM.GetVersion();
+            ps2ls.IO.LZHAM.CompressStatus compressStatus = ps2ls.IO.LZHAM.Compress(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, false);
+            IntPtr asd = ps2ls.IO.LZHAM.CompressInit(IntPtr.Zero);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
