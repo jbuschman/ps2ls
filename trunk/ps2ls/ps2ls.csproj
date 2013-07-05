@@ -367,6 +367,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\ui-label.png" />
+    <None Include="Resources\regular-expression.png" />
     <None Include="Resources\logo_48_warn.png" />
     <None Include="Resources\eye-half.png" />
     <None Include="Resources\eye-gear.png" />

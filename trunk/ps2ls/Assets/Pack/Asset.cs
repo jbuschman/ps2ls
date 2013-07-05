@@ -63,23 +63,27 @@ namespace ps2ls.Assets.Pack
             asset.Size = reader.ReadUInt32();
             asset.Crc32 = reader.ReadUInt32();
 
-            // Set the type of the asset based on the extension
-            {
-                // First get the extension without the leading '.'
-                string extension = Path.GetExtension(asset.Name).Substring(1);
-                try
-                {
-                    asset.Type = (Asset.Types)Enum.Parse(typeof(Types), extension, true);
-                }
-                catch (System.ArgumentException exception)
-                {
-                    // This extension isn't mapped in the enum
-                    System.Diagnostics.Debug.Write(exception.ToString());
-                    asset.Type = Types.Unknown;
-                }
-            }
+            //determine asset type from file extension
+            string fileExtension = Path.GetExtension(asset.Name).Substring(1);
+            Types assetType = Types.Unknown;
+            GetTypeFromFileExtension(fileExtension, ref assetType);
+            asset.Type = assetType;
 
             return asset;
+        }
+
+        public static void GetTypeFromFileExtension(string extension, ref Asset.Types type)
+        {
+            try
+            {
+                type = (Asset.Types)Enum.Parse(typeof(Types), extension, true);
+            }
+            catch (System.ArgumentException exception)
+            {
+                // This extension isn't mapped in the enum
+                System.Diagnostics.Debug.Write(exception.ToString());
+                type = Types.Unknown;
+            }
         }
 
         public override string ToString()
