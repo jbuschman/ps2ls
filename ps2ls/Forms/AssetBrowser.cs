@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using ps2ls.Assets.Pack;
+using System.Text.RegularExpressions;
 
 namespace ps2ls.Forms
 {
@@ -30,7 +31,14 @@ namespace ps2ls.Forms
         public static AssetBrowser Instance { get { return instance; } }
         #endregion
 
+        enum SearchTypes
+        {
+            Textual,
+            RegularExpression
+        }
+
         private bool assetsDirty = false;
+        private SearchTypes assetSearchType = SearchTypes.Textual;
 
         private AssetBrowser()
         {
@@ -202,15 +210,32 @@ namespace ps2ls.Forms
             // Rather than adding the rows one at a time, do it in a batch
             List<System.Windows.Forms.DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
 
+            Regex regex = new Regex(searchTextBox.Text);
+
             foreach (Pack pack in packs)
             {
                 totalFileCount += pack.Assets.Count;
 
                 foreach (Asset asset in pack.Assets)
                 {
-                    if (asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()) == false)
+                    switch (assetSearchType)
                     {
-                        continue;
+                        case SearchTypes.Textual:
+                            {
+                                if (!asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()))
+                                {
+                                    continue;
+                                }
+                            }
+                            break;
+                        case SearchTypes.RegularExpression:
+                            {
+                                if (!regex.IsMatch(asset.Name))
+                                {
+                                    continue;
+                                }
+                            }
+                            break;
                     }
 
                     String extension = System.IO.Path.GetExtension(asset.Name);
@@ -395,6 +420,28 @@ namespace ps2ls.Forms
         {
             AssetManifestWriter assetManifestWriter = new AssetManifestWriter();
             assetManifestWriter.Write(@"C:\Users\Colin\Desktop\ps2ls.manifest");
+        }
+
+        private void textualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (assetSearchType == SearchTypes.Textual)
+                return;
+
+            assetSearchType = SearchTypes.Textual;
+            assetSearchTypeDropDownButton.Image = textualToolStripMenuItem.Image;
+
+            refreshAssetsDataGridView();
+        }
+
+        private void regularExpressionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (assetSearchType == SearchTypes.RegularExpression)
+                return;
+
+            assetSearchType = SearchTypes.RegularExpression;
+            assetSearchTypeDropDownButton.Image = regularExpressionToolStripMenuItem.Image;
+
+            refreshAssetsDataGridView();
         }
     }
 }
