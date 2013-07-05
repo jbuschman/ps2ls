@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using ps2ls.Assets.Pack;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace ps2ls.Forms
 {
@@ -210,7 +211,13 @@ namespace ps2ls.Forms
             // Rather than adding the rows one at a time, do it in a batch
             List<System.Windows.Forms.DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
 
-            Regex regex = new Regex(searchTextBox.Text);
+            Regex regex = null;
+
+            try
+            {
+                regex = new Regex(searchTextBox.Text, RegexOptions.Compiled);
+            }
+            catch (Exception e) { /* invalid regex */ }
 
             foreach (Pack pack in packs)
             {
@@ -230,7 +237,7 @@ namespace ps2ls.Forms
                             break;
                         case SearchTypes.RegularExpression:
                             {
-                                if (!regex.IsMatch(asset.Name))
+                                if (regex == null || !regex.IsMatch(asset.Name))
                                 {
                                     continue;
                                 }
