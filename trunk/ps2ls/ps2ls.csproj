@@ -126,6 +126,7 @@
     <Compile Include="Forms\SoundExportForm.Designer.cs">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IO\LZHAM.cs" />
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
     <Compile Include="Forms\Controls\CustomListBox.cs">
