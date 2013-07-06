@@ -39,7 +39,17 @@ namespace ps2ls.Forms
         }
 
         private bool assetsDirty = false;
-        private SearchTypes assetSearchType = SearchTypes.Textual;
+        private SearchTypes _assetSearchType = SearchTypes.Textual;
+        private SearchTypes assetSearchType
+        {
+            get { return _assetSearchType; }
+            set
+            {
+                _assetSearchType = value;
+
+
+            }
+        }
 
         private AssetBrowser()
         {
@@ -209,7 +219,7 @@ namespace ps2ls.Forms
             Int32 totalFileCount = 0;
 
             // Rather than adding the rows one at a time, do it in a batch
-            List<System.Windows.Forms.DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
+            List<DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
 
             Regex regex = null;
 
