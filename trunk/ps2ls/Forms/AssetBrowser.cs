@@ -424,7 +424,14 @@ namespace ps2ls.Forms
                 Asset asset = (Asset)row.Tag;
 
                 if (asset != null)
+                {
+                    if (asset.Type == Asset.Types.CNK0)
+                    {
+                        ps2ls.Assets.Cnk.Cnk0 asd = ps2ls.Assets.Cnk.Cnk0.LoadFromStream(asset.Pack.CreateAssetMemoryStreamByName(asset.Name));
+                    }
+
                     asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
+                }
             }
         }
 
