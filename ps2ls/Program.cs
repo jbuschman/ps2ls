@@ -6,6 +6,7 @@ using ps2ls.Forms;
 using ps2ls.Graphics.Materials;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using lzhamNET;
 
 namespace ps2ls
 {
@@ -17,19 +18,6 @@ namespace ps2ls
         [STAThread]
         static void Main()
         {
-            ps2ls.IO.LZHAM.DecompressParams decompressParams = new IO.LZHAM.DecompressParams();
-            decompressParams.ComputeAdler32 = 0;
-            decompressParams.DictSizeLog2 = ps2ls.IO.LZHAM.MinDictSizeLog2;
-            decompressParams.NumSeedBytes = 0;
-            decompressParams.OutputUnbuffered = 1;
-            decompressParams.SeedBytes = IntPtr.Zero;
-            decompressParams.StructSize = (uint)Marshal.SizeOf(decompressParams.GetType());
-
-            IntPtr decompressState = ps2ls.IO.LZHAM.DecompressInitialize(decompressParams);
-            Byte[] inputBuffer = new Byte[100];
-            Byte[] outputBuffer = new Byte[200];
-            ps2ls.IO.LZHAM.DecompressStatus decompressStatus = ps2ls.IO.LZHAM.Decompress(decompressState, inputBuffer, outputBuffer, true);
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

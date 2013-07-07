@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Adr\Adr.cs" />
+    <Compile Include="Assets\Cnk\Cnk.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
     <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="Forms\SoundExportForm.Designer.cs">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="IO\LZHAM.cs" />
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
     <Compile Include="Forms\Controls\CustomListBox.cs">
@@ -421,6 +421,10 @@
     <ProjectReference Include="..\fmodNET\fmodNET.csproj">
       <Project>{d3a5783f-a596-4263-905d-255d59174818}</Project>
       <Name>fmodNET</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lzhamNET\lzhamNET.csproj">
+      <Project>{554e226e-4a51-414e-94c9-665e1e1b29a8}</Project>
+      <Name>lzhamNET</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
