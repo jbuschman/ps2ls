@@ -159,13 +159,13 @@ namespace lzhamNET
         /// <summary>
         /// Returns DLL version (LZHAM_DLL_VERSION).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_get_version", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_get_version", CallingConvention = CallingConvention.Cdecl)]
         public static extern UInt32 GetVersion();
 
         /// <summary>
         /// Call this function to force LZHAM to use custom memory malloc(), realloc(), free() and msize functions.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_set_memory_callbacks", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_set_memory_callbacks", CallingConvention = CallingConvention.Cdecl)]
         public static extern void SetMemoryCallbacks(ReallocFunc pRealloc, MSizeFunc pMSize, IntPtr pUser_data);
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace lzhamNET
         /// </summary>
         /// <param name="pParams"></param>
         /// <returns></returns>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_init", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_init", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr DecompressInitialize(IntPtr decompressParamsIntPtr);
         public static IntPtr DecompressInitialize(DecompressParams decompressParams)
         {
@@ -189,7 +189,7 @@ namespace lzhamNET
         /// <summary>
         /// Quickly re-initializes the decompressor to its initial state given an already allocated/initialized state (doesn't do any memory alloc unless necessary).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_reinit", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_reinit", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr DecompressReinitialize(IntPtr statePointer, IntPtr decompressParamsIntPtr);
         public static IntPtr DecompressReinitialize(IntPtr statePointer, DecompressParams decompressParams)
         {
@@ -204,7 +204,7 @@ namespace lzhamNET
         /// Deinitializes a decompressor.
         /// returns adler32 of decompressed data if compute_adler32 was true, otherwise it returns the adler32 from the compressed stream.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_deinit", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_deinit", CallingConvention = CallingConvention.Cdecl)]
         public static extern UInt32 DecompressDeinitialize(IntPtr statePointer);
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace lzhamNET
         ///  decompressor. In this case, if the decompressor actually has more bytes you'll receive the LZHAM_DECOMP_STATUS_FAILED_HAVE_MORE_OUTPUT
         ///  error (which is recoverable in the buffered case - just call lzham_decompress() again with a non-zero size output buffer).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress", CallingConvention = CallingConvention.Cdecl)]
         public static extern DecompressStatus Decompress(IntPtr decompressState, IntPtr pIn_buf, IntPtr pIn_buf_size, IntPtr pOut_buf, IntPtr pOut_buf_size, bool no_more_input_bytes_flag);
         public static DecompressStatus Decompress(IntPtr decompressState, byte[] inputBuffer, ulong inputBufferSize, byte[] outputBuffer, ref ulong outputBufferSize, bool noMoreInputBytesFlag)
         {
@@ -245,7 +245,7 @@ namespace lzhamNET
         /// <summary>
         /// Single function call interface.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_memory", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_memory", CallingConvention = CallingConvention.Cdecl)]
         public static extern DecompressStatus DecompressMemory(IntPtr pParams, IntPtr pDst_buf, IntPtr pDst_len, IntPtr pSrc_buf, UInt64 src_len, IntPtr pAdler32);
 
         /// <summary>
@@ -253,14 +253,14 @@ namespace lzhamNET
         /// pParams cannot be NULL. Be sure to initialize the pParams->m_struct_size member to sizeof(lzham_compress_params) (along with the other members to reasonable values) before calling this function.
         /// TODO: With large dictionaries this function could take a while (due to memory allocation). I need to add a reinit() API for compression (decompression already has one).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_init", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_init", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CompressInitialize(IntPtr compressParams);
 
         /// <summary>
         /// Deinitializes a compressor, releasing all allocated memory.
         //  returns adler32 of source data (valid only on success).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_deinit", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_deinit", CallingConvention = CallingConvention.Cdecl)]
         public static extern UInt32 CompressDeinitialize(IntPtr p);
 
         /// <summary>
@@ -280,14 +280,14 @@ namespace lzhamNET
         ///    LZHAM_COMP_STATUS_SUCCESS - Compression has completed successfully.
         ///    LZHAM_COMP_STATUS_FAILED, LZHAM_COMP_STATUS_FAILED_INITIALIZING, LZHAM_COMP_STATUS_INVALID_PARAMETER - Something went wrong.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress", CallingConvention = CallingConvention.Cdecl)]
         public static extern CompressStatus Compress(IntPtr state, IntPtr inputBuffer, IntPtr inputBufferSize, IntPtr outputBuffer, IntPtr outputBufferSize, bool noMoreInputBytesFlag);
 
         /// <summary>
         /// Single function call compression interface.
         /// Same return codes as lzham_compress, except this function can also return LZHAM_COMP_STATUS_OUTPUT_BUF_TOO_SMALL.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_memory", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_memory", CallingConvention = CallingConvention.Cdecl)]
         public static extern CompressStatus CompressMemory(IntPtr compressParams, IntPtr destinationBuffer, UInt64 destinationLength, IntPtr sourceBuffer, UInt64 sourceLength, IntPtr adler32);
     }
 }
