@@ -47,6 +47,11 @@ namespace ps2ls.Assets.Cnk
             byte[] inputBuffer = binaryReader.ReadBytes((int)compressedSize);
             ulong inputBufferSize = compressedSize;
 
+            FileStream fileStream = new FileStream(@"C:\Users\Colin\Desktop\cnktest", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
+            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
+            binaryWriter.Write(inputBuffer);
+            binaryWriter.Close();
+
             byte[] outputBuffer = new byte[uncompressedSize];
             ulong outputBufferSize = 0;
 
@@ -55,7 +60,7 @@ namespace ps2ls.Assets.Cnk
             decompressParams.DictSizeLog2 = LZHAM.MinDictSizeLog2;
             decompressParams.NumSeedBytes = 0;
             decompressParams.OutputUnbuffered = true;
-            decompressParams.SeedBytes = IntPtr.Zero; 
+            decompressParams.SeedBytes = IntPtr.Zero;
             IntPtr decompressState = LZHAM.DecompressInitialize(decompressParams);
 
             LZHAM.DecompressStatus decompressStatus = LZHAM.Decompress(decompressState, inputBuffer, inputBufferSize, outputBuffer, ref outputBufferSize, true);
