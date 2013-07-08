@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextureBrowser));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.searchTextTypeToolStripDrownDownButton1 = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
             this.searchText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchTextButton = new System.Windows.Forms.ToolStripButton();
             this.pictureWindow = new System.Windows.Forms.PictureBox();
@@ -51,6 +53,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
+            this.searchTextTypeToolStripDrownDownButton1,
             this.searchText,
             this.clearSearchTextButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -67,6 +70,17 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
+            // 
+            // searchTextTypeToolStripDrownDownButton1
+            // 
+            this.searchTextTypeToolStripDrownDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.searchTextTypeToolStripDrownDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("searchTextTypeToolStripDrownDownButton1.Image")));
+            this.searchTextTypeToolStripDrownDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchTextTypeToolStripDrownDownButton1.Name = "searchTextTypeToolStripDrownDownButton1";
+            this.searchTextTypeToolStripDrownDownButton1.SearchTextType = ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual;
+            this.searchTextTypeToolStripDrownDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.searchTextTypeToolStripDrownDownButton1.Text = "Textual";
+            this.searchTextTypeToolStripDrownDownButton1.SearchTextTypeChanged += new System.EventHandler(this.searchTextTypeToolStripDrownDownButton1_SearchTextTypeChanged);
             // 
             // searchText
             // 
@@ -185,5 +199,6 @@
         private System.Windows.Forms.ToolStripStatusLabel imagesCountLabel;
         private System.Windows.Forms.PictureBox pictureWindow;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton1;
     }
 }

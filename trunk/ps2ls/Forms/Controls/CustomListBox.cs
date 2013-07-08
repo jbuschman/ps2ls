@@ -16,6 +16,8 @@ namespace ps2ls.Forms.Controls
             this.DrawItem += new DrawItemEventHandler(this.CustomListBox_DrawItem);
 
             DrawMode = DrawMode.OwnerDrawFixed;
+
+            this.Items.Add("default");
         }
 
         private void CustomListBox_DrawItem(object sender, DrawItemEventArgs e)

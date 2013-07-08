@@ -51,7 +51,7 @@ namespace ps2ls.Assets.Dma
                 MatrixColumns,
                 Object,
                 Struct,
-                ForceDword = 0x7fffffff
+                ForceDWord = 0x7fffffff
             }
 
             //http://msdn.microsoft.com/en-us/library/windows/desktop/bb205380(v=vs.85).aspx
@@ -77,7 +77,7 @@ namespace ps2ls.Assets.Dma
                 PixelFragment,
                 VertexFrament,
                 Unsupported,
-                ForceDword = 0x7fffffff
+                ForceDWord = 0x7fffffff
             }
 
             private Parameter()

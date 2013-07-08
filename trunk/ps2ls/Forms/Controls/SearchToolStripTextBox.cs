@@ -12,9 +12,11 @@ namespace ps2ls.Forms.Controls
         private Timer timer = new Timer();
         public event EventHandler CustomTextChanged;
 
+        private Int32 TIMER_INTERVAL = 500;
+
         public SearchToolStripTextBox()
         {
-            timer.Interval = 500;
+            timer.Interval = TIMER_INTERVAL;
             timer.Tick += new EventHandler(timer_Tick);
             TextChanged += new EventHandler(CustomSearchTextBox_TextChanged);
         }

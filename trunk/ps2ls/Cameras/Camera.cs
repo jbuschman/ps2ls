@@ -34,8 +34,8 @@ namespace ps2ls.Cameras
             {
                 projection = value;
 
-                if (AspectRatioChanged != null)
-                    AspectRatioChanged.Invoke(this, null);
+                if (ProjectionChanged != null)
+                    ProjectionChanged.Invoke(this, null);
             }
         }
         private Single aspectRatio;

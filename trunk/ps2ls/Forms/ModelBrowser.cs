@@ -16,27 +16,13 @@ using ps2ls.Graphics.Materials;
 using System.IO;
 using System.Xml;
 using System.Runtime.InteropServices;
+using ps2ls.Forms.Controls;
+using System.Text.RegularExpressions;
 
 namespace ps2ls.Forms
 {
     public partial class ModelBrowser : UserControl
     {
-        #region Singleton
-        private static ModelBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new ModelBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static ModelBrowser Instance { get { return instance; } }
-        #endregion
-
         private Model model = null;
         private ColorDialog backgroundColorDialog = new ColorDialog();
         private Int32 shaderProgram = 0;
@@ -82,7 +68,7 @@ namespace ps2ls.Forms
                              };
         #endregion
 
-        private ModelBrowser()
+        public ModelBrowser()
         {
             InitializeComponent();
 
@@ -269,11 +255,10 @@ void main(void)
                 GL.UseProgram(shaderProgram);
 
                 GL.Enable(EnableCap.DepthTest);
-                GL.Enable(EnableCap.CullFace);
+                GL.Disable(EnableCap.CullFace);
                 GL.Enable(EnableCap.Texture2D);
                 GL.Enable(EnableCap.Blend);
                 GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-                GL.CullFace(CullFaceMode.Back);
                 GL.FrontFace(FrontFaceDirection.Cw);
 
                 GL.ActiveTexture(TextureUnit.Texture0);
@@ -434,10 +419,14 @@ void main(void)
 
         private void applicationIdle(object sender, EventArgs e)
         {
+            if (!ContainsFocus)
+                return;
+
             while (glControl1.Context != null && glControl1.IsIdle)
             {
                 update();
                 render();
+                break;
             }
         }
 
@@ -485,6 +474,14 @@ void main(void)
 
             if (assets != null)
             {
+                Regex regex = null;
+
+                try
+                {
+                    regex = new Regex(searchModelsText.Text, RegexOptions.Compiled);
+                }
+                catch (Exception) { /* invalid regex */ }
+
                 foreach (Asset asset in assets)
                 {
                     if (showAutoLODModelsButton.Checked == false && asset.Name.EndsWith("Auto.dme"))
@@ -498,8 +495,21 @@ void main(void)
                             continue;
                     }
 
-                    if (searchModelsText.Text.Length > 0 && asset.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) == -1)
-                        continue;
+                    switch (searchTextTypeToolStripDrownDownButton.SearchTextType)
+                    {
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:
+                            {
+                                if (searchModelsText.Text.Length > 0 && asset.Name.IndexOf(searchModelsText.Text, 0, StringComparison.OrdinalIgnoreCase) == -1)
+                                    continue;
+                            }
+                            break;
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.RegularExpression:
+                            {
+                                if (regex == null || !regex.IsMatch(asset.Name))
+                                    continue;
+                            }
+                            break;
+                    }
                         
                     modelsListBox.Items.Add(asset);
                 }
@@ -706,6 +716,12 @@ void main(void)
             {
                 extractToolStripMenuItem.Text = "Extract " + modelsListBox.SelectedItems.Count + "...";
             }
+        }
+
+        private void searchTextTypeToolStripDrownDownButton_SearchTextTypeChanged(object sender, EventArgs e)
+        {
+            if(searchModelsText.Text.Length != 0)
+                refreshModelsListBox();
         }
     }
 }
