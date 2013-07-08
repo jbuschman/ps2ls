@@ -6,288 +6,166 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using System.IO;
+using System.Reflection;
 
 namespace lzhamNET
 {
     public static class LZHAM
     {
-        public const int MinDictSizeLog2 = 15;
-        public const int MaxDictSizeLog2x86 = 26;
-        public const int MaxDictSizeLog2x65 = 29;
-        public const int MaxHelperThreads = 16;
-
-        public enum CompressFlags
+        public enum ZFlush
         {
             /// <summary>
-            /// Forces Polar codes vs. Huffman, for a slight increase in decompression speed.
+            /// compression/decompression
             /// </summary>
-            ForcePolarCoding = 1,
+            NoFlush = 0,
             /// <summary>
-            /// Improves ratio by allowing the compressor's parse graph to grow "higher" (up to 4 parent nodes per output node), but is much slower.
+            /// compression/decompression, same as LZHAM_Z_SYNC_FLUSH
             /// </summary>
-            ExtremeParsing = 2,
+            PartialFlush = 1,
             /// <summary>
-            /// Guarantees that the compressed output will always be the same given the same input and parameters (no variation between runs due to kernel threading scheduling).
+            /// compression/decompression, when compressing: flush current block (if any), always outputs sync block (aligns output to byte boundary, a 0xFFFF0000 marker will appear in the output stream)
             /// </summary>
-            DeterministicParsing = 4,
+            SyncFlush = 2,
             /// <summary>
-            /// If enabled, the compressor is free to use any optimizations which could lower the decompression rate (such
-            /// as adaptively resetting the Huffman table update rate to maximum frequency, which is costly for the decompressor).
+            /// compression/decompression, when compressing: same as LZHAM_Z_SYNC_FLUSH but also forces a full state flush (LZ dictionary, all symbol statistics)
             /// </summary>
-            TradeoffDecompressionRateForCompRatio = 16
-        };
-
-        public enum CompressLevel
-        {
-            Fastest = 0,
-            Faster,
-            Default,
-            Better,
-            Uber,
-            CompressLevels,
-            ForceDWORD = -1,
+            FullFlush = 3,
+            /// <summary>
+            /// compression/decompression
+            /// </summary>
+            Finish = 4,
+            /// <summary>
+            /// not supported
+            /// </summary>
+            Block = 5,
+            /// <summary>
+            /// compression only, resets all symbol table update rates to maximum frequency (LZHAM extension)
+            /// </summary>
+            TableFlush = 10
         }
-
-        public enum CompressStatus
-        {
-            NotFinished = 0,
-            NeedsMoreInput,
-            FirstSuccessOrFailureCode,
-            Success = FirstSuccessOrFailureCode,
-            Failed,
-            FailedInitializing,
-            InvalidParameter,
-            OutputBufferTooSmall,
-            ForceDWORD = -1,
-        }
-
-        public enum DecompressStatus
-        {
-            /// <summary>
-            /// LZHAM_DECOMP_STATUS_NOT_FINISHED indicates that the decompressor is flushing its output buffer (and there may be more bytes available to decompress).
-            /// </summary>
-            NotFinished = 0,
-            /// <summary>
-            /// LZHAM_DECOMP_STATUS_NEEDS_MORE_INPUT indicates that the decompressor has consumed all input bytes and has not encountered an "end of stream" code, so it's expecting more input to proceed.
-            /// </summary>
-            NeedsMoreInput,
-            /// <summary>
-            /// LZHAM_DECOMP_STATUS_SUCCESS indicates decompression has successfully completed.
-            /// </summary>
-            Success,
-            // The remaining status codes indicate a failure of some sort. Most failures are unrecoverable. TODO: Document which codes are recoverable.
-            FailedInitializing,
-            DestBufTooSmall,
-            HaveMoreOutput,
-            ExpectedMoreRawBytes,
-            BadCode,
-            Adler32,
-            BadRawBlock,
-            BadCompBlockSyncCheck,
-            InvalidParameter,
-            Debug = 10000,
-        };
-
+     
         [StructLayout(LayoutKind.Sequential)]
-        public struct CompressParams
+        public class ZStream
         {
-            public UInt32 StructSize;
-            public UInt32 DictSizeLog2;
-            public CompressLevel Level;
-            public UInt32 MaxHelperThreads;
-            public UInt32 CpuCacheTotalLines;
-            public UInt32 CpuCacheLineSize;
-            public UInt32 CompressFlags;
-            public UInt32 NumSeedBytes;
-            public IntPtr SeedBytes;
+            /// <summary>
+            /// pointer to next byte to read
+            /// </summary>
+            public IntPtr NextInputByte;
+            /// <summary>
+            /// number of bytes available at next_in
+            /// </summary>
+            public UInt32 AvailableInputBytes;
+            /// <summary>
+            /// total number of bytes consumed so far
+            /// </summary>
+            public UInt32 TotalInputBytes;
+            /// <summary>
+            /// pointer to next byte to write
+            /// </summary>
+            public IntPtr NextOutputByte;
+            /// <summary>
+            /// number of bytes that can be written to next_out
+            /// </summary>
+            public UInt32 AvailableOutputBytes;
+            /// <summary>
+            /// total number of bytes produced so far
+            /// </summary>
+            public UInt32 TotalOutputBytes;
+            /// <summary>
+            /// error msg (unused)
+            /// </summary>
+            public IntPtr ErrorMessage;
+            /// <summary>
+            /// internal state, allocated by zalloc/zfree
+            /// </summary>
+            public IntPtr State;
+            /// <summary>
+            /// optional heap allocation function (defaults to malloc)
+            /// </summary>
+            public IntPtr ZAllocFunc;
+            /// <summary>
+            /// optional heap free function (defaults to free)
+            /// </summary>
+            public IntPtr ZFreeFunc;
+            /// <summary>
+            /// heap alloc function user pointer
+            /// </summary>
+            public IntPtr Opaque;
+            /// <summary>
+            /// data_type (unused)
+            /// </summary>
+            public Int32 DataType;
+            /// <summary>
+            /// adler32 of the source or uncompressed data
+            /// </summary>
+            public UInt32 Adler32;
+            /// <summary>
+            /// not used
+            /// </summary>
+            public UInt32 Reserved;
         }
 
         /// <summary>
-        /// Decompression parameters structure.
-        /// Notes: 
-        /// m_dict_size_log2 MUST match the value used during compression!
-        /// If m_num_seed_bytes != 0, m_output_unbuffered MUST be false (i.e. static "seed" dictionaries are not compatible with unbuffered decompression).
-        /// The seed buffer's contents and size must match the seed buffer used during compression.
+        /// lzham_z_inflateInit2() is like lzham_z_inflateInit() with an additional option that controls the window size and whether or not the stream has been wrapped with a zlib header/footer:
+        /// window_bits must be LZHAM_Z_DEFAULT_WINDOW_BITS (to parse zlib header/footer) or -LZHAM_Z_DEFAULT_WINDOW_BITS (raw stream with no zlib header/footer).
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public class DecompressParams
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_z_inflateInit2", CallingConvention = CallingConvention.Cdecl)]
+        private extern static Int32 ZInflateInit2(IntPtr pStream, Int32 window_bits);
+        public static Int32 ZInflateInit2(ZStream zStream, Int32 windowBits)
         {
-            /// <summary>
-            /// set to sizeof(lzham_decompress_params)
-            /// </summary>
-            private uint structSize;
-            /// <summary>
-            /// set to the log2(dictionary_size), must range between [LZHAM_MIN_DICT_SIZE_LOG2, LZHAM_MAX_DICT_SIZE_LOG2_X86] for x86 LZHAM_MAX_DICT_SIZE_LOG2_X64 for x64
-            /// </summary>
-            public uint DictSizeLog2;
-            /// <summary>
-            /// true if the output buffer is guaranteed to be large enough to hold the entire output stream (a bit faster)
-            /// </summary>
-            private int outputUnbuffered;
-            public bool OutputUnbuffered
-            {
-                get { return outputUnbuffered != 0; }
-                set { outputUnbuffered = (value ? 1 : 0); }
-            }
-            /// <summary>
-            /// true to enable adler32 checking during decompression (slightly slower)
-            /// </summary>
-            private int computeAdler32;
-            public bool ComputeAdler32
-            {
-                get { return computeAdler32 != 0; }
-                set { computeAdler32 = (value ? 1 : 0); }
-            }
-            /// <summary>
-            /// for delta compression (optional) - number of seed bytes pointed to by m_pSeed_bytes
-            /// </summary>
-            public uint NumSeedBytes;
-            /// <summary>
-            /// for delta compression (optional) - pointer to seed bytes buffer, must be at least m_num_seed_bytes long
-            /// </summary>
-            public IntPtr SeedBytes;
+            GCHandle zStreamGCHandle = GCHandle.Alloc(zStream, GCHandleType.Pinned);
+            IntPtr zStreamIntPtr = zStreamGCHandle.AddrOfPinnedObject();
 
-            public DecompressParams()
-            {
-                structSize = (uint)Marshal.SizeOf(typeof(DecompressParams));
-            }
-        };
+            Int32 result = ZInflateInit2(zStreamIntPtr, windowBits);
 
-        public delegate IntPtr ReallocFunc(IntPtr p, UInt64 size, IntPtr pActual_size, bool movable, IntPtr pUser_data);
-        public delegate UInt64 MSizeFunc(IntPtr p, IntPtr pUser_data);
-
-        /// <summary>
-        /// Returns DLL version (LZHAM_DLL_VERSION).
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_get_version", CallingConvention = CallingConvention.Cdecl)]
-        public static extern UInt32 GetVersion();
-
-        /// <summary>
-        /// Call this function to force LZHAM to use custom memory malloc(), realloc(), free() and msize functions.
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_set_memory_callbacks", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void SetMemoryCallbacks(ReallocFunc pRealloc, MSizeFunc pMSize, IntPtr pUser_data);
-
-        /// <summary>
-        /// Initializes a decompressor.
-        /// pParams cannot be NULL. Be sure to initialize the pParams->m_struct_size member to sizeof(lzham_decompress_params) (along with the other members to reasonable values) before calling this function.
-        /// Note: With large dictionaries this function could take a while (due to memory allocation). To serially decompress multiple streams, it's faster to init a compressor once and 
-        /// reuse it using by calling lzham_decompress_reinit().
-        /// </summary>
-        /// <param name="pParams"></param>
-        /// <returns></returns>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_init", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr DecompressInitialize(IntPtr decompressParamsIntPtr);
-        public static IntPtr DecompressInitialize(DecompressParams decompressParams)
-        {
-            GCHandle decompressParamsGCHandle = GCHandle.Alloc(decompressParams, GCHandleType.Pinned);
-            IntPtr decompressStateIntPtr = DecompressInitialize(decompressParamsGCHandle.AddrOfPinnedObject());
-            decompressParamsGCHandle.Free();
-            return decompressStateIntPtr;
-        }
-
-        /// <summary>
-        /// Quickly re-initializes the decompressor to its initial state given an already allocated/initialized state (doesn't do any memory alloc unless necessary).
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_reinit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr DecompressReinitialize(IntPtr statePointer, IntPtr decompressParamsIntPtr);
-        public static IntPtr DecompressReinitialize(IntPtr statePointer, DecompressParams decompressParams)
-        {
-            IntPtr decompressParamsIntPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DecompressParams)));
-            Marshal.StructureToPtr(decompressParams, decompressParamsIntPtr, false);
-            IntPtr returnStatePointer = DecompressReinitialize(statePointer, decompressParamsIntPtr);
-            Marshal.FreeHGlobal(decompressParamsIntPtr);
-            return returnStatePointer;
-        }
-
-        /// <summary>
-        /// Deinitializes a decompressor.
-        /// returns adler32 of decompressed data if compute_adler32 was true, otherwise it returns the adler32 from the compressed stream.
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_deinit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern UInt32 DecompressDeinitialize(IntPtr statePointer);
-
-        /// <summary>
-        /// Decompresses an arbitrarily sized block of compressed data, writing as much available decompressed data as possible to the output buffer. 
-        /// This method is implemented as a coroutine so it may be called as many times as needed. However, for best perf. try not to call it with tiny buffers.
-        /// pState - Pointer to internal decompression state, originally created by lzham_decompress_init.
-        /// pIn_buf, pIn_buf_size - Pointer to input data buffer, and pointer to a size_t containing the number of bytes available in this buffer. 
-        ///                         On return, *pIn_buf_size will be set to the number of bytes read from the buffer.
-        /// pOut_buf, pOut_buf_size - Pointer to the output data buffer, and a pointer to a size_t containing the max number of bytes that can be written to this buffer.
-        ///                         On return, *pOut_buf_size will be set to the number of bytes written to this buffer.
-        /// no_more_input_bytes_flag - Set to true to indicate that no more input bytes are available to compress (EOF). Once you call this function with this param set to true, it must stay set to true in all future calls.
-        /// Notes:
-        /// In unbuffered mode, the output buffer MUST be large enough to hold the entire decompressed stream. Otherwise, you'll receive the
-        ///  LZHAM_DECOMP_STATUS_FAILED_DEST_BUF_TOO_SMALL error (which is currently unrecoverable during unbuffered decompression).
-        /// In buffered mode, if the output buffer's size is 0 bytes, the caller is indicating that no more output bytes are expected from the
-        ///  decompressor. In this case, if the decompressor actually has more bytes you'll receive the LZHAM_DECOMP_STATUS_FAILED_HAVE_MORE_OUTPUT
-        ///  error (which is recoverable in the buffered case - just call lzham_decompress() again with a non-zero size output buffer).
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress", CallingConvention = CallingConvention.Cdecl)]
-        public static extern DecompressStatus Decompress(IntPtr decompressState, IntPtr pIn_buf, IntPtr pIn_buf_size, IntPtr pOut_buf, IntPtr pOut_buf_size, bool no_more_input_bytes_flag);
-        public static DecompressStatus Decompress(IntPtr decompressState, byte[] inputBuffer, ulong inputBufferSize, byte[] outputBuffer, ref ulong outputBufferSize, bool noMoreInputBytesFlag)
-        {
-            GCHandle inputBufferGCHandle = GCHandle.Alloc(inputBuffer, GCHandleType.Pinned);
-            GCHandle inputBufferSizeGCHandle = GCHandle.Alloc(inputBufferSize, GCHandleType.Pinned);
-            GCHandle outputBufferGCHandle = GCHandle.Alloc(inputBuffer, GCHandleType.Pinned);
-            GCHandle outputBufferSizeGCHandle = GCHandle.Alloc(outputBufferSize, GCHandleType.Pinned);
-
-            DecompressStatus result = Decompress(decompressState, inputBufferGCHandle.AddrOfPinnedObject(), inputBufferSizeGCHandle.AddrOfPinnedObject(), outputBufferGCHandle.AddrOfPinnedObject(), outputBufferSizeGCHandle.AddrOfPinnedObject(), true);
-
-            inputBufferGCHandle.Free();
-            inputBufferSizeGCHandle.Free();
-            outputBufferGCHandle.Free();
-            outputBufferSizeGCHandle.Free();
+            zStreamGCHandle.Free();
 
             return result;
         }
 
         /// <summary>
-        /// Single function call interface.
+        /// Deinitializes a decompressor.
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_decompress_memory", CallingConvention = CallingConvention.Cdecl)]
-        public static extern DecompressStatus DecompressMemory(IntPtr pParams, IntPtr pDst_buf, IntPtr pDst_len, IntPtr pSrc_buf, UInt64 src_len, IntPtr pAdler32);
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_z_inflateEnd", CallingConvention = CallingConvention.Cdecl)]
+        private extern static Int32 ZInflateEnd(IntPtr pStream);
+        public static Int32 ZInflateEnd(ZStream zStream)
+        {
+            GCHandle zStreamGCHandle = GCHandle.Alloc(zStream, GCHandleType.Pinned);
+
+            Int32 result = ZInflateEnd(zStreamGCHandle.AddrOfPinnedObject());
+
+            zStreamGCHandle.Free();
+
+            return result;
+        }
 
         /// <summary>
-        /// Initializes a compressor. Returns a pointer to the compressor's internal state, or NULL on failure.
-        /// pParams cannot be NULL. Be sure to initialize the pParams->m_struct_size member to sizeof(lzham_compress_params) (along with the other members to reasonable values) before calling this function.
-        /// TODO: With large dictionaries this function could take a while (due to memory allocation). I need to add a reinit() API for compression (decompression already has one).
+        /// Decompresses the input stream to the output, consuming only as much of the input as needed, and writing as much to the output as possible.
+        /// Parameters:
+        ///   pStream is the stream to read from and write to. You must initialize/update the next_in, avail_in, next_out, and avail_out members.
+        ///   flush may be LZHAM_Z_NO_FLUSH, LZHAM_Z_SYNC_FLUSH, or LZHAM_Z_FINISH.
+        ///   On the first call, if flush is LZHAM_Z_FINISH it's assumed the input and output buffers are both sized large enough to decompress the entire stream in a single call (this is slightly faster).
+        ///   LZHAM_Z_FINISH implies that there are no more source bytes available beside what's already in the input buffer, and that the output buffer is large enough to hold the rest of the decompressed data.
+        /// Return values:
+        ///   LZHAM_Z_OK on success. Either more input is needed but not available, and/or there's more output to be written but the output buffer is full.
+        ///   LZHAM_Z_STREAM_END if all needed input has been consumed and all output bytes have been written. For zlib streams, the adler-32 of the decompressed data has also been verified.
+        ///   LZHAM_Z_STREAM_ERROR if the stream is bogus.
+        ///   LZHAM_Z_DATA_ERROR if the deflate stream is invalid.
+        ///   LZHAM_Z_PARAM_ERROR if one of the parameters is invalid.
+        ///   LZHAM_Z_BUF_ERROR if no forward progress is possible because the input buffer is empty but the inflater needs more input to continue, or if the output buffer is not large enough. Call lzham_inflate() again
+        ///   with more input data, or with more room in the output buffer (except when using single call decompression, described above).
         /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_init", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr CompressInitialize(IntPtr compressParams);
+        [DllImport("lzham_x86.dll", EntryPoint = "lzham_z_inflate", CallingConvention = CallingConvention.Cdecl)]
+        private extern static Int32 ZInflate(IntPtr pStream, int flush);
+        public static Int32 ZInflate(ZStream zStream, int flush)
+        {
+            GCHandle zStreamGCHandle = GCHandle.Alloc(zStream, GCHandleType.Pinned);
 
-        /// <summary>
-        /// Deinitializes a compressor, releasing all allocated memory.
-        //  returns adler32 of source data (valid only on success).
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_deinit", CallingConvention = CallingConvention.Cdecl)]
-        public static extern UInt32 CompressDeinitialize(IntPtr p);
+            Int32 result = ZInflate(zStreamGCHandle.AddrOfPinnedObject(), flush);
 
-        /// <summary>
-        /// Compresses an arbitrarily sized block of data, writing as much available compressed data as possible to the output buffer. 
-        /// This method may be called as many times as needed, but for best perf. try not to call it with tiny buffers.
-        /// pState - Pointer to internal compression state, created by lzham_compress_init.
-        /// pIn_buf, pIn_buf_size - Pointer to input data buffer, and pointer to a size_t containing the number of bytes available in this buffer. 
-        ///                         On return, *pIn_buf_size will be set to the number of bytes read from the buffer.
-        /// pOut_buf, pOut_buf_size - Pointer to the output data buffer, and a pointer to a size_t containing the max number of bytes that can be written to this buffer.
-        ///                         On return, *pOut_buf_size will be set to the number of bytes written to this buffer.
-        /// no_more_input_bytes_flag - Set to true to indicate that no more input bytes are available to compress (EOF). Once you call this function with this param set to true, it must stay set to true in all future calls.
-        ///
-        /// Normal return status codes:
-        ///    LZHAM_COMP_STATUS_NOT_FINISHED - Compression can continue, but the compressor needs more input, or it needs more room in the output buffer.
-        ///    LZHAM_COMP_STATUS_NEEDS_MORE_INPUT - Compression can contintue, but the compressor has no more output, and has no input but we're not at EOF. Supply more input to continue.
-        /// Success/failure return status codes:
-        ///    LZHAM_COMP_STATUS_SUCCESS - Compression has completed successfully.
-        ///    LZHAM_COMP_STATUS_FAILED, LZHAM_COMP_STATUS_FAILED_INITIALIZING, LZHAM_COMP_STATUS_INVALID_PARAMETER - Something went wrong.
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress", CallingConvention = CallingConvention.Cdecl)]
-        public static extern CompressStatus Compress(IntPtr state, IntPtr inputBuffer, IntPtr inputBufferSize, IntPtr outputBuffer, IntPtr outputBufferSize, bool noMoreInputBytesFlag);
+            zStreamGCHandle.Free();
 
-        /// <summary>
-        /// Single function call compression interface.
-        /// Same return codes as lzham_compress, except this function can also return LZHAM_COMP_STATUS_OUTPUT_BUF_TOO_SMALL.
-        /// </summary>
-        [DllImport("lzham_x86.dll", EntryPoint = "lzham_compress_memory", CallingConvention = CallingConvention.Cdecl)]
-        public static extern CompressStatus CompressMemory(IntPtr compressParams, IntPtr destinationBuffer, UInt64 destinationLength, IntPtr sourceBuffer, UInt64 sourceLength, IntPtr adler32);
+            return result;
+        }
     }
 }
