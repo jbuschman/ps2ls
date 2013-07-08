@@ -81,8 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Adr\Adr.cs" />
-    <Compile Include="Assets\Cnk\Cnk.cs" />
-    <Compile Include="Assets\Cnk\Tile.cs" />
+    <Compile Include="Assets\Cnk\Cnk0.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
     <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
@@ -133,6 +132,12 @@
     </Compile>
     <Compile Include="Forms\SoundExportForm.Designer.cs">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ZoneBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ZoneBrowser.Designer.cs">
+      <DependentUpon>ZoneBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
@@ -266,6 +271,9 @@
     <EmbeddedResource Include="Forms\SoundExportForm.resx">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ZoneBrowser.resx">
+      <DependentUpon>ZoneBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -377,6 +385,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\map-medium.png" />
+    <None Include="Resources\map.png" />
     <None Include="Resources\ui-label.png" />
     <None Include="Resources\regular-expression.png" />
     <None Include="Resources\logo_48_warn.png" />

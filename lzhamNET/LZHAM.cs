@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace lzhamNET
 {
-    public static class LZHAM
+    public static class Lzham
     {
         public enum ZFlush
         {
@@ -43,7 +43,7 @@ namespace lzhamNET
             /// </summary>
             TableFlush = 10
         }
-     
+
         [StructLayout(LayoutKind.Sequential)]
         public class ZStream
         {

@@ -10,27 +10,13 @@ using ps2ls.Assets.Pack;
 using System.IO;
 using DevIL;
 using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
+using ps2ls.Forms.Controls;
 
 namespace ps2ls.Forms
 {
     public partial class TextureBrowser : UserControl
     {
-        #region Singleton
-        private static TextureBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new TextureBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static TextureBrowser Instance { get { return instance; } }
-        #endregion
-
         private bool assetsDirty = false;
 
         public TextureBrowser()
@@ -69,13 +55,33 @@ namespace ps2ls.Forms
 
             if (assets != null)
             {
+                Regex regex = null;
+
+                try
+                {
+                    regex = new Regex(searchText.Text, RegexOptions.Compiled);
+                }
+                catch (Exception) { /* invalid regex */ }
+
                 foreach (Asset asset in assets)
                 {
-                    if (asset.Name.IndexOf(searchText.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    switch (searchTextTypeToolStripDrownDownButton1.SearchTextType)
                     {
-                        textureListbox.Items.Add(asset);
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:
+                            {
+                                if (asset.Name.IndexOf(searchText.Text, 0, StringComparison.OrdinalIgnoreCase) < 0)
+                                    continue;
+                            }
+                            break;
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.RegularExpression:
+                            {
+                                if (regex == null || !regex.IsMatch(asset.Name))
+                                    continue;
+                            }
+                            break;
                     }
 
+                    textureListbox.Items.Add(asset);
                 }
             }
 
@@ -146,6 +152,12 @@ namespace ps2ls.Forms
             bitmap.UnlockBits(bdata);
 
             return (System.Drawing.Image)bitmap;
+        }
+
+        private void searchTextTypeToolStripDrownDownButton1_SearchTextTypeChanged(object sender, EventArgs e)
+        {
+            if(searchText.Text.Length > 0)
+                refreshImageListBox();
         }
     }
 }

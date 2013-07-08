@@ -11,47 +11,15 @@ using System.Threading;
 using ps2ls.Assets.Pack;
 using System.Text.RegularExpressions;
 using System.Configuration;
+using ps2ls.Forms.Controls;
 
 namespace ps2ls.Forms
 {
     public partial class AssetBrowser : UserControl
     {
-        #region Singleton
-        private static AssetBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new AssetBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static AssetBrowser Instance { get { return instance; } }
-        #endregion
-
-        enum SearchTypes
-        {
-            Textual,
-            RegularExpression
-        }
-
         private bool assetsDirty = false;
-        private SearchTypes _assetSearchType = SearchTypes.Textual;
-        private SearchTypes assetSearchType
-        {
-            get { return _assetSearchType; }
-            set
-            {
-                _assetSearchType = value;
 
-
-            }
-        }
-
-        private AssetBrowser()
+        public AssetBrowser()
         {
             InitializeComponent();
 
@@ -235,9 +203,9 @@ namespace ps2ls.Forms
 
                 foreach (Asset asset in pack.Assets)
                 {
-                    switch (assetSearchType)
+                    switch (searchTextTypeToolStripDrownDownButton1.SearchTextType)
                     {
-                        case SearchTypes.Textual:
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:
                             {
                                 if (!asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()))
                                 {
@@ -245,7 +213,7 @@ namespace ps2ls.Forms
                                 }
                             }
                             break;
-                        case SearchTypes.RegularExpression:
+                        case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.RegularExpression:
                             {
                                 if (regex == null || !regex.IsMatch(asset.Name))
                                 {
@@ -446,26 +414,40 @@ namespace ps2ls.Forms
             AssetManager.Instance.WriteManifest(@"C:\Users\Colin\Desktop\ps2ls.manifest");
         }
 
-        private void textualToolStripMenuItem_Click(object sender, EventArgs e)
+        private void searchTextTypeToolStripDrownDownButton1_SearchTextTypeChanged(object sender, EventArgs e)
         {
-            if (assetSearchType == SearchTypes.Textual)
-                return;
-
-            assetSearchType = SearchTypes.Textual;
-            assetSearchTypeDropDownButton.Image = textualToolStripMenuItem.Image;
-
             refreshAssetsDataGridView();
         }
 
-        private void regularExpressionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportAssetListToCsvButton_Click(object sender, EventArgs e)
         {
-            if (assetSearchType == SearchTypes.RegularExpression)
+            if (exportAssetFileToCsvSaveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            assetSearchType = SearchTypes.RegularExpression;
-            assetSearchTypeDropDownButton.Image = regularExpressionToolStripMenuItem.Image;
+            FileStream fileStream = new FileStream(exportAssetFileToCsvSaveFileDialog.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
 
-            refreshAssetsDataGridView();
+            streamWriter.Write("Name, ");
+            streamWriter.Write("Size, ");
+            streamWriter.Write("CRC-32");
+            streamWriter.Write(Environment.NewLine);
+
+            foreach (DataGridViewRow row in assetsDataGridView.Rows)
+            {
+                if (row == null)
+                    continue;
+
+                Asset asset = (Asset)row.Tag;
+
+                streamWriter.Write(asset.Name);
+                streamWriter.Write(", ");
+                streamWriter.Write(asset.Size);
+                streamWriter.Write(", ");
+                streamWriter.Write(asset.Crc32);
+                streamWriter.Write(Environment.NewLine);
+            }
+
+            streamWriter.Close();
         }
     }
 }

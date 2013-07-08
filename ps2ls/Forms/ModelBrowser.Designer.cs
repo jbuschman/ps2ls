@@ -29,14 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            ps2ls.Cameras.ArcBallCamera arcBallCamera4 = new ps2ls.Cameras.ArcBallCamera();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
+            ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.modelsListBox = new ps2ls.Forms.Controls.CustomListBox();
+            this.modelContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.modelsCountToolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.searchTextTypeToolStripDrownDownButton = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
             this.searchModelsText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -54,16 +57,14 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.materialSelectionComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.modelContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.modelContextMenuStrip.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.modelContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -97,12 +98,28 @@
             this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
             this.modelsListBox.Items.AddRange(new object[] {
             "CustomListBox"});
-            this.modelsListBox.Location = new System.Drawing.Point(0, 25);
+            this.modelsListBox.Location = new System.Drawing.Point(0, 27);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.modelsListBox.Size = new System.Drawing.Size(319, 553);
+            this.modelsListBox.Size = new System.Drawing.Size(319, 551);
             this.modelsListBox.TabIndex = 3;
             this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
+            // 
+            // modelContextMenuStrip
+            // 
+            this.modelContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.extractToolStripMenuItem});
+            this.modelContextMenuStrip.Name = "modelContextMenuStrip";
+            this.modelContextMenuStrip.Size = new System.Drawing.Size(119, 26);
+            this.modelContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.modelContextMenuStrip_Opening);
+            // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.extractToolStripMenuItem.Text = "Extract...";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
             // 
             // statusStrip2
             // 
@@ -127,6 +144,7 @@
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
+            this.searchTextTypeToolStripDrownDownButton,
             this.searchModelsText,
             this.clearSearchModelsText,
             this.toolStripSeparator2,
@@ -135,7 +153,7 @@
             this.lodFilterComboBox});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(319, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(319, 27);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -145,14 +163,25 @@
             this.toolStripButton1.Image = global::ps2ls.Properties.Resources.magnifier;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 24);
             this.toolStripButton1.Text = "toolStripButton1";
+            // 
+            // searchTextTypeToolStripDrownDownButton
+            // 
+            this.searchTextTypeToolStripDrownDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.searchTextTypeToolStripDrownDownButton.Image = ((System.Drawing.Image)(resources.GetObject("searchTextTypeToolStripDrownDownButton.Image")));
+            this.searchTextTypeToolStripDrownDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchTextTypeToolStripDrownDownButton.Name = "searchTextTypeToolStripDrownDownButton";
+            this.searchTextTypeToolStripDrownDownButton.SearchTextType = ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual;
+            this.searchTextTypeToolStripDrownDownButton.Size = new System.Drawing.Size(29, 24);
+            this.searchTextTypeToolStripDrownDownButton.Text = "Textual";
+            this.searchTextTypeToolStripDrownDownButton.SearchTextTypeChanged += new System.EventHandler(this.searchTextTypeToolStripDrownDownButton_SearchTextTypeChanged);
             // 
             // searchModelsText
             // 
             this.searchModelsText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.searchModelsText.Name = "searchModelsText";
-            this.searchModelsText.Size = new System.Drawing.Size(100, 25);
+            this.searchModelsText.Size = new System.Drawing.Size(100, 27);
             this.searchModelsText.CustomTextChanged += new System.EventHandler(this.searchModelsText_CustomTextChanged);
             // 
             // clearSearchModelsText
@@ -162,14 +191,14 @@
             this.clearSearchModelsText.Image = global::ps2ls.Properties.Resources.ui_text_field_clear_button;
             this.clearSearchModelsText.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.clearSearchModelsText.Name = "clearSearchModelsText";
-            this.clearSearchModelsText.Size = new System.Drawing.Size(23, 22);
+            this.clearSearchModelsText.Size = new System.Drawing.Size(23, 24);
             this.clearSearchModelsText.Text = "Clear Search Text";
             this.clearSearchModelsText.Click += new System.EventHandler(this.clearSearchModelsText_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
             // 
             // showAutoLODModelsButton
             // 
@@ -178,7 +207,7 @@
             this.showAutoLODModelsButton.Image = global::ps2ls.Properties.Resources.eye_gear;
             this.showAutoLODModelsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showAutoLODModelsButton.Name = "showAutoLODModelsButton";
-            this.showAutoLODModelsButton.Size = new System.Drawing.Size(23, 22);
+            this.showAutoLODModelsButton.Size = new System.Drawing.Size(23, 24);
             this.showAutoLODModelsButton.Text = "Show automatically generated LOD models";
             this.showAutoLODModelsButton.CheckedChanged += new System.EventHandler(this.showAutoLODModelsButton_CheckedChanged);
             // 
@@ -188,7 +217,7 @@
             this.toolStripLabel1.Image = global::ps2ls.Properties.Resources.eye_half;
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.toolStripLabel1.Size = new System.Drawing.Size(22, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(22, 24);
             this.toolStripLabel1.Text = "toolStripLabel1";
             this.toolStripLabel1.ToolTipText = "LOD";
             // 
@@ -202,7 +231,7 @@
             "LOD 1",
             "LOD 2"});
             this.lodFilterComboBox.Name = "lodFilterComboBox";
-            this.lodFilterComboBox.Size = new System.Drawing.Size(75, 25);
+            this.lodFilterComboBox.Size = new System.Drawing.Size(75, 23);
             this.lodFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.lodFilterComboBox_SelectedIndexChanged);
             // 
             // ModelBrowserModelStats1
@@ -217,18 +246,18 @@
             // glControl1
             // 
             this.glControl1.BackColor = System.Drawing.Color.Black;
-            arcBallCamera4.AspectRatio = 0F;
-            arcBallCamera4.DesiredDistance = 10F;
-            arcBallCamera4.DesiredPitch = 0.7853982F;
-            arcBallCamera4.DesiredTarget = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera4.DesiredTarget")));
-            arcBallCamera4.DesiredYaw = -0.7853982F;
-            arcBallCamera4.FarPlaneDistance = 65536F;
-            arcBallCamera4.FieldOfView = 1.291544F;
-            arcBallCamera4.NearPlaneDistance = 0.00390625F;
-            arcBallCamera4.Pitch = 0.7853982F;
-            arcBallCamera4.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera4.Position")));
-            arcBallCamera4.Yaw = -0.7853982F;
-            this.glControl1.Camera = arcBallCamera4;
+            arcBallCamera1.AspectRatio = 0F;
+            arcBallCamera1.DesiredDistance = 10F;
+            arcBallCamera1.DesiredPitch = 0.7853982F;
+            arcBallCamera1.DesiredTarget = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.DesiredTarget")));
+            arcBallCamera1.DesiredYaw = -0.7853982F;
+            arcBallCamera1.FarPlaneDistance = 65536F;
+            arcBallCamera1.FieldOfView = 1.291544F;
+            arcBallCamera1.NearPlaneDistance = 0.00390625F;
+            arcBallCamera1.Pitch = 0.7853982F;
+            arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
+            arcBallCamera1.Yaw = -0.7853982F;
+            this.glControl1.Camera = arcBallCamera1;
             this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControl1.Location = new System.Drawing.Point(0, 25);
             this.glControl1.Name = "glControl1";
@@ -333,22 +362,6 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
             // 
-            // modelContextMenuStrip
-            // 
-            this.modelContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.extractToolStripMenuItem});
-            this.modelContextMenuStrip.Name = "modelContextMenuStrip";
-            this.modelContextMenuStrip.Size = new System.Drawing.Size(153, 48);
-            this.modelContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.modelContextMenuStrip_Opening);
-            // 
-            // extractToolStripMenuItem
-            // 
-            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
-            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
-            this.extractToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.extractToolStripMenuItem.Text = "Extract...";
-            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
-            // 
             // ModelBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -363,13 +376,13 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.modelContextMenuStrip.ResumeLayout(false);
             this.statusStrip2.ResumeLayout(false);
             this.statusStrip2.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.modelContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -401,5 +414,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ContextMenuStrip modelContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem extractToolStripMenuItem;
+        private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton;
     }
 }

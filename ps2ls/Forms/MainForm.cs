@@ -34,9 +34,21 @@ namespace ps2ls.Forms
         public static MainForm Instance { get { return instance; } }
         #endregion
 
+        public AssetBrowser AssetBrowser { get; private set; }
+        public ModelBrowser ModelBrowser { get; private set; }
+        public TextureBrowser TextureBrowser { get; private set; }
+        public SoundBrowser SoundBrowser { get; private set; }
+        public ZoneBrowser ZoneBrowser { get; private set; }
+
         private MainForm()
         {
             InitializeComponent();
+
+            AssetBrowser = new AssetBrowser();
+            ModelBrowser = new ModelBrowser();
+            TextureBrowser = new TextureBrowser();
+            SoundBrowser = new SoundBrowser();
+            ZoneBrowser = new ZoneBrowser();
         }
 
         private void onAssetsChanged(object sender, EventArgs e)
@@ -56,11 +68,6 @@ namespace ps2ls.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            AssetBrowser.CreateInstance();
-            ModelBrowser.CreateInstance();
-            TextureBrowser.CreateInstance();
-            SoundBrowser.CreateInstance();
-
             //the placement of this event handler is not arbitrary, do not move it!
             AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
 
@@ -69,28 +76,33 @@ namespace ps2ls.Forms
             imageList.Images.Add(Properties.Resources.tree_small);
             imageList.Images.Add(Properties.Resources.image);
             imageList.Images.Add(Properties.Resources.music);
+            imageList.Images.Add(Properties.Resources.music);
             tabControl1.ImageList = imageList;
 
             TabPage assetBrowserTabPage = new TabPage("Asset Browser");
-            assetBrowserTabPage.Controls.Add(AssetBrowser.Instance);
+            assetBrowserTabPage.Controls.Add(AssetBrowser);
             assetBrowserTabPage.ImageIndex = 0;
             tabControl1.TabPages.Add(assetBrowserTabPage);
 
             TabPage modelBrowserTabPage = new TabPage("Model Browser");
-            modelBrowserTabPage.Controls.Add(ModelBrowser.Instance);
+            modelBrowserTabPage.Controls.Add(ModelBrowser);
             modelBrowserTabPage.ImageIndex = 1;
             tabControl1.TabPages.Add(modelBrowserTabPage);
 
-            TabPage textureBrowser = new TabPage("Texture Browser");
-            textureBrowser.Controls.Add(TextureBrowser.Instance);
-            textureBrowser.ImageIndex = 2;
-            tabControl1.TabPages.Add(textureBrowser);
+            TabPage textureBrowserTagPage = new TabPage("Texture Browser");
+            textureBrowserTagPage.Controls.Add(TextureBrowser);
+            textureBrowserTagPage.ImageIndex = 2;
+            tabControl1.TabPages.Add(textureBrowserTagPage);
 
-            TabPage soundBrowser = new TabPage("Sound Browser");
-            soundBrowser.Controls.Add(SoundBrowser.Instance);
-            soundBrowser.ImageIndex = 3;
-            soundBrowser.Enter += SoundBrowser.Instance.onEnter;
-            tabControl1.TabPages.Add(soundBrowser);
+            TabPage soundBrowserTabPage = new TabPage("Sound Browser");
+            soundBrowserTabPage.Controls.Add(SoundBrowser);
+            soundBrowserTabPage.ImageIndex = 3;
+            tabControl1.TabPages.Add(soundBrowserTabPage);
+
+            TabPage zoneBrowserTabPage = new TabPage("Zone Browser");
+            zoneBrowserTabPage.Controls.Add(ZoneBrowser);
+            zoneBrowserTabPage.ImageIndex = 4;
+            tabControl1.TabPages.Add(zoneBrowserTabPage);
         }
 
         private void reportIssueToolStripMenuItem_Click(object sender, EventArgs e)

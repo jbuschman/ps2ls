@@ -17,22 +17,6 @@ namespace ps2ls.Forms
 {
     public partial class SoundBrowser : UserControl
     {
-        #region Singleton
-        private static SoundBrowser instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new SoundBrowser();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static SoundBrowser Instance { get { return instance; } }
-        #endregion
-
         private bool assetsDirty = false;
 
         public SoundBrowser()
@@ -221,10 +205,6 @@ namespace ps2ls.Forms
 
             refreshTimer.Stop();
             refreshListBox();
-        }
-
-        public void onEnter(object sender, EventArgs e)
-        {
         }
 
         public override void Refresh()
