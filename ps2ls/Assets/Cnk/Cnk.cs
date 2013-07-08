@@ -12,16 +12,30 @@ namespace ps2ls.Assets.Cnk
 {
     public class Cnk0
     {
+        public Tile[] Tiles { get; private set; }
+
         public const int VERSION = 1;
+
+        public enum LoadError
+        {
+            None,
+            NullStream,
+            BadHeader,
+            VersionMismatch,
+            BadTile
+        }
 
         private Cnk0()
         {
         }
 
-        public static Cnk0 LoadFromStream(Stream stream)
+        public static LoadError LoadFromStream(Stream stream, out Cnk0 cnk0)
         {
             if (stream == null)
-                return null;
+            {
+                cnk0 = null;
+                return LoadError.NullStream;
+            }
 
             BinaryReader binaryReader = new BinaryReader(stream);
 
@@ -33,40 +47,64 @@ namespace ps2ls.Assets.Cnk
                 magic[2] != 'K' ||
                 magic[3] != '0')
             {
-                return null;
             }
 
             int version = binaryReader.ReadInt32();
 
             if (version != VERSION)
-                return null;
+            {
+                cnk0 = null;
+                return LoadError.VersionMismatch;
+            }
 
             uint uncompressedSize = binaryReader.ReadUInt32();
             uint compressedSize = binaryReader.ReadUInt32();
 
             byte[] inputBuffer = binaryReader.ReadBytes((int)compressedSize);
-            ulong inputBufferSize = compressedSize;
 
-            FileStream fileStream = new FileStream(@"C:\Users\Colin\Desktop\cnktest", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
-            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
-            binaryWriter.Write(inputBuffer);
-            binaryWriter.Close();
+            binaryReader.Close();
 
             byte[] outputBuffer = new byte[uncompressedSize];
-            ulong outputBufferSize = 0;
 
-            LZHAM.DecompressParams decompressParams = new LZHAM.DecompressParams();
-            decompressParams.ComputeAdler32 = false;
-            decompressParams.DictSizeLog2 = LZHAM.MinDictSizeLog2;
-            decompressParams.NumSeedBytes = 0;
-            decompressParams.OutputUnbuffered = true;
-            decompressParams.SeedBytes = IntPtr.Zero;
-            IntPtr decompressState = LZHAM.DecompressInitialize(decompressParams);
+            LZHAM.ZStream zStream = new LZHAM.ZStream();
+            LZHAM.ZInflateInit2(zStream, 20);
+            zStream.AvailableInputBytes = compressedSize;
+            zStream.AvailableOutputBytes = uncompressedSize;
 
-            LZHAM.DecompressStatus decompressStatus = LZHAM.Decompress(decompressState, inputBuffer, inputBufferSize, outputBuffer, ref outputBufferSize, true);
+            GCHandle inputBufferGCHandle = GCHandle.Alloc(inputBuffer, GCHandleType.Pinned);
+            GCHandle outputBufferGCHandle = GCHandle.Alloc(outputBuffer, GCHandleType.Pinned);
 
-            Cnk0 cnk0 = new Cnk0();
-            return cnk0;
+            zStream.NextInputByte = inputBufferGCHandle.AddrOfPinnedObject();
+            zStream.NextOutputByte = outputBufferGCHandle.AddrOfPinnedObject();
+
+            LZHAM.ZInflate(zStream, (int)LZHAM.ZFlush.Finish);
+            LZHAM.ZInflateEnd(zStream);
+
+            MemoryStream memoryStream = new MemoryStream(outputBuffer);
+            binaryReader = new BinaryReader(memoryStream);
+
+            cnk0 = new Cnk0();
+
+            UInt32 tileCount = binaryReader.ReadUInt32();
+
+            cnk0.Tiles = new Tile[tileCount];
+
+            for (UInt32 i = 0; i < tileCount; ++i)
+            {
+                Tile tile;
+
+                if (Tile.LoadFromStream(memoryStream, out tile) != Tile.LoadError.None)
+                {
+                    cnk0 = null;
+                    return LoadError.BadTile;
+                }
+
+                cnk0.Tiles[i] = tile;
+            }
+
+            binaryReader.Close();
+
+            return LoadError.None;
         }
     }
 }

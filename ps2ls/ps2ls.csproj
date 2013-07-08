@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EA8DD307-8B70-4B76-A3E4-140D2A5ECB89}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ps2ls</RootNamespace>
     <AssemblyName>ps2ls</AssemblyName>
@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Assets\Adr\Adr.cs" />
     <Compile Include="Assets\Cnk\Cnk.cs" />
+    <Compile Include="Assets\Cnk\Tile.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
     <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
@@ -435,7 +436,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(SolutionDir)devil-net\Libs\$(Platform)\*.dll" .
 xcopy /Y "$(SolutionDir)fmodNET\*.dll" .
-xcopy /Y "$(SolutionDir)lzham\bin\*.dll" .</PostBuildEvent>
+xcopy /Y "$(SolutionDir)lzhamNET\bin\Debug\*.dll" .</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
