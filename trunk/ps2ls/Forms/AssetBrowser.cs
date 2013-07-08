@@ -427,7 +427,8 @@ namespace ps2ls.Forms
                 {
                     if (asset.Type == Asset.Types.CNK0)
                     {
-                        ps2ls.Assets.Cnk.Cnk0 asd = ps2ls.Assets.Cnk.Cnk0.LoadFromStream(asset.Pack.CreateAssetMemoryStreamByName(asset.Name));
+                        ps2ls.Assets.Cnk.Cnk0 cnk0;
+                        ps2ls.Assets.Cnk.Cnk0.LoadFromStream(asset.Pack.CreateAssetMemoryStreamByName(asset.Name), out cnk0);
                     }
 
                     asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
