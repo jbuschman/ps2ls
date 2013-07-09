@@ -88,6 +88,7 @@
     <Compile Include="Assets\Zone\Eco.cs" />
     <Compile Include="Assets\Zone\Flora.cs" />
     <Compile Include="Assets\Zone\Zone.cs" />
+    <Compile Include="Cameras\QuakeCamera.cs" />
     <Compile Include="Forms\Controls\SearchTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -138,6 +139,9 @@
     </Compile>
     <Compile Include="Forms\ZoneBrowser.Designer.cs">
       <DependentUpon>ZoneBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ZoneBrowserGLControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
@@ -438,7 +442,7 @@
       <Name>fmodNET</Name>
     </ProjectReference>
     <ProjectReference Include="..\lzhamNET\lzhamNET.csproj">
-      <Project>{554e226e-4a51-414e-94c9-665e1e1b29a8}</Project>
+      <Project>{a66d1231-14e5-4a9d-a697-b87f01d6a5c1}</Project>
       <Name>lzhamNET</Name>
     </ProjectReference>
   </ItemGroup>

@@ -11,7 +11,7 @@ namespace ps2ls.Cameras
         public enum Types
         {
             ArcBall,
-            Free
+            Quake
         };
 
         private Matrix4 view;
