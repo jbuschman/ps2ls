@@ -8,45 +8,56 @@ namespace ps2ls.Cameras
 {
     public class ArcBallCamera : Camera
     {
-        private Single distance;
-        private Vector3 target;
-        private Single desiredPitch = 0;
-
-        public Single DesiredDistance { get; set; }
-        public Vector3 DesiredTarget{ get; set; }
-        public Single DesiredYaw { get; set; }
-        public Single DesiredPitch
+        public Single distance;
+        public Single Distance
         {
-            get { return desiredPitch; }
+            get { return distance; }
             set
             {
-                desiredPitch = Utils.Clamp(value, -MathHelper.DegreesToRadians(89.9f), MathHelper.DegreesToRadians(89.9f));
+                if (distance == value)
+                    return;
+
+                distance = value;
+
+                if (DistanceChanged != null)
+                    DistanceChanged.Invoke(this, EventArgs.Empty);
             }
         }
+        public event EventHandler DistanceChanged;
+
+        private Vector3 target;
+        public Vector3 Target
+        {
+            get { return target; }
+            set
+            {
+                if (target == value)
+                    return;
+
+                target = value;
+
+                if (TargetChanged != null)
+                    TargetChanged.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler TargetChanged;
 
         public ArcBallCamera()
             : base(Camera.Types.ArcBall)
         {
-            DesiredYaw = Yaw = MathHelper.DegreesToRadians(-45.0f);
-            DesiredPitch = Pitch = MathHelper.DegreesToRadians(45.0f);
-            DesiredDistance = distance = 10.0f;
+            Yaw = MathHelper.DegreesToRadians(-45.0f);
+            Pitch = MathHelper.DegreesToRadians(45.0f);
+            distance = 10.0f;
         }
 
         public override void Update()
         {
-            distance = DesiredDistance;
-
-            distance = Math.Max(Single.Epsilon, distance);
-
-            target = DesiredTarget;
-
-            Yaw = DesiredYaw;
-            Pitch = DesiredPitch;
+            distance = Math.Max(Single.Epsilon, Distance);
 
             Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
             Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
 
-            Position = target - (forward * distance);
+            Position = Target - (forward * Distance);
 
             base.Update();
         }

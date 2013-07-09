@@ -14,11 +14,11 @@ namespace ps2ls.Forms
         {
         }
 
-        public override void Render()
+        public override void Tick()
         {
         }
 
-        public override void Tick()
+        public override void Render()
         {
         }
     }

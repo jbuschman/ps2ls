@@ -18,6 +18,7 @@ namespace ps2ls.Forms.Controls
         {
             base.OnPaint(e);
 
+            Tick();
             Render();
         }
 

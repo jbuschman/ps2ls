@@ -8,6 +8,17 @@ namespace ps2ls.Cameras
 {
     public class Camera
     {
+        private const float FIELD_OF_VIEW_DEFAULT = 75.0f;
+        private const float FIELD_OF_VIEW_MIN = 10.0f;
+        private const float FIELD_OF_VIEW_MAX = 90.0f;
+
+        private const float PITCH_DEFAULT = 45.0f;
+        private const float PITCH_MIN = -89.9f;
+        private const float PITCH_MAX = 89.9f;
+
+        private const float NEAR_PLANE_DISTANCE_DEFAULT = 0.00390625f;
+        private const float FAR_PLANE_DISTANCE_DEFAULT = 256.0f;
+
         public enum Types
         {
             ArcBall,
@@ -20,6 +31,9 @@ namespace ps2ls.Cameras
             get { return view; }
             protected set
             {
+                if (view == value)
+                    return;
+
                 view = value;
 
                 if (ViewChanged != null)
@@ -32,6 +46,9 @@ namespace ps2ls.Cameras
             get { return projection; }
             protected set
             {
+                if (projection == value)
+                    return;
+
                 projection = value;
 
                 if (ProjectionChanged != null)
@@ -44,6 +61,9 @@ namespace ps2ls.Cameras
             get { return aspectRatio; }
             set
             {
+                if (aspectRatio == value)
+                    return;
+
                 aspectRatio = value;
 
                 if (AspectRatioChanged != null)
@@ -56,7 +76,10 @@ namespace ps2ls.Cameras
             get { return fieldOfView; }
             set
             {
-                fieldOfView = Utils.Clamp(value, float.Epsilon, MathHelper.PiOver2);
+                if (fieldOfView == value)
+                    return;
+
+                fieldOfView = Utils.Clamp(value, MathHelper.DegreesToRadians(FIELD_OF_VIEW_MIN), MathHelper.DegreesToRadians(FIELD_OF_VIEW_MAX));
 
                 if(FieldOfViewChanged != null)
                     FieldOfViewChanged.Invoke(this, null);
@@ -71,6 +94,9 @@ namespace ps2ls.Cameras
             }
             set
             {
+                if (nearPlaneDistance == value)
+                    return;
+
                 nearPlaneDistance = value;
 
                 if(NearPlaneDistanceChanged != null)
@@ -86,6 +112,9 @@ namespace ps2ls.Cameras
             }
             set
             {
+                if (farPlaneDistance == value)
+                    return;
+
                 farPlaneDistance = value;
 
                 if(FarPlaneDistanceChanged != null)
@@ -101,6 +130,9 @@ namespace ps2ls.Cameras
             }
             set
             {
+                if (position == value)
+                    return;
+
                 position = value;
 
                 if (PositionChanged != null)
@@ -113,7 +145,10 @@ namespace ps2ls.Cameras
             get { return pitch; }
             set
             {
-                pitch = value;
+                if (pitch == value)
+                    return;
+
+                pitch = Utils.Clamp(value, PITCH_MIN, PITCH_MAX);
 
                 if(PitchChanged != null)
                     PitchChanged.Invoke(this, null);
@@ -125,6 +160,9 @@ namespace ps2ls.Cameras
             get { return yaw; }
             set
             {
+                if (yaw == value)
+                    return;
+
                 yaw = value;
 
                 if(YawChanged != null)
@@ -147,17 +185,17 @@ namespace ps2ls.Cameras
         protected Camera(Camera.Types type)
         {
             CameraType = type;
-            FieldOfView = MathHelper.DegreesToRadians(75.0f);
-            NearPlaneDistance = (Single)Math.Pow(2, -8);
-            FarPlaneDistance = (Single)Math.Pow(2, 8);
+            FieldOfView = MathHelper.DegreesToRadians(FIELD_OF_VIEW_DEFAULT);
+            NearPlaneDistance = NEAR_PLANE_DISTANCE_DEFAULT;
+            FarPlaneDistance = FAR_PLANE_DISTANCE_DEFAULT;
         }
 
         public virtual void Update()
         {
             Projection = Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearPlaneDistance, FarPlaneDistance);
             
-            Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
-            Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
+            Matrix4 worldRotation = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
+            Vector3 forward = Vector3.Transform(Vector3.UnitZ, worldRotation);
 
             View = Matrix4.LookAt(Position, Position + forward, Vector3.UnitY);
         }
