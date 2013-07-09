@@ -20,18 +20,7 @@ namespace ps2ls.Cameras
             get { return desiredPitch; }
             set
             {
-                if (value > MathHelper.DegreesToRadians(89.9f))
-                {
-                    desiredPitch = MathHelper.DegreesToRadians(89.9f);
-                }
-                else if (value < -MathHelper.DegreesToRadians(89.9f))
-                {
-                    desiredPitch = -MathHelper.DegreesToRadians(89.9f);
-                }
-                else
-                {
-                    desiredPitch = value;
-                }
+                desiredPitch = Utils.Clamp(value, -MathHelper.DegreesToRadians(89.9f), MathHelper.DegreesToRadians(89.9f));
             }
         }
 

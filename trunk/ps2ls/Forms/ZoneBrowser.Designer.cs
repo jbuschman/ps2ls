@@ -31,16 +31,16 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.statusStrip3 = new System.Windows.Forms.StatusStrip();
             this.zonesListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.customListBox1 = new ps2ls.Forms.Controls.CustomListBox();
+            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.glControl = new ps2ls.Forms.ModelBrowserGLControl();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.fileCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.customGLControl1 = new ps2ls.Forms.Controls.CustomGLControl();
-            this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.statusStrip3 = new System.Windows.Forms.StatusStrip();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -66,7 +66,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.customGLControl1);
+            this.splitContainer2.Panel2.Controls.Add(this.glControl);
             this.splitContainer2.Panel2.Controls.Add(this.statusStrip1);
             this.splitContainer2.Size = new System.Drawing.Size(800, 600);
             this.splitContainer2.SplitterDistance = 250;
@@ -93,6 +93,15 @@
             this.splitContainer1.Size = new System.Drawing.Size(250, 600);
             this.splitContainer1.SplitterDistance = 100;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // statusStrip3
+            // 
+            this.statusStrip3.Location = new System.Drawing.Point(0, 78);
+            this.statusStrip3.Name = "statusStrip3";
+            this.statusStrip3.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip3.SizingGrip = false;
+            this.statusStrip3.TabIndex = 2;
+            this.statusStrip3.Text = "statusStrip3";
             // 
             // zonesListBox
             // 
@@ -129,6 +138,15 @@
             this.customListBox1.Size = new System.Drawing.Size(250, 449);
             this.customListBox1.TabIndex = 1;
             // 
+            // statusStrip2
+            // 
+            this.statusStrip2.Location = new System.Drawing.Point(0, 474);
+            this.statusStrip2.Name = "statusStrip2";
+            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.SizingGrip = false;
+            this.statusStrip2.TabIndex = 2;
+            this.statusStrip2.Text = "statusStrip2";
+            // 
             // toolStrip2
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -137,6 +155,16 @@
             this.toolStrip2.Size = new System.Drawing.Size(250, 25);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
+            // 
+            // glControl
+            // 
+            this.glControl.BackColor = System.Drawing.Color.Black;
+            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl.Location = new System.Drawing.Point(0, 0);
+            this.glControl.Name = "glControl";
+            this.glControl.Size = new System.Drawing.Size(546, 578);
+            this.glControl.TabIndex = 2;
+            this.glControl.VSync = false;
             // 
             // statusStrip1
             // 
@@ -155,34 +183,6 @@
             this.fileCountLabel.Name = "fileCountLabel";
             this.fileCountLabel.Size = new System.Drawing.Size(40, 17);
             this.fileCountLabel.Text = "0/0";
-            // 
-            // customGLControl1
-            // 
-            this.customGLControl1.BackColor = System.Drawing.Color.Black;
-            this.customGLControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.customGLControl1.Location = new System.Drawing.Point(0, 0);
-            this.customGLControl1.Name = "customGLControl1";
-            this.customGLControl1.Size = new System.Drawing.Size(546, 578);
-            this.customGLControl1.TabIndex = 2;
-            this.customGLControl1.VSync = false;
-            // 
-            // statusStrip2
-            // 
-            this.statusStrip2.Location = new System.Drawing.Point(0, 474);
-            this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
-            this.statusStrip2.SizingGrip = false;
-            this.statusStrip2.TabIndex = 2;
-            this.statusStrip2.Text = "statusStrip2";
-            // 
-            // statusStrip3
-            // 
-            this.statusStrip3.Location = new System.Drawing.Point(0, 78);
-            this.statusStrip3.Name = "statusStrip3";
-            this.statusStrip3.Size = new System.Drawing.Size(250, 22);
-            this.statusStrip3.SizingGrip = false;
-            this.statusStrip3.TabIndex = 2;
-            this.statusStrip3.Text = "statusStrip3";
             // 
             // ZoneBrowser
             // 
@@ -219,7 +219,7 @@
         private System.Windows.Forms.Timer timer1;
         private Controls.CustomListBox zonesListBox;
         private Controls.CustomListBox customListBox1;
-        private Controls.CustomGLControl customGLControl1;
+        private Controls.CustomGLControl glControl;
         private System.Windows.Forms.StatusStrip statusStrip3;
         private System.Windows.Forms.StatusStrip statusStrip2;
     }
