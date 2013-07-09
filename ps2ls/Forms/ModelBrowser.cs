@@ -24,14 +24,27 @@ namespace ps2ls.Forms
     public partial class ModelBrowser : UserControl
     {
         private Model model = null;
+        public Model Model
+        {
+            get { return model; }
+            set
+            {
+                if (model == value)
+                    return;
+
+                model = value;
+
+                if (ModelChanged != null)
+                    ModelChanged.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler ModelChanged;
 
         private bool assetsDirty = false;
 
         public ModelBrowser()
         {
             InitializeComponent();
-
-            lodFilterComboBox.SelectedIndex = 1;    //LOD 0
 
             //HACK: Can't load ModelBrowser.cs in design mode unless we have at least one item for some reason.
             //Clear items after construction.
@@ -40,6 +53,39 @@ namespace ps2ls.Forms
             Dock = DockStyle.Fill;
 
             AssetManager.Instance.AssetsChanged += new EventHandler(AssetManager_AssetsChanged);
+
+            ModelChanged += ModelBrowser_ModelChanged;
+
+            modelBrowserGLControl.RenderModeChanged += modelBrowserGLControl_RenderModeChanged;
+            modelBrowserGLControl.RenderMode = ModelBrowserGLControl.RenderModes.Wireframe;
+
+            drawAxesButton.Checked = modelBrowserGLControl.DrawAxes;
+            snapCameraToModelButton.Checked = modelBrowserGLControl.SnapCameraToModelOnModelChange;
+        }
+
+        void modelBrowserGLControl_RenderModeChanged(object sender, EventArgs e)
+        {
+            switch(modelBrowserGLControl.RenderMode)
+            {
+                case ModelBrowserGLControl.RenderModes.Smooth:
+                    {
+                        toolStripDropDownButton1.Text = "Smooth";
+                        toolStripDropDownButton1.Image = Properties.Resources.smooth;
+                    }
+                    break;
+                case ModelBrowserGLControl.RenderModes.Wireframe:
+                    {
+                        toolStripDropDownButton1.Text = "Wireframe";
+                        toolStripDropDownButton1.Image = Properties.Resources.wireframe;
+                    }
+                    break;
+            }
+        }
+
+        void ModelBrowser_ModelChanged(object sender, EventArgs e)
+        {
+            modelBrowserGLControl.Model = model;
+            modelBrowserModelStats.Model = model;
         }
 
         private void AssetManager_AssetsChanged(object sender, EventArgs e)
@@ -72,6 +118,8 @@ namespace ps2ls.Forms
 
             assets.Sort(new Asset.NameComparer());
 
+            AssetTreeListView.Load(assets);
+
             if (assets != null)
             {
                 Regex regex = null;
@@ -86,14 +134,6 @@ namespace ps2ls.Forms
                 {
                     if (showAutoLODModelsButton.Checked == false && asset.Name.EndsWith("Auto.dme"))
                         continue;
-
-                    if (lodFilterComboBox.SelectedIndex > 0)
-                    {
-                        String lodString = "lod" + (lodFilterComboBox.SelectedIndex - 1).ToString();
-
-                        if (asset.Name.IndexOf(lodString, 0, StringComparison.OrdinalIgnoreCase) == -1)
-                            continue;
-                    }
 
                     switch (searchTextTypeToolStripDrownDownButton.SearchTextType)
                     {
@@ -138,36 +178,7 @@ namespace ps2ls.Forms
 
             MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
 
-            model = Model.LoadFromStream(asset.Name, memoryStream);
-            modelBrowserGLControl.Model = model;
-
-            ModelBrowserModelStats1.Model = model;
-
-            materialSelectionComboBox.Items.Clear();
-
-            if (model != null)
-            {
-                foreach (string textureName in model.TextureStrings)
-                {
-                    materialSelectionComboBox.Items.Add(textureName);
-                }
-            }
-
-            materialSelectionComboBox.SelectedIndex = materialSelectionComboBox.Items.Count > 0 ? 0 : -1;
-
-            snapCameraToModel();
-        }
-
-        private void snapCameraToModel()
-        {
-            if (model == null)
-                return;
-
-            Vector3 center = (model.Max + model.Min) / 2.0f;
-            Vector3 extents = (model.Max - model.Min) / 2.0f;
-
-            modelBrowserGLControl.Camera.DesiredTarget = center;
-            modelBrowserGLControl.Camera.DesiredDistance = extents.Length * 1.75f;
+            Model = Model.LoadFromStream(asset.Name, memoryStream);
         }
 
         private void showAutoLODModelsButton_CheckedChanged(object sender, EventArgs e)
@@ -240,7 +251,7 @@ namespace ps2ls.Forms
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            modelBrowserGLControl.RenderMode = ModelBrowserGLControl.RenderModes.WireFrame;
+            modelBrowserGLControl.RenderMode = ModelBrowserGLControl.RenderModes.Wireframe;
         }
 
         private void smoothToolStripMenuItem_Click(object sender, EventArgs e)
@@ -250,7 +261,12 @@ namespace ps2ls.Forms
 
         private void showAxesButton_CheckedChanged(object sender, EventArgs e)
         {
-            modelBrowserGLControl.DrawAxes = showAxesButton.Checked;
+            modelBrowserGLControl.DrawAxes = drawAxesButton.Checked;
+        }
+
+        private void snapCameraToModelButton_CheckedChanged(object sender, EventArgs e)
+        {
+            modelBrowserGLControl.SnapCameraToModelOnModelChange = snapCameraToModelButton.Checked;
         }
     }
 }

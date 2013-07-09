@@ -89,6 +89,10 @@
     <Compile Include="Assets\Zone\Flora.cs" />
     <Compile Include="Assets\Zone\Zone.cs" />
     <Compile Include="Cameras\QuakeCamera.cs" />
+    <Compile Include="Forms\Controls\AssetTreeListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\AssetTreeNode.cs" />
     <Compile Include="Forms\Controls\SearchTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

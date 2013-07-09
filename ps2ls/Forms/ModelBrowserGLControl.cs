@@ -58,7 +58,7 @@ namespace ps2ls.Forms
 
         public enum RenderModes
         {
-            WireFrame,
+            Wireframe,
             Smooth
         }
 
@@ -127,13 +127,12 @@ namespace ps2ls.Forms
         }
         public event EventHandler RenderModeChanged;
 
-        private InputTypes inputType { get; set; }
-        private Point location;
-
-        private int shaderProgram;
-        private int currentTexture;
-
+        public bool SnapCameraToModelOnModelChange { get; set; }
         public ArcBallCamera Camera { get; set; }
+
+        private InputTypes inputType;
+        private Point location;
+        private int shaderProgram;
 
         public ModelBrowserGLControl()
         {
@@ -146,8 +145,14 @@ namespace ps2ls.Forms
             MouseUp += ModelBrowserGLControl_MouseUp;
             MouseMove += ModelBrowserGLControl_MouseMove;
             MouseEnter += ModelBrowserGLControl_MouseEnter;
+            ModelChanged += ModelBrowserGLControl_ModelChanged;
         }
 
+        void ModelBrowserGLControl_ModelChanged(object sender, EventArgs e)
+        {
+            if (SnapCameraToModelOnModelChange)
+                snapCameraToModel();
+        }
 
         //TODO: move this elsehwere
         private void compileShader(Int32 shader, String source)
@@ -174,7 +179,7 @@ namespace ps2ls.Forms
             }
         }
 
-        //TODO: move this elsehwere
+        //TODO: move this to a generic shader manager
         private void createShaderProgram()
         {
             ErrorCode e;
@@ -298,19 +303,19 @@ void main(void)
                         Vector3 up = Vector3.UnitY;
                         Vector3 left = Vector3.Cross(up, forward);
 
-                        Camera.DesiredTarget += (up * deltaY) * 0.00390625f;
-                        Camera.DesiredTarget += (left * deltaX) * 0.00390625f;
+                        Camera.Target += (up * deltaY) * 0.00390625f;
+                        Camera.Target += (left * deltaX) * 0.00390625f;
                     }
                     break;
                 case InputTypes.Rotate:
                     {
-                        Camera.DesiredYaw -= MathHelper.DegreesToRadians(0.25f * deltaX);
-                        Camera.DesiredPitch += MathHelper.DegreesToRadians(0.25f * deltaY);
+                        Camera.Yaw -= MathHelper.DegreesToRadians(0.25f * deltaX);
+                        Camera.Pitch += MathHelper.DegreesToRadians(0.25f * deltaY);
                     }
                     break;
                 case InputTypes.Zoom:
                     {
-                        Camera.DesiredDistance -= deltaY * 0.015625f;
+                        Camera.Distance -= deltaY * 0.015625f;
                     }
                     break;
             }
@@ -326,7 +331,7 @@ void main(void)
                     RenderMode = RenderModes.Smooth;
                     break;
                 case Keys.F6:
-                    RenderMode = RenderModes.WireFrame;
+                    RenderMode = RenderModes.Wireframe;
                     break;
             }
         }
@@ -401,7 +406,7 @@ void main(void)
                 GL.FrontFace(FrontFaceDirection.Cw);
 
                 GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, currentTexture);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
 
                 int loc = GL.GetUniformLocation(shaderProgram, "colorMap");
                 GL.Uniform1(loc, 0);
@@ -426,7 +431,7 @@ void main(void)
 
                     switch (RenderMode)
                     {
-                        case RenderModes.WireFrame:
+                        case RenderModes.Wireframe:
                             {
                                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                             }
@@ -520,6 +525,22 @@ void main(void)
             }
 
             SwapBuffers();
+        }
+
+        private void snapCameraToModel()
+        {
+            if(model == null)
+                return;
+
+            Vector3 center = (model.Max + model.Min) / 2.0f;
+            Vector3 extents = new Vector3(
+                Math.Max(Math.Abs(model.Max.X), Math.Abs(model.Min.X)),
+                Math.Max(Math.Abs(model.Max.Y), Math.Abs(model.Min.Y)),
+                Math.Max(Math.Abs(model.Max.Z), Math.Abs(model.Min.Z))
+                );
+
+            Camera.Target = center;
+            Camera.Distance = extents.Length;
         }
     }
 }
