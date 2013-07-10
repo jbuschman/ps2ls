@@ -53,5 +53,15 @@ namespace ps2ls.Forms
         {
             assetsDirty = true;
         }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+
+            if (assetsDirty)
+            {
+
+            }
+        }
     }
 }

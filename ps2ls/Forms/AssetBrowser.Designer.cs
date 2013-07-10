@@ -60,12 +60,12 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportAssetListToCsvButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.fileCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.packFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.packOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.exportAssetListToCsvButton = new System.Windows.Forms.ToolStripButton();
             this.exportAssetFileToCsvSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -84,6 +84,7 @@
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             // 
@@ -92,7 +93,7 @@
             this.splitContainer2.Panel1.Controls.Add(this.packsListBox);
             this.splitContainer2.Panel1.Controls.Add(this.toolStrip1);
             this.splitContainer2.Panel1.Controls.Add(this.statusStrip2);
-            this.splitContainer2.Panel1MinSize = 250;
+            this.splitContainer2.Panel1MinSize = 200;
             // 
             // splitContainer2.Panel2
             // 
@@ -100,7 +101,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip3);
             this.splitContainer2.Panel2.Controls.Add(this.statusStrip1);
             this.splitContainer2.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer2.SplitterDistance = 250;
+            this.splitContainer2.SplitterDistance = 200;
             this.splitContainer2.TabIndex = 2;
             // 
             // packsListBox
@@ -112,7 +113,7 @@
             this.packsListBox.Location = new System.Drawing.Point(0, 25);
             this.packsListBox.Name = "packsListBox";
             this.packsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.packsListBox.Size = new System.Drawing.Size(250, 553);
+            this.packsListBox.Size = new System.Drawing.Size(200, 553);
             this.packsListBox.TabIndex = 0;
             this.packsListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.packsListBox_DrawItem);
             this.packsListBox.SelectedIndexChanged += new System.EventHandler(this.packsListBox_SelectedIndexChanged);
@@ -143,7 +144,7 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(250, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(200, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -178,7 +179,7 @@
             this.packCountLabel});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(200, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 2;
             this.statusStrip2.Text = "statusStrip2";
@@ -235,7 +236,7 @@
             this.assetsDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.assetsDataGridView.RowHeadersVisible = false;
             this.assetsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.assetsDataGridView.Size = new System.Drawing.Size(546, 553);
+            this.assetsDataGridView.Size = new System.Drawing.Size(596, 553);
             this.assetsDataGridView.TabIndex = 1;
             this.assetsDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.assetsDataGridView_CellDoubleClick);
             this.assetsDataGridView.SelectionChanged += new System.EventHandler(this.assetsDataGridView_SelectionChanged);
@@ -318,7 +319,7 @@
             this.exportAssetListToCsvButton});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(546, 25);
+            this.toolStrip3.Size = new System.Drawing.Size(596, 25);
             this.toolStrip3.TabIndex = 2;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -390,13 +391,28 @@
             this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
             this.filesMaxComboBox.SelectedIndexChanged += new System.EventHandler(this.filesMaxComboBox_SelectedIndexChanged);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // exportAssetListToCsvButton
+            // 
+            this.exportAssetListToCsvButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.exportAssetListToCsvButton.Image = ((System.Drawing.Image)(resources.GetObject("exportAssetListToCsvButton.Image")));
+            this.exportAssetListToCsvButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.exportAssetListToCsvButton.Name = "exportAssetListToCsvButton";
+            this.exportAssetListToCsvButton.Size = new System.Drawing.Size(23, 22);
+            this.exportAssetListToCsvButton.Text = "Export Asset List to *.CSV";
+            this.exportAssetListToCsvButton.Click += new System.EventHandler(this.exportAssetListToCsvButton_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileCountLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 578);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(546, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(596, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
@@ -412,21 +428,6 @@
             // 
             this.packOpenFileDialog.Filter = "PACK files|*.pack|All files|*.*";
             this.packOpenFileDialog.Multiselect = true;
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // exportAssetListToCsvButton
-            // 
-            this.exportAssetListToCsvButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.exportAssetListToCsvButton.Image = ((System.Drawing.Image)(resources.GetObject("exportAssetListToCsvButton.Image")));
-            this.exportAssetListToCsvButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.exportAssetListToCsvButton.Name = "exportAssetListToCsvButton";
-            this.exportAssetListToCsvButton.Size = new System.Drawing.Size(23, 22);
-            this.exportAssetListToCsvButton.Text = "Export Asset List to *.CSV";
-            this.exportAssetListToCsvButton.Click += new System.EventHandler(this.exportAssetListToCsvButton_Click);
             // 
             // exportAssetFileToCsvSaveFileDialog
             // 

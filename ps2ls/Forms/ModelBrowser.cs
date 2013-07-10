@@ -118,7 +118,7 @@ namespace ps2ls.Forms
 
             assets.Sort(new Asset.NameComparer());
 
-            AssetTreeListView.Load(assets);
+            assetTreeListView1.Load(assets);
 
             if (assets != null)
             {
@@ -132,9 +132,6 @@ namespace ps2ls.Forms
 
                 foreach (Asset asset in assets)
                 {
-                    if (showAutoLODModelsButton.Checked == false && asset.Name.EndsWith("Auto.dme"))
-                        continue;
-
                     switch (searchTextTypeToolStripDrownDownButton.SearchTextType)
                     {
                         case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:

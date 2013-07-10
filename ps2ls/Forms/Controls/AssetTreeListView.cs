@@ -27,14 +27,35 @@ namespace ps2ls.Forms.Controls
             {
                 get { return Children.Count > 0; }
             }
+
+            public void Collapse()
+            {
+                if (!HasChildren)
+                    return;
+
+                if (Children.Count == 1)
+                {
+                    AssetNode child = Children.First().Value;
+
+                    child.Collapse();
+
+                    //concatenate names
+                    Name += DELIMETER + child.Name;
+                    //give me your children, and dispose other object
+                    Children = child.Children;
+                }
+            }
         }
 
         public AssetTreeListView()
         {
         }
 
-        public static void Load(IEnumerable<Asset> assets)
+        public void Load(IEnumerable<Asset> assets)
         {
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             AssetNode rootAssetNode = new AssetNode();
             rootAssetNode.Name = "root";
 
@@ -84,7 +105,16 @@ namespace ps2ls.Forms.Controls
                 }
             }
 
-            Console.Write("");
+            rootAssetNode.Collapse();
+
+            stopwatch.Stop();
+
+            foreach (AssetNode assetNode in rootAssetNode.Children.Values)
+            {
+                Nodes.Add(assetNode.Name);
+            }
+
+            Console.WriteLine("asd");
         }
     }
 }

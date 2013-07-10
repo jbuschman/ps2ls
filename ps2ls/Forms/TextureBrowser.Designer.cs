@@ -34,6 +34,9 @@
             this.searchTextTypeToolStripDrownDownButton1 = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
             this.searchText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchTextButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.pictureWindow = new System.Windows.Forms.PictureBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.imagesCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -55,10 +58,13 @@
             this.toolStripLabel1,
             this.searchTextTypeToolStripDrownDownButton1,
             this.searchText,
-            this.clearSearchTextButton});
+            this.clearSearchTextButton,
+            this.toolStripSeparator2,
+            this.toolStripLabel2,
+            this.filesMaxComboBox});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(250, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(300, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -100,6 +106,33 @@
             this.clearSearchTextButton.Text = "clearSearchText";
             this.clearSearchTextButton.Click += new System.EventHandler(this.clearSearchTextButton_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripLabel2.Image = global::ps2ls.Properties.Resources.counter;
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.toolStripLabel2.Size = new System.Drawing.Size(22, 22);
+            this.toolStripLabel2.Text = "File Count Max";
+            this.toolStripLabel2.ToolTipText = "File Count Maximum";
+            // 
+            // filesMaxComboBox
+            // 
+            this.filesMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.filesMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.filesMaxComboBox.Items.AddRange(new object[] {
+            "100",
+            "1000",
+            "10000",
+            "∞"});
+            this.filesMaxComboBox.Name = "filesMaxComboBox";
+            this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
+            // 
             // pictureWindow
             // 
             this.pictureWindow.BackColor = System.Drawing.Color.Black;
@@ -108,7 +141,7 @@
             this.pictureWindow.InitialImage = null;
             this.pictureWindow.Location = new System.Drawing.Point(0, 0);
             this.pictureWindow.Name = "pictureWindow";
-            this.pictureWindow.Size = new System.Drawing.Size(546, 600);
+            this.pictureWindow.Size = new System.Drawing.Size(496, 600);
             this.pictureWindow.TabIndex = 2;
             this.pictureWindow.TabStop = false;
             // 
@@ -118,14 +151,14 @@
             this.imagesCountLabel});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(250, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(300, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 4;
             this.statusStrip2.Text = "statusStrip2";
             // 
             // imagesCountLabel
             // 
-            this.imagesCountLabel.Image = global::ps2ls.Properties.Resources.image;
+            this.imagesCountLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
             this.imagesCountLabel.Name = "imagesCountLabel";
             this.imagesCountLabel.Size = new System.Drawing.Size(40, 17);
             this.imagesCountLabel.Text = "0/0";
@@ -139,11 +172,13 @@
             this.textureListbox.Items.AddRange(new object[] {
             "default",
             "default",
+            "default",
+            "default",
             "ImageListBox"});
             this.textureListbox.Location = new System.Drawing.Point(0, 25);
             this.textureListbox.Name = "textureListbox";
             this.textureListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.textureListbox.Size = new System.Drawing.Size(250, 553);
+            this.textureListbox.Size = new System.Drawing.Size(300, 553);
             this.textureListbox.TabIndex = 0;
             this.textureListbox.SelectedIndexChanged += new System.EventHandler(this.textureListbox_SelectedIndexChanged);
             // 
@@ -159,13 +194,13 @@
             this.splitContainer1.Panel1.Controls.Add(this.textureListbox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Panel1MinSize = 250;
+            this.splitContainer1.Panel1MinSize = 300;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.pictureWindow);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 5;
             // 
             // TextureBrowser
@@ -202,5 +237,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
     }
 }
