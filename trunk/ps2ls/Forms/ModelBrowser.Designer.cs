@@ -43,7 +43,8 @@
             this.searchModelsText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.showAutoLODModelsButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.modelBrowserGLControl = new ps2ls.Forms.ModelBrowserGLControl();
             this.modelBrowserModelStats = new ps2ls.Forms.ModelBrowserModelStats();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -54,6 +55,7 @@
             this.smoothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.snapCameraToModelButton = new System.Windows.Forms.ToolStripButton();
+            this.assetTreeListView1 = new ps2ls.Forms.Controls.AssetTreeListView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -73,9 +75,11 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.assetTreeListView1);
             this.splitContainer1.Panel1.Controls.Add(this.modelsListBox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip2);
+            this.splitContainer1.Panel1MinSize = 300;
             // 
             // splitContainer1.Panel2
             // 
@@ -83,13 +87,13 @@
             this.splitContainer1.Panel2.Controls.Add(this.modelBrowserModelStats);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
-            this.splitContainer1.SplitterDistance = 319;
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 1;
             // 
             // modelsListBox
             // 
             this.modelsListBox.ContextMenuStrip = this.modelContextMenuStrip;
-            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.modelsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.modelsListBox.FormattingEnabled = true;
             this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
@@ -106,11 +110,14 @@
             "default",
             "default",
             "default",
+            "default",
+            "default",
+            "default",
             "CustomListBox"});
             this.modelsListBox.Location = new System.Drawing.Point(0, 25);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.modelsListBox.Size = new System.Drawing.Size(319, 553);
+            this.modelsListBox.Size = new System.Drawing.Size(143, 553);
             this.modelsListBox.TabIndex = 3;
             this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
             // 
@@ -136,7 +143,7 @@
             this.modelsCountToolStripStatusLabel});
             this.statusStrip2.Location = new System.Drawing.Point(0, 578);
             this.statusStrip2.Name = "statusStrip2";
-            this.statusStrip2.Size = new System.Drawing.Size(319, 22);
+            this.statusStrip2.Size = new System.Drawing.Size(300, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 2;
             this.statusStrip2.Text = "statusStrip2";
@@ -157,10 +164,11 @@
             this.searchModelsText,
             this.clearSearchModelsText,
             this.toolStripSeparator2,
-            this.showAutoLODModelsButton});
+            this.toolStripLabel1,
+            this.filesMaxComboBox});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(319, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(300, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -207,21 +215,32 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
-            // showAutoLODModelsButton
+            // toolStripLabel1
             // 
-            this.showAutoLODModelsButton.CheckOnClick = true;
-            this.showAutoLODModelsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showAutoLODModelsButton.Image = global::ps2ls.Properties.Resources.eye_gear;
-            this.showAutoLODModelsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.showAutoLODModelsButton.Name = "showAutoLODModelsButton";
-            this.showAutoLODModelsButton.Size = new System.Drawing.Size(23, 22);
-            this.showAutoLODModelsButton.Text = "Show automatically generated LOD models";
-            this.showAutoLODModelsButton.CheckedChanged += new System.EventHandler(this.showAutoLODModelsButton_CheckedChanged);
+            this.toolStripLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripLabel1.Image = global::ps2ls.Properties.Resources.counter;
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.toolStripLabel1.Size = new System.Drawing.Size(22, 22);
+            this.toolStripLabel1.Text = "File Count Max";
+            this.toolStripLabel1.ToolTipText = "File Count Maximum";
+            // 
+            // filesMaxComboBox
+            // 
+            this.filesMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.filesMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.filesMaxComboBox.Items.AddRange(new object[] {
+            "100",
+            "1000",
+            "10000",
+            "∞"});
+            this.filesMaxComboBox.Name = "filesMaxComboBox";
+            this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
             // 
             // modelBrowserGLControl
             // 
             this.modelBrowserGLControl.BackColor = System.Drawing.Color.Black;
-            arcBallCamera1.AspectRatio = 1.152174F;
+            arcBallCamera1.AspectRatio = 1.198068F;
             arcBallCamera1.Distance = 10F;
             arcBallCamera1.FarPlaneDistance = 65536F;
             arcBallCamera1.FieldOfView = 1.291544F;
@@ -237,7 +256,7 @@
             this.modelBrowserGLControl.Model = null;
             this.modelBrowserGLControl.Name = "modelBrowserGLControl";
             this.modelBrowserGLControl.RenderMode = ps2ls.Forms.ModelBrowserGLControl.RenderModes.Smooth;
-            this.modelBrowserGLControl.Size = new System.Drawing.Size(477, 414);
+            this.modelBrowserGLControl.Size = new System.Drawing.Size(496, 414);
             this.modelBrowserGLControl.SnapCameraToModelOnModelChange = true;
             this.modelBrowserGLControl.TabIndex = 1;
             this.modelBrowserGLControl.VSync = false;
@@ -248,7 +267,7 @@
             this.modelBrowserModelStats.Location = new System.Drawing.Point(0, 439);
             this.modelBrowserModelStats.Model = null;
             this.modelBrowserModelStats.Name = "modelBrowserModelStats";
-            this.modelBrowserModelStats.Size = new System.Drawing.Size(477, 161);
+            this.modelBrowserModelStats.Size = new System.Drawing.Size(496, 161);
             this.modelBrowserModelStats.TabIndex = 3;
             // 
             // toolStrip1
@@ -262,7 +281,7 @@
             this.snapCameraToModelButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(477, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(496, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -328,6 +347,14 @@
             this.snapCameraToModelButton.Text = "Snap Camera To Model";
             this.snapCameraToModelButton.CheckedChanged += new System.EventHandler(this.snapCameraToModelButton_CheckedChanged);
             // 
+            // assetTreeListView1
+            // 
+            this.assetTreeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.assetTreeListView1.Location = new System.Drawing.Point(143, 25);
+            this.assetTreeListView1.Name = "assetTreeListView1";
+            this.assetTreeListView1.Size = new System.Drawing.Size(157, 553);
+            this.assetTreeListView1.TabIndex = 4;
+            // 
             // ModelBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -367,7 +394,6 @@
         private System.Windows.Forms.ToolStripButton drawAxesButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private ModelBrowserModelStats modelBrowserModelStats;
-        private System.Windows.Forms.ToolStripButton showAutoLODModelsButton;
         private System.Windows.Forms.ContextMenuStrip modelContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem extractToolStripMenuItem;
         private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton;
@@ -377,5 +403,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton snapCameraToModelButton;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
+        private Controls.AssetTreeListView assetTreeListView1;
     }
 }

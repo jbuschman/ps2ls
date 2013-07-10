@@ -25,9 +25,14 @@ namespace ps2ls.Forms
 
             packOpenFileDialog.InitialDirectory = Properties.Settings.Default.AssetDirectory;
 
-            Dock = DockStyle.Fill;
-
             AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
+        }
+
+        protected override void InitLayout()
+        {
+            base.InitLayout();
+
+            Dock = DockStyle.Fill;
         }
 
         private void onAssetsChanged(object sender, EventArgs e)
