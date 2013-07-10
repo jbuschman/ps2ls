@@ -11,6 +11,7 @@ using ps2ls.Assets.Pack;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using ps2ls.Assets.Zone;
+using System.IO;
 
 namespace ps2ls.Forms
 {
@@ -60,7 +61,58 @@ namespace ps2ls.Forms
 
             if (assetsDirty)
             {
+                refreshZonesListBox();
+            }
+        }
 
+        private void refreshZonesListBox()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            zonesListBox.BeginUpdate();
+
+            zonesListBox.Items.Clear();
+
+            List<Asset> assets = null;
+            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.ZONE, out assets);
+
+            if (assets != null)
+            {
+                foreach (Asset asset in assets)
+                {
+                    zonesListBox.Items.Add(asset);
+                }
+            }
+
+            zonesListBox.EndUpdate();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void zonesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (zonesListBox.SelectedIndex < 0)
+                return;
+
+            Zone zone = null;
+            Asset asset = null;
+
+            try
+            {
+                asset = (Asset)zonesListBox.SelectedItem;
+            }
+            catch(Exception) { return; }
+
+            MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
+            Zone.LoadError loadError = Zone.LoadFromStream(memoryStream, out zone);
+
+            switch (loadError)
+            {
+                case Assets.Zone.Zone.LoadError.None:
+                    {
+
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

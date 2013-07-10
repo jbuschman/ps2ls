@@ -35,8 +35,11 @@ namespace ps2ls.Forms
             assetsDirty = true;
         }
 
-        private void refreshImageListBox()
+        private void refreshTexturesListBox()
         {
+            Cursor.Current = Cursors.WaitCursor;
+            textureListbox.BeginUpdate();
+
             textureListbox.Items.Clear();
 
             List<Asset> images = null;
@@ -47,9 +50,7 @@ namespace ps2ls.Forms
             List<Asset> assets = new List<Asset>(imageCount);
 
             if (images != null)
-            {
                 assets.AddRange(images);
-            }
 
             assets.Sort(new Asset.NameComparer());
 
@@ -85,11 +86,13 @@ namespace ps2ls.Forms
                 }
             }
 
-            int count = textureListbox.Items.Count;
-            int max = assets != null ? assets.Count : 0;
+            int textureCount = textureListbox.Items.Count;
+            int texturesMax = assets != null ? assets.Count : 0;
 
-            imagesCountLabel.Text = count + "/" + max;
+            texturesCountLabel.Text = textureCount + "/" + texturesMax;
 
+            textureListbox.EndUpdate();
+            Cursor.Current = Cursors.WaitCursor;
         }
 
         private void textureListbox_SelectedIndexChanged(object sender, EventArgs e)
@@ -104,14 +107,10 @@ namespace ps2ls.Forms
 
             System.IO.MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
 
-            System.Drawing.Image image = LoadDrawingImageFromStream(memoryStream);
+            System.Drawing.Image image = LoadImageFromStream(memoryStream);
 
             pictureWindow.BackgroundImage = image;
             pictureWindow.Show();
-        }
-
-        private void ImageBrowser_Load(object sender, EventArgs e)
-        {
         }
 
         public override void Refresh()
@@ -120,14 +119,14 @@ namespace ps2ls.Forms
 
             if (assetsDirty)
             {
-                refreshImageListBox();
+                refreshTexturesListBox();
                 assetsDirty = false;
             }
         }
 
         private void searchText_CustomTextChanged(object sender, EventArgs e)
         {
-            refreshImageListBox();
+            refreshTexturesListBox();
 
             clearSearchTextButton.Enabled = searchText.Text.Length > 0;
         }
@@ -137,19 +136,19 @@ namespace ps2ls.Forms
             searchText.Clear();
         }
 
-        public static System.Drawing.Image LoadDrawingImageFromStream(Stream stream)
+        public static System.Drawing.Image LoadImageFromStream(Stream stream)
         {
             ImageImporter importer = new ImageImporter();
             DevIL.Image img = importer.LoadImageFromStream(stream);
 
-            DevIL.Unmanaged.ImageInfo data = img.GetImageInfo();
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(data.Width, data.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, data.Width, data.Height);
-            System.Drawing.Imaging.BitmapData bdata = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            DevIL.Unmanaged.ImageInfo imageInfo = img.GetImageInfo();
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(imageInfo.Width, imageInfo.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Rectangle rectangle = new System.Drawing.Rectangle(0, 0, imageInfo.Width, imageInfo.Height);
+            System.Drawing.Imaging.BitmapData bitmapData = bitmap.LockBits(rectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            DevIL.Unmanaged.IL.CopyPixels(0, 0, 0, data.Width, data.Height, 1, DataFormat.BGRA, DevIL.DataType.UnsignedByte, bdata.Scan0);
+            DevIL.Unmanaged.IL.CopyPixels(0, 0, 0, imageInfo.Width, imageInfo.Height, 1, DataFormat.BGRA, DevIL.DataType.UnsignedByte, bitmapData.Scan0);
 
-            bitmap.UnlockBits(bdata);
+            bitmap.UnlockBits(bitmapData);
 
             return (System.Drawing.Image)bitmap;
         }
@@ -157,7 +156,12 @@ namespace ps2ls.Forms
         private void searchTextTypeToolStripDrownDownButton1_SearchTextTypeChanged(object sender, EventArgs e)
         {
             if(searchText.Text.Length > 0)
-                refreshImageListBox();
+                refreshTexturesListBox();
+        }
+
+        private void texturesMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshTexturesListBox();
         }
     }
 }

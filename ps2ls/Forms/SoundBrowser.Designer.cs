@@ -35,7 +35,7 @@
             this.searchBox = new System.Windows.Forms.ToolStripTextBox();
             this.SearchBoxClear = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.filesListed = new System.Windows.Forms.ToolStripStatusLabel();
+            this.soundsListed = new System.Windows.Forms.ToolStripStatusLabel();
             this.StopButton = new System.Windows.Forms.Button();
             this.PlayPause = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
@@ -107,7 +107,7 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.filesListed});
+            this.soundsListed});
             this.statusStrip1.Location = new System.Drawing.Point(0, 578);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(250, 22);
@@ -116,10 +116,10 @@
             // 
             // filesListed
             // 
-            this.filesListed.Image = global::ps2ls.Properties.Resources.music;
-            this.filesListed.Name = "filesListed";
-            this.filesListed.Size = new System.Drawing.Size(40, 17);
-            this.filesListed.Text = "0/0";
+            this.soundsListed.Image = global::ps2ls.Properties.Resources.music;
+            this.soundsListed.Name = "filesListed";
+            this.soundsListed.Size = new System.Drawing.Size(40, 17);
+            this.soundsListed.Text = "0/0";
             // 
             // StopButton
             // 
@@ -216,7 +216,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private Controls.CustomListBox soundListBox;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel filesListed;
+        private System.Windows.Forms.ToolStripStatusLabel soundsListed;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripTextBox searchBox;
         private System.Windows.Forms.ToolStripButton SearchBoxClear;

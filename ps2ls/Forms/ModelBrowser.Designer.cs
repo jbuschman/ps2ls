@@ -44,7 +44,7 @@
             this.clearSearchModelsText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.modelsMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.modelBrowserGLControl = new ps2ls.Forms.ModelBrowserGLControl();
             this.modelBrowserModelStats = new ps2ls.Forms.ModelBrowserModelStats();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -55,7 +55,6 @@
             this.smoothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.snapCameraToModelButton = new System.Windows.Forms.ToolStripButton();
-            this.assetTreeListView1 = new ps2ls.Forms.Controls.AssetTreeListView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -75,7 +74,6 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.assetTreeListView1);
             this.splitContainer1.Panel1.Controls.Add(this.modelsListBox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip2);
@@ -93,7 +91,7 @@
             // modelsListBox
             // 
             this.modelsListBox.ContextMenuStrip = this.modelContextMenuStrip;
-            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.modelsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modelsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.modelsListBox.FormattingEnabled = true;
             this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
@@ -113,11 +111,14 @@
             "default",
             "default",
             "default",
+            "default",
+            "default",
+            "default",
             "CustomListBox"});
             this.modelsListBox.Location = new System.Drawing.Point(0, 25);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.modelsListBox.Size = new System.Drawing.Size(143, 553);
+            this.modelsListBox.Size = new System.Drawing.Size(300, 553);
             this.modelsListBox.TabIndex = 3;
             this.modelsListBox.SelectedIndexChanged += new System.EventHandler(this.modelsListBox_SelectedIndexChanged);
             // 
@@ -165,7 +166,7 @@
             this.clearSearchModelsText,
             this.toolStripSeparator2,
             this.toolStripLabel1,
-            this.filesMaxComboBox});
+            this.modelsMaxComboBox});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(300, 25);
@@ -223,19 +224,20 @@
             this.toolStripLabel1.Padding = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.toolStripLabel1.Size = new System.Drawing.Size(22, 22);
             this.toolStripLabel1.Text = "File Count Max";
-            this.toolStripLabel1.ToolTipText = "File Count Maximum";
+            this.toolStripLabel1.ToolTipText = "Model Count Maximum";
             // 
-            // filesMaxComboBox
+            // modelsMaxComboBox
             // 
-            this.filesMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.filesMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.filesMaxComboBox.Items.AddRange(new object[] {
+            this.modelsMaxComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.modelsMaxComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.modelsMaxComboBox.Items.AddRange(new object[] {
             "100",
             "1000",
             "10000",
             "∞"});
-            this.filesMaxComboBox.Name = "filesMaxComboBox";
-            this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
+            this.modelsMaxComboBox.Name = "modelsMaxComboBox";
+            this.modelsMaxComboBox.Size = new System.Drawing.Size(75, 25);
+            this.modelsMaxComboBox.SelectedIndexChanged += new System.EventHandler(this.modelsMaxComboBox_SelectedIndexChanged);
             // 
             // modelBrowserGLControl
             // 
@@ -347,14 +349,6 @@
             this.snapCameraToModelButton.Text = "Snap Camera To Model";
             this.snapCameraToModelButton.CheckedChanged += new System.EventHandler(this.snapCameraToModelButton_CheckedChanged);
             // 
-            // assetTreeListView1
-            // 
-            this.assetTreeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.assetTreeListView1.Location = new System.Drawing.Point(143, 25);
-            this.assetTreeListView1.Name = "assetTreeListView1";
-            this.assetTreeListView1.Size = new System.Drawing.Size(157, 553);
-            this.assetTreeListView1.TabIndex = 4;
-            // 
             // ModelBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -404,7 +398,6 @@
         private System.Windows.Forms.ToolStripButton snapCameraToModelButton;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripComboBox filesMaxComboBox;
-        private Controls.AssetTreeListView assetTreeListView1;
+        private System.Windows.Forms.ToolStripComboBox modelsMaxComboBox;
     }
 }

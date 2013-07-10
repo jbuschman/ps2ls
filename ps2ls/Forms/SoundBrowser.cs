@@ -101,9 +101,7 @@ namespace ps2ls.Forms
             bytesread = (uint)ms.Read(readbuffer, 0, (int)sizebytes);
 
             if (bytesread == 0)
-            {
                 return FMOD.RESULT.ERR_FILE_EOF;
-            }
 
             Marshal.Copy(readbuffer, 0, buffer, (int)sizebytes);
 
@@ -144,13 +142,14 @@ namespace ps2ls.Forms
             FMOD.RESULT createSoundResult = fmodSystem.createSound(name, (FMOD.MODE._2D | FMOD.MODE.HARDWARE | FMOD.MODE.CREATESTREAM), ref fsb);
 
             if (createSoundResult != FMOD.RESULT.OK)
-            {
                 MessageBox.Show("Cannot load file.  Reason: " + createSoundResult.ToString(), "FMOD Load Error", MessageBoxButtons.OK);
-            }
         }
 
-        private void refreshListBox()
+        private void refreshSoundListBox()
         {
+            Cursor.Current = Cursors.WaitCursor;
+            soundListBox.BeginUpdate();
+
             soundListBox.Items.Clear();
 
             List<Asset> assets = new List<Asset>();
@@ -159,9 +158,7 @@ namespace ps2ls.Forms
             AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.FSB, out sounds);
 
             if (sounds != null)
-            {
                 assets.AddRange(sounds);
-            }
 
             assets.Sort(new Asset.NameComparer());
 
@@ -176,10 +173,13 @@ namespace ps2ls.Forms
                 }
             }
 
-            int count = soundListBox.Items.Count;
-            int max = assets != null ? assets.Count : 0;
+            int soundCount = soundListBox.Items.Count;
+            int soundsMax = assets != null ? assets.Count : 0;
 
-            filesListed.Text = count + "/" + max;
+            soundsListed.Text = soundCount + "/" + soundsMax;
+
+            soundListBox.EndUpdate();
+            Cursor.Current = Cursors.Default;
 
         }
 
@@ -204,7 +204,7 @@ namespace ps2ls.Forms
             }
 
             refreshTimer.Stop();
-            refreshListBox();
+            refreshSoundListBox();
         }
 
         public override void Refresh()
@@ -213,7 +213,7 @@ namespace ps2ls.Forms
 
             if (assetsDirty)
             {
-                refreshListBox();
+                refreshSoundListBox();
                 assetsDirty = false;
             }
         }
@@ -295,7 +295,7 @@ namespace ps2ls.Forms
 
         private void soundsMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            refreshListBox();
+            refreshSoundListBox();
         }
     }
 }
