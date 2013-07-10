@@ -57,6 +57,5 @@ namespace ps2ls
                        
             return stream;
         }
-        
     }
 }

@@ -18,6 +18,7 @@ namespace ps2ls.Assets.Zone
             public Single SlopeExtent { get; private set; }
             public Single MinElevation { get; private set; }
             public Single MaxElevation { get; private set; }
+            public Byte Unknown0 { get; private set; }
             public String Flora { get; private set; }
             public UInt32 TintCount { get; private set; }
 
@@ -49,6 +50,7 @@ namespace ps2ls.Assets.Zone
                 layer.SlopeExtent = binaryReader.ReadSingle();
                 layer.MinElevation = binaryReader.ReadSingle();
                 layer.MaxElevation = binaryReader.ReadSingle();
+                layer.Unknown0 = binaryReader.ReadByte();
                 layer.Flora = ps2ls.IO.Utils.ReadNullTerminatedStringFromStream(stream);
                 layer.TintCount = binaryReader.ReadUInt32();
 
@@ -94,10 +96,11 @@ namespace ps2ls.Assets.Zone
                 return LoadError.NullStream;
             }
 
-            BinaryReader binaryReader = new BinaryReader(stream);
+            BinaryReader binaryReader = new BinaryReader(stream, Encoding.Default, true);
 
             eco = new Eco();
 
+            binaryReader.ReadUInt32(); //unknown
             eco.Name = ps2ls.IO.Utils.ReadNullTerminatedStringFromStream(stream);
             eco.ColorNxMap = ps2ls.IO.Utils.ReadNullTerminatedStringFromStream(stream);
             eco.SpecNyMap = ps2ls.IO.Utils.ReadNullTerminatedStringFromStream(stream);
@@ -124,7 +127,6 @@ namespace ps2ls.Assets.Zone
 
                 eco.Layers.Add(layer);
             }
-
 
             return LoadError.None;
         }

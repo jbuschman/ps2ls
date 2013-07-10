@@ -42,10 +42,9 @@ namespace ps2ls
             TextureManager.CreateInstance();
             AssetManager.CreateInstance();
             AboutBox.CreateInstance();
-            MainForm.CreateInstance();
             MaterialDefinitionManager.CreateInstance();
 
-            Application.Run(MainForm.Instance);
+            Application.Run(new MainForm());
         }
 
         /// <summary>
@@ -65,9 +64,7 @@ namespace ps2ls
                 defaultDirectory = Path.GetDirectoryName(defaultDirectory) + @"\Resources\Assets";
 
                 if (Directory.Exists(defaultDirectory))
-                {
                     return defaultDirectory;
-                }
             }
 
             // steam install
@@ -80,9 +77,7 @@ namespace ps2ls
                 defaultDirectory += @"\Resources\Assets";
 
                 if (Directory.Exists(defaultDirectory))
-                {
                     return defaultDirectory;
-                }
             }
 
             return String.Empty;

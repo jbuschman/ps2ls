@@ -26,7 +26,7 @@ namespace ps2ls.Assets.Zone
         {
         }
 
-        public LoadError LoadFromStream(Stream stream, out Flora flora)
+        public static LoadError LoadFromStream(Stream stream, out Flora flora)
         {
             if (stream == null)
             {

@@ -18,29 +18,13 @@ namespace ps2ls.Forms
 {
     public partial class MainForm : Form
     {
-        #region Singleton
-        private static MainForm instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new MainForm();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static MainForm Instance { get { return instance; } }
-        #endregion
-
         public AssetBrowser AssetBrowser { get; private set; }
         public ModelBrowser ModelBrowser { get; private set; }
         public TextureBrowser TextureBrowser { get; private set; }
         public SoundBrowser SoundBrowser { get; private set; }
         public ZoneBrowser ZoneBrowser { get; private set; }
 
-        private MainForm()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -68,7 +52,6 @@ namespace ps2ls.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //the placement of this event handler is not arbitrary, do not move it!
             AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
 
             ImageList imageList = new ImageList();
@@ -76,7 +59,7 @@ namespace ps2ls.Forms
             imageList.Images.Add(Properties.Resources.tree_small);
             imageList.Images.Add(Properties.Resources.image);
             imageList.Images.Add(Properties.Resources.music);
-            imageList.Images.Add(Properties.Resources.music);
+            imageList.Images.Add(Properties.Resources.map_medium);
             tabControl1.ImageList = imageList;
 
             TabPage assetBrowserTabPage = new TabPage("Asset Browser");

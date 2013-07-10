@@ -172,7 +172,6 @@ namespace ps2ls.Forms
         private void refreshAssetsDataGridView()
         {
             Cursor.Current = Cursors.WaitCursor;
-            assetsDataGridView.SuspendLayout();
 
             assetsDataGridView.Rows.Clear();
 
@@ -298,6 +297,8 @@ namespace ps2ls.Forms
 
         private void refreshPacksListBox()
         {
+            packsListBox.BeginUpdate();
+
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
 
@@ -305,6 +306,8 @@ namespace ps2ls.Forms
             {
                 packsListBox.Items.Add(pack);
             }
+
+            packsListBox.EndUpdate();
         }
 
         public override void Refresh()

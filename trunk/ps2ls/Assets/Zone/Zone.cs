@@ -9,7 +9,6 @@ namespace ps2ls.Assets.Zone
 {
     public class Zone
     {
-
         public Int32 QuadsPerTile { get; private set; }
         public Single TileSize { get; private set; }
         public UInt32 Unknown1 { get; private set; }
@@ -19,15 +18,17 @@ namespace ps2ls.Assets.Zone
         public Int32 StartY { get; private set; }
         public UInt32 ChunksX { get; private set; }
         public UInt32 ChunksY { get; private set; }
-        public List<Eco> Ecos { get; private set; }
-        public List<Flora> Floras { get; private set; }
+        public Eco[] Ecos { get; private set; }
+        public Flora[] Floras { get; private set; }
+        public Actor[] Actors { get; private set; }
 
         public enum LoadError
         {
             None,
             NullStream,
             BadHeader,
-            BadEco
+            BadEco,
+            BadFlora
         };
 
         private Zone()
@@ -57,7 +58,7 @@ namespace ps2ls.Assets.Zone
             }
 
             //unknown
-            binaryReader.ReadBytes(28);
+            byte[] unknown0 = binaryReader.ReadBytes(28);
 
             zone = new Zone();
             zone.QuadsPerTile = binaryReader.ReadInt32();
@@ -70,8 +71,9 @@ namespace ps2ls.Assets.Zone
             zone.ChunksX = binaryReader.ReadUInt32();
             zone.ChunksY = binaryReader.ReadUInt32();
 
+            //ecos
             UInt32 ecoCount = binaryReader.ReadUInt32();
-            zone.Ecos = new List<Eco>((int)ecoCount);
+            zone.Ecos = new Eco[ecoCount];
 
             for (UInt32 i = 0; i < ecoCount; ++i)
             {
@@ -82,7 +84,39 @@ namespace ps2ls.Assets.Zone
                     return LoadError.BadEco;
                 }
 
-                zone.Ecos.Add(eco);
+                zone.Ecos[i] = eco;
+            }
+
+            //flora
+            UInt32 floraCount = binaryReader.ReadUInt32();
+            zone.Floras = new Flora[floraCount];
+
+            for (UInt32 i = 0; i < floraCount; ++i)
+            {
+                Flora flora;
+                if(Flora.LoadFromStream(stream, out flora) != Flora.LoadError.None)
+                {
+                    zone = null;
+                    return LoadError.BadFlora;
+                }
+
+                zone.Floras[i] = flora;
+            }
+
+            //actors
+            UInt32 actorCount = binaryReader.ReadUInt32();
+            zone.Actors = new Actor[actorCount];
+
+            for (UInt32 i = 0; i < floraCount; ++i)
+            {
+                Actor actor;
+                if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
+                {
+                    zone = null;
+                    return LoadError.BadFlora;
+                }
+
+                zone.Floras[i] = flora;
             }
 
             return LoadError.None;

@@ -29,19 +29,18 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ZoneBrowser));
+            ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.statusStrip3 = new System.Windows.Forms.StatusStrip();
+            this.zoneCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.zonesListBox = new ps2ls.Forms.Controls.CustomListBox();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.customListBox1 = new ps2ls.Forms.Controls.CustomListBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.glControl = new ps2ls.Forms.ModelBrowserGLControl();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.searchTextTypeToolStripDrownDownButton1 = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
             this.searchText = new ps2ls.Forms.Controls.SearchToolStripTextBox();
@@ -49,8 +48,9 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.zoneCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.glControl = new ps2ls.Forms.ModelBrowserGLControl();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -87,6 +87,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -96,6 +97,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip3);
             this.splitContainer1.Panel1.Controls.Add(this.zonesListBox);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
+            this.splitContainer1.Panel1MinSize = 150;
             // 
             // splitContainer1.Panel2
             // 
@@ -103,33 +105,55 @@
             this.splitContainer1.Panel2.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip2);
             this.splitContainer1.Size = new System.Drawing.Size(300, 600);
-            this.splitContainer1.SplitterDistance = 100;
+            this.splitContainer1.SplitterDistance = 150;
             this.splitContainer1.TabIndex = 0;
             // 
             // statusStrip3
             // 
             this.statusStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.zoneCountLabel});
-            this.statusStrip3.Location = new System.Drawing.Point(0, 78);
+            this.statusStrip3.Location = new System.Drawing.Point(0, 128);
             this.statusStrip3.Name = "statusStrip3";
             this.statusStrip3.Size = new System.Drawing.Size(300, 22);
             this.statusStrip3.SizingGrip = false;
             this.statusStrip3.TabIndex = 2;
             this.statusStrip3.Text = "statusStrip3";
             // 
+            // zoneCountLabel
+            // 
+            this.zoneCountLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
+            this.zoneCountLabel.Name = "zoneCountLabel";
+            this.zoneCountLabel.Size = new System.Drawing.Size(40, 17);
+            this.zoneCountLabel.Text = "0/0";
+            // 
             // zonesListBox
             // 
             this.zonesListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zonesListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.zonesListBox.FormattingEnabled = true;
-            this.zonesListBox.Image = global::ps2ls.Properties.Resources.map;
+            this.zonesListBox.Image = global::ps2ls.Properties.Resources.map_medium;
             this.zonesListBox.Items.AddRange(new object[] {
+            "default",
+            "default",
+            "default",
+            "default",
+            "default",
             "default",
             "default"});
             this.zonesListBox.Location = new System.Drawing.Point(0, 25);
             this.zonesListBox.Name = "zonesListBox";
-            this.zonesListBox.Size = new System.Drawing.Size(300, 75);
+            this.zonesListBox.Size = new System.Drawing.Size(300, 125);
             this.zonesListBox.TabIndex = 1;
+            this.zonesListBox.SelectedIndexChanged += new System.EventHandler(this.zonesListBox_SelectedIndexChanged);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(300, 25);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // customListBox1
             // 
@@ -139,22 +163,34 @@
             this.customListBox1.Image = global::ps2ls.Properties.Resources.map_medium;
             this.customListBox1.Items.AddRange(new object[] {
             "default",
+            "default",
+            "default",
+            "default",
+            "default",
+            "default",
             "default"});
             this.customListBox1.Location = new System.Drawing.Point(0, 25);
             this.customListBox1.Name = "customListBox1";
-            this.customListBox1.Size = new System.Drawing.Size(300, 449);
+            this.customListBox1.Size = new System.Drawing.Size(300, 399);
             this.customListBox1.TabIndex = 1;
             // 
             // statusStrip2
             // 
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip2.Location = new System.Drawing.Point(0, 474);
+            this.statusStrip2.Location = new System.Drawing.Point(0, 424);
             this.statusStrip2.Name = "statusStrip2";
             this.statusStrip2.Size = new System.Drawing.Size(300, 22);
             this.statusStrip2.SizingGrip = false;
             this.statusStrip2.TabIndex = 2;
             this.statusStrip2.Text = "statusStrip2";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Image = global::ps2ls.Properties.Resources.document_search_result;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(40, 17);
+            this.toolStripStatusLabel1.Text = "0/0";
             // 
             // toolStrip2
             // 
@@ -172,46 +208,6 @@
             this.toolStrip2.Size = new System.Drawing.Size(300, 25);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
-            // 
-            // glControl
-            // 
-            this.glControl.BackColor = System.Drawing.Color.Black;
-            arcBallCamera1.AspectRatio = 0.9446367F;
-            arcBallCamera1.Distance = 10F;
-            arcBallCamera1.FarPlaneDistance = 256F;
-            arcBallCamera1.FieldOfView = 1.308997F;
-            arcBallCamera1.NearPlaneDistance = 0.00390625F;
-            arcBallCamera1.Pitch = 0.7853982F;
-            arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
-            arcBallCamera1.Target = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Target")));
-            arcBallCamera1.Yaw = -0.7853982F;
-            this.glControl.Camera = arcBallCamera1;
-            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl.DrawAxes = false;
-            this.glControl.Location = new System.Drawing.Point(0, 0);
-            this.glControl.Model = null;
-            this.glControl.Name = "glControl";
-            this.glControl.RenderMode = ps2ls.Forms.ModelBrowserGLControl.RenderModes.Smooth;
-            this.glControl.Size = new System.Drawing.Size(496, 578);
-            this.glControl.SnapCameraToModelOnModelChange = false;
-            this.glControl.TabIndex = 2;
-            this.glControl.VSync = false;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 578);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(496, 22);
-            this.statusStrip1.SizingGrip = false;
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Image = global::ps2ls.Properties.Resources.document_search_result;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(40, 17);
-            this.toolStripStatusLabel1.Text = "0/0";
             // 
             // toolStripLabel1
             // 
@@ -275,21 +271,38 @@
             this.filesMaxComboBox.Name = "filesMaxComboBox";
             this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
             // 
-            // toolStrip1
+            // glControl
             // 
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(300, 25);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
+            this.glControl.BackColor = System.Drawing.Color.Black;
+            arcBallCamera1.AspectRatio = 0.8581315F;
+            arcBallCamera1.Distance = 10F;
+            arcBallCamera1.FarPlaneDistance = 256F;
+            arcBallCamera1.FieldOfView = 1.308997F;
+            arcBallCamera1.NearPlaneDistance = 0.00390625F;
+            arcBallCamera1.Pitch = 0.7853982F;
+            arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
+            arcBallCamera1.Target = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Target")));
+            arcBallCamera1.Yaw = -0.7853982F;
+            this.glControl.Camera = arcBallCamera1;
+            this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.glControl.DrawAxes = false;
+            this.glControl.Location = new System.Drawing.Point(0, 0);
+            this.glControl.Model = null;
+            this.glControl.Name = "glControl";
+            this.glControl.RenderMode = ps2ls.Forms.ModelBrowserGLControl.RenderModes.Smooth;
+            this.glControl.Size = new System.Drawing.Size(496, 578);
+            this.glControl.SnapCameraToModelOnModelChange = false;
+            this.glControl.TabIndex = 2;
+            this.glControl.VSync = false;
             // 
-            // zoneCountLabel
+            // statusStrip1
             // 
-            this.zoneCountLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
-            this.zoneCountLabel.Name = "zoneCountLabel";
-            this.zoneCountLabel.Size = new System.Drawing.Size(40, 17);
-            this.zoneCountLabel.Text = "0/0";
+            this.statusStrip1.Location = new System.Drawing.Point(0, 578);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(496, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // ZoneBrowser
             // 

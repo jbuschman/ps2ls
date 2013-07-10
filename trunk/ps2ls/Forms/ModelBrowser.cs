@@ -61,6 +61,8 @@ namespace ps2ls.Forms
 
             drawAxesButton.Checked = modelBrowserGLControl.DrawAxes;
             snapCameraToModelButton.Checked = modelBrowserGLControl.SnapCameraToModelOnModelChange;
+
+            modelsMaxComboBox.SelectedIndex = 3;
         }
 
         void modelBrowserGLControl_RenderModeChanged(object sender, EventArgs e)
@@ -106,6 +108,20 @@ namespace ps2ls.Forms
 
         private void refreshModelsListBox()
         {
+            Cursor.Current = Cursors.WaitCursor;
+            modelsListBox.BeginUpdate();
+
+            Int32 modelsMax = 0;
+
+            try
+            {
+                modelsMax = Int32.Parse(modelsMaxComboBox.Items[modelsMaxComboBox.SelectedIndex].ToString());
+            }
+            catch (FormatException)
+            {
+                modelsMax = Int32.MaxValue;
+            }
+
             modelsListBox.Items.Clear();
 
             List<Asset> assets = new List<Asset>();
@@ -117,8 +133,6 @@ namespace ps2ls.Forms
                 assets.AddRange(dmes);
 
             assets.Sort(new Asset.NameComparer());
-
-            assetTreeListView1.Load(assets);
 
             if (assets != null)
             {
@@ -149,6 +163,9 @@ namespace ps2ls.Forms
                     }
                         
                     modelsListBox.Items.Add(asset);
+
+                    if (modelsListBox.Items.Count >= modelsMax)
+                        break;
                 }
             }
 
@@ -156,6 +173,9 @@ namespace ps2ls.Forms
             Int32 max = assets != null ? assets.Count : 0;
 
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
+
+            modelsListBox.EndUpdate();
+            Cursor.Current = Cursors.Default;
         }
 
         private void clearSearchModelsText_Click(object sender, EventArgs e)
@@ -264,6 +284,11 @@ namespace ps2ls.Forms
         private void snapCameraToModelButton_CheckedChanged(object sender, EventArgs e)
         {
             modelBrowserGLControl.SnapCameraToModelOnModelChange = snapCameraToModelButton.Checked;
+        }
+
+        private void modelsMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshModelsListBox();
         }
     }
 }
