@@ -12,9 +12,9 @@ namespace ps2ls.Assets.Zone
     {
         public struct InstanceInfo
         {
-            public Vector4 Translation = new Vector4();
-            public Quaternion Rotation = new Quaternion();
-            public Vector4 Scale = new Vector4();
+            public Vector4 Translation;
+            public Quaternion Rotation;
+            public Vector4 Scale;
             public UInt32 Unknown0;
             public Byte Unknown1;
             public Single Unknown2;

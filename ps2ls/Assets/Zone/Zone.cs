@@ -116,7 +116,7 @@ namespace ps2ls.Assets.Zone
                     return LoadError.BadFlora;
                 }
 
-                zone.Floras[i] = flora;
+                zone.Actors[i] = actor;
             }
 
             return LoadError.None;

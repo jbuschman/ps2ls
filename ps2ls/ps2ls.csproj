@@ -85,6 +85,7 @@
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
     <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
+    <Compile Include="Assets\Zone\Actor.cs" />
     <Compile Include="Assets\Zone\Eco.cs" />
     <Compile Include="Assets\Zone\Flora.cs" />
     <Compile Include="Assets\Zone\Zone.cs" />
@@ -274,6 +275,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SoundExportForm.resx">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TextureExportForm.resx">
+      <DependentUpon>TextureExportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ZoneBrowser.resx">
       <DependentUpon>ZoneBrowser.cs</DependentUpon>
