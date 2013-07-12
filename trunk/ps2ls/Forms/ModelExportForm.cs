@@ -220,12 +220,19 @@ namespace ps2ls.Forms
             loadModelExportFormatComboBox();
             loadModelAxesPresetComboBox();
             loadTextureFormatComboBox();
+            loadModelsListBox();
+        }
+
+        private void loadModelsListBox()
+        {
+            foreach (String fileName in FileNames)
+                modelsListBox.Items.Add(fileName);
         }
 
         private void exportTexturesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            textureFormatComboBox.Enabled = texturesCheckBox.Checked;
-            modelExportOptions.Textures = texturesCheckBox.Checked;
+            textureFormatComboBox.Enabled = exportTexturesCheckBox.Checked;
+            modelExportOptions.Textures = exportTexturesCheckBox.Checked;
         }
 
         private void normalsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -290,7 +297,7 @@ namespace ps2ls.Forms
             modelExportOptions.Scale.Y = (Single)yScaleNumericUpDown.Value;
             modelExportOptions.Scale.Z = (Single)zScaleNumericUpDown.Value;
             modelExportOptions.TextureCoordinates = textureCoordinatesCheckBox.Checked;
-            modelExportOptions.Textures = texturesCheckBox.Checked;
+            modelExportOptions.Textures = exportTexturesCheckBox.Checked;
             modelExportOptions.UpAxis = (Axes)upAxisComboBox.SelectedIndex;
             modelExportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
         }
@@ -298,6 +305,11 @@ namespace ps2ls.Forms
         private void textureFormatComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             modelExportOptions.TextureFormat = (TextureExporter.TextureFormatInfo)textureFormatComboBox.SelectedItem;
+        }
+
+        private void exportTexturesCheckBox_CheckedChanged_1(object sender, EventArgs e)
+        {
+            textureFormatComboBox.Enabled = exportTexturesCheckBox.Checked;
         }
     }
 }

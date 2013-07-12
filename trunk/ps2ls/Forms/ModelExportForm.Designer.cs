@@ -51,19 +51,16 @@
             this.modelFormatComboBox = new System.Windows.Forms.ComboBox();
             this.exportButton = new System.Windows.Forms.Button();
             this.exportFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.texturesCheckBox = new System.Windows.Forms.CheckBox();
-            this.exportModelCheckBox = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textureFormatComboBox = new System.Windows.Forms.ComboBox();
             this.packageCheckBox = new System.Windows.Forms.CheckBox();
+            this.modelsListBox = new System.Windows.Forms.ListBox();
+            this.exportTexturesCheckBox = new System.Windows.Forms.CheckBox();
+            this.textureFormatComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.zScaleNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yScaleNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xScaleNumericUpDown)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -74,9 +71,9 @@
             this.groupBox1.Controls.Add(this.leftAxisComboBox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.upAxisComboBox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 189);
+            this.groupBox1.Location = new System.Drawing.Point(11, 217);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(275, 104);
+            this.groupBox1.Size = new System.Drawing.Size(261, 80);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Model Axes";
@@ -102,14 +99,14 @@
             this.modelAxesPresetComboBox.MaxDropDownItems = 3;
             this.modelAxesPresetComboBox.MaxLength = 1;
             this.modelAxesPresetComboBox.Name = "modelAxesPresetComboBox";
-            this.modelAxesPresetComboBox.Size = new System.Drawing.Size(209, 21);
+            this.modelAxesPresetComboBox.Size = new System.Drawing.Size(195, 21);
             this.modelAxesPresetComboBox.TabIndex = 8;
             this.modelAxesPresetComboBox.SelectedIndexChanged += new System.EventHandler(this.modelAxesPresetComboBox_SelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 76);
+            this.label5.Location = new System.Drawing.Point(116, 49);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 6;
@@ -124,11 +121,11 @@
             "X",
             "Y",
             "Z"});
-            this.leftAxisComboBox.Location = new System.Drawing.Point(60, 73);
+            this.leftAxisComboBox.Location = new System.Drawing.Point(169, 46);
             this.leftAxisComboBox.MaxDropDownItems = 3;
             this.leftAxisComboBox.MaxLength = 1;
             this.leftAxisComboBox.Name = "leftAxisComboBox";
-            this.leftAxisComboBox.Size = new System.Drawing.Size(67, 21);
+            this.leftAxisComboBox.Size = new System.Drawing.Size(50, 21);
             this.leftAxisComboBox.TabIndex = 7;
             this.leftAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.leftAxisComboBox_SelectedIndexChanged);
             // 
@@ -154,7 +151,7 @@
             this.upAxisComboBox.MaxDropDownItems = 3;
             this.upAxisComboBox.MaxLength = 1;
             this.upAxisComboBox.Name = "upAxisComboBox";
-            this.upAxisComboBox.Size = new System.Drawing.Size(67, 21);
+            this.upAxisComboBox.Size = new System.Drawing.Size(50, 21);
             this.upAxisComboBox.TabIndex = 6;
             this.upAxisComboBox.SelectedIndexChanged += new System.EventHandler(this.upAxisComboBox_SelectedIndexChanged);
             // 
@@ -167,9 +164,9 @@
             this.groupBox2.Controls.Add(this.yScaleNumericUpDown);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.xScaleNumericUpDown);
-            this.groupBox2.Location = new System.Drawing.Point(12, 299);
+            this.groupBox2.Location = new System.Drawing.Point(11, 303);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(275, 101);
+            this.groupBox2.Size = new System.Drawing.Size(261, 50);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Model Scale";
@@ -181,7 +178,7 @@
             this.scaleLinkAxesCheckBox.Checked = true;
             this.scaleLinkAxesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.scaleLinkAxesCheckBox.Image = global::ps2ls.Properties.Resources.chain_small;
-            this.scaleLinkAxesCheckBox.Location = new System.Drawing.Point(107, 17);
+            this.scaleLinkAxesCheckBox.Location = new System.Drawing.Point(234, 17);
             this.scaleLinkAxesCheckBox.Name = "scaleLinkAxesCheckBox";
             this.scaleLinkAxesCheckBox.Size = new System.Drawing.Size(22, 22);
             this.scaleLinkAxesCheckBox.TabIndex = 11;
@@ -192,7 +189,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 72);
+            this.label3.Location = new System.Drawing.Point(158, 20);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(14, 13);
             this.label3.TabIndex = 10;
@@ -200,16 +197,16 @@
             // 
             // zScaleNumericUpDown
             // 
-            this.zScaleNumericUpDown.DecimalPlaces = 4;
+            this.zScaleNumericUpDown.DecimalPlaces = 3;
             this.zScaleNumericUpDown.Enabled = false;
-            this.zScaleNumericUpDown.Location = new System.Drawing.Point(26, 70);
+            this.zScaleNumericUpDown.Location = new System.Drawing.Point(178, 18);
             this.zScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.zScaleNumericUpDown.Name = "zScaleNumericUpDown";
-            this.zScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
+            this.zScaleNumericUpDown.Size = new System.Drawing.Size(50, 20);
             this.zScaleNumericUpDown.TabIndex = 10;
             this.zScaleNumericUpDown.Value = new decimal(new int[] {
             10,
@@ -221,7 +218,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 46);
+            this.label2.Location = new System.Drawing.Point(82, 20);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(14, 13);
             this.label2.TabIndex = 8;
@@ -229,16 +226,16 @@
             // 
             // yScaleNumericUpDown
             // 
-            this.yScaleNumericUpDown.DecimalPlaces = 4;
+            this.yScaleNumericUpDown.DecimalPlaces = 3;
             this.yScaleNumericUpDown.Enabled = false;
-            this.yScaleNumericUpDown.Location = new System.Drawing.Point(26, 44);
+            this.yScaleNumericUpDown.Location = new System.Drawing.Point(102, 18);
             this.yScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.yScaleNumericUpDown.Name = "yScaleNumericUpDown";
-            this.yScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
+            this.yScaleNumericUpDown.Size = new System.Drawing.Size(50, 20);
             this.yScaleNumericUpDown.TabIndex = 9;
             this.yScaleNumericUpDown.Value = new decimal(new int[] {
             10,
@@ -258,7 +255,7 @@
             // 
             // xScaleNumericUpDown
             // 
-            this.xScaleNumericUpDown.DecimalPlaces = 4;
+            this.xScaleNumericUpDown.DecimalPlaces = 3;
             this.xScaleNumericUpDown.Location = new System.Drawing.Point(26, 18);
             this.xScaleNumericUpDown.Maximum = new decimal(new int[] {
             65535,
@@ -266,7 +263,7 @@
             0,
             0});
             this.xScaleNumericUpDown.Name = "xScaleNumericUpDown";
-            this.xScaleNumericUpDown.Size = new System.Drawing.Size(75, 20);
+            this.xScaleNumericUpDown.Size = new System.Drawing.Size(50, 20);
             this.xScaleNumericUpDown.TabIndex = 8;
             this.xScaleNumericUpDown.Value = new decimal(new int[] {
             10,
@@ -279,9 +276,9 @@
             // 
             this.groupBox3.Controls.Add(this.textureCoordinatesCheckBox);
             this.groupBox3.Controls.Add(this.normalsCheckBox);
-            this.groupBox3.Location = new System.Drawing.Point(12, 113);
+            this.groupBox3.Location = new System.Drawing.Point(11, 141);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(276, 70);
+            this.groupBox3.Size = new System.Drawing.Size(261, 70);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Model Components";
@@ -314,7 +311,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 62);
+            this.label6.Location = new System.Drawing.Point(11, 90);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(71, 13);
             this.label6.TabIndex = 5;
@@ -324,15 +321,15 @@
             // 
             this.modelFormatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.modelFormatComboBox.FormattingEnabled = true;
-            this.modelFormatComboBox.Location = new System.Drawing.Point(114, 59);
+            this.modelFormatComboBox.Location = new System.Drawing.Point(88, 87);
             this.modelFormatComboBox.Name = "modelFormatComboBox";
-            this.modelFormatComboBox.Size = new System.Drawing.Size(174, 21);
+            this.modelFormatComboBox.Size = new System.Drawing.Size(184, 21);
             this.modelFormatComboBox.TabIndex = 0;
             this.modelFormatComboBox.SelectedIndexChanged += new System.EventHandler(this.formatComboBox_SelectedIndexChanged);
             // 
             // exportButton
             // 
-            this.exportButton.Location = new System.Drawing.Point(212, 406);
+            this.exportButton.Location = new System.Drawing.Point(197, 358);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(75, 23);
             this.exportButton.TabIndex = 5;
@@ -340,51 +337,39 @@
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
             // 
-            // groupBox4
+            // packageCheckBox
             // 
-            this.groupBox4.Controls.Add(this.texturesCheckBox);
-            this.groupBox4.Controls.Add(this.exportModelCheckBox);
-            this.groupBox4.Location = new System.Drawing.Point(12, 12);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(276, 41);
-            this.groupBox4.TabIndex = 3;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Assets";
+            this.packageCheckBox.AutoSize = true;
+            this.packageCheckBox.Checked = true;
+            this.packageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.packageCheckBox.Location = new System.Drawing.Point(12, 362);
+            this.packageCheckBox.Name = "packageCheckBox";
+            this.packageCheckBox.Size = new System.Drawing.Size(103, 17);
+            this.packageCheckBox.TabIndex = 8;
+            this.packageCheckBox.Text = "Package Assets";
+            this.packageCheckBox.UseVisualStyleBackColor = true;
+            this.packageCheckBox.CheckedChanged += new System.EventHandler(this.packageCheckBox_CheckedChanged);
             // 
-            // texturesCheckBox
+            // modelsListBox
             // 
-            this.texturesCheckBox.AutoSize = true;
-            this.texturesCheckBox.Checked = true;
-            this.texturesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.texturesCheckBox.Location = new System.Drawing.Point(67, 19);
-            this.texturesCheckBox.Name = "texturesCheckBox";
-            this.texturesCheckBox.Size = new System.Drawing.Size(67, 17);
-            this.texturesCheckBox.TabIndex = 2;
-            this.texturesCheckBox.Text = "Textures";
-            this.texturesCheckBox.UseVisualStyleBackColor = true;
-            this.texturesCheckBox.CheckedChanged += new System.EventHandler(this.exportTexturesCheckBox_CheckedChanged);
+            this.modelsListBox.FormattingEnabled = true;
+            this.modelsListBox.Location = new System.Drawing.Point(12, 12);
+            this.modelsListBox.Name = "modelsListBox";
+            this.modelsListBox.Size = new System.Drawing.Size(260, 69);
+            this.modelsListBox.TabIndex = 10;
             // 
-            // exportModelCheckBox
+            // exportTexturesCheckBox
             // 
-            this.exportModelCheckBox.AutoSize = true;
-            this.exportModelCheckBox.Checked = true;
-            this.exportModelCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.exportModelCheckBox.Enabled = false;
-            this.exportModelCheckBox.Location = new System.Drawing.Point(6, 19);
-            this.exportModelCheckBox.Name = "exportModelCheckBox";
-            this.exportModelCheckBox.Size = new System.Drawing.Size(55, 17);
-            this.exportModelCheckBox.TabIndex = 1;
-            this.exportModelCheckBox.Text = "Model";
-            this.exportModelCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 89);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 13);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Texture Format";
+            this.exportTexturesCheckBox.AutoSize = true;
+            this.exportTexturesCheckBox.Checked = true;
+            this.exportTexturesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.exportTexturesCheckBox.Location = new System.Drawing.Point(14, 116);
+            this.exportTexturesCheckBox.Name = "exportTexturesCheckBox";
+            this.exportTexturesCheckBox.Size = new System.Drawing.Size(100, 17);
+            this.exportTexturesCheckBox.TabIndex = 11;
+            this.exportTexturesCheckBox.Text = "Export Textures";
+            this.exportTexturesCheckBox.UseVisualStyleBackColor = true;
+            this.exportTexturesCheckBox.CheckedChanged += new System.EventHandler(this.exportTexturesCheckBox_CheckedChanged_1);
             // 
             // textureFormatComboBox
             // 
@@ -394,34 +379,20 @@
             "DirectDraw Surface (*.dds)",
             "Portal Network Graphics (*.png)",
             "Truevision TGA (*.tga)"});
-            this.textureFormatComboBox.Location = new System.Drawing.Point(114, 86);
+            this.textureFormatComboBox.Location = new System.Drawing.Point(120, 114);
             this.textureFormatComboBox.Name = "textureFormatComboBox";
-            this.textureFormatComboBox.Size = new System.Drawing.Size(174, 21);
-            this.textureFormatComboBox.TabIndex = 6;
-            this.textureFormatComboBox.SelectedIndexChanged += new System.EventHandler(this.textureFormatComboBox_SelectedIndexChanged);
-            // 
-            // packageCheckBox
-            // 
-            this.packageCheckBox.AutoSize = true;
-            this.packageCheckBox.Checked = true;
-            this.packageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.packageCheckBox.Location = new System.Drawing.Point(12, 410);
-            this.packageCheckBox.Name = "packageCheckBox";
-            this.packageCheckBox.Size = new System.Drawing.Size(103, 17);
-            this.packageCheckBox.TabIndex = 8;
-            this.packageCheckBox.Text = "Package Assets";
-            this.packageCheckBox.UseVisualStyleBackColor = true;
-            this.packageCheckBox.CheckedChanged += new System.EventHandler(this.packageCheckBox_CheckedChanged);
+            this.textureFormatComboBox.Size = new System.Drawing.Size(152, 21);
+            this.textureFormatComboBox.TabIndex = 12;
             // 
             // ModelExportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(299, 439);
-            this.Controls.Add(this.packageCheckBox);
-            this.Controls.Add(this.label7);
+            this.ClientSize = new System.Drawing.Size(284, 393);
+            this.Controls.Add(this.exportTexturesCheckBox);
             this.Controls.Add(this.textureFormatComboBox);
-            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.modelsListBox);
+            this.Controls.Add(this.packageCheckBox);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.modelFormatComboBox);
@@ -445,8 +416,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.xScaleNumericUpDown)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -473,14 +442,12 @@
         private System.Windows.Forms.ComboBox modelFormatComboBox;
         private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.FolderBrowserDialog exportFolderBrowserDialog;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox texturesCheckBox;
-        private System.Windows.Forms.CheckBox exportModelCheckBox;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox textureFormatComboBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox modelAxesPresetComboBox;
         private System.Windows.Forms.CheckBox packageCheckBox;
+        private System.Windows.Forms.ListBox modelsListBox;
+        private System.Windows.Forms.CheckBox exportTexturesCheckBox;
+        private System.Windows.Forms.ComboBox textureFormatComboBox;
     }
 }
