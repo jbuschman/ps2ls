@@ -22,11 +22,6 @@ namespace ps2ls.Forms.Controls
 
         private void CustomListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
-            if (e.Index < 0)
-            {
-                return;
-            }
-
             e.DrawBackground();
 
             String text = ((ListBox)sender).Items[e.Index].ToString();

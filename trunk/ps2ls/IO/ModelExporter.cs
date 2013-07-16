@@ -14,6 +14,22 @@ namespace ps2ls.IO
         Z
     }
 
+    public static class AxisResolver
+    {
+        public static Axes Resolve(Axes axis1, Axes axis2)
+        {
+            if (axis1 == axis2)
+                throw new ArgumentException("Canot resolve duplicate axes.");
+
+            if ((axis1 == Axes.X || axis1 == Axes.Y) && (axis2 == Axes.X || axis2 == Axes.Y))
+                return Axes.Z;
+            else if ((axis1 == Axes.X || axis1 == Axes.Z) && (axis2 == Axes.X || axis2 == Axes.Z))
+                return Axes.Z;
+            else
+                return Axes.Z;
+        }
+    }
+
     public class ModelExportOptions
     {
         public Axes UpAxis;
@@ -23,13 +39,9 @@ namespace ps2ls.IO
             get
             {
                 if (LeftAxis != Axes.X && UpAxis != Axes.X)
-                {
                     return Axes.X;
-                }
                 else if (LeftAxis != Axes.Y && UpAxis != Axes.Y)
-                {
                     return Axes.Y;
-                }
 
                 return Axes.Z;
             }

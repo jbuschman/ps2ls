@@ -417,45 +417,9 @@ namespace ps2ls.Forms
             extractSelectedAssets();
         }
 
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
-        {
-            AssetManager.Instance.WriteManifest(@"C:\Users\Colin\Desktop\ps2ls.manifest");
-        }
-
         private void searchTextTypeToolStripDrownDownButton1_SearchTextTypeChanged(object sender, EventArgs e)
         {
             refreshAssetsDataGridView();
-        }
-
-        private void exportAssetListToCsvButton_Click(object sender, EventArgs e)
-        {
-            if (exportAssetFileToCsvSaveFileDialog.ShowDialog() != DialogResult.OK)
-                return;
-
-            FileStream fileStream = new FileStream(exportAssetFileToCsvSaveFileDialog.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
-
-            streamWriter.Write("Name, ");
-            streamWriter.Write("Size, ");
-            streamWriter.Write("CRC-32");
-            streamWriter.Write(Environment.NewLine);
-
-            foreach (DataGridViewRow row in assetsDataGridView.Rows)
-            {
-                if (row == null)
-                    continue;
-
-                Asset asset = (Asset)row.Tag;
-
-                streamWriter.Write(asset.Name);
-                streamWriter.Write(", ");
-                streamWriter.Write(asset.Size);
-                streamWriter.Write(", ");
-                streamWriter.Write(asset.Crc32);
-                streamWriter.Write(Environment.NewLine);
-            }
-
-            streamWriter.Close();
         }
     }
 }

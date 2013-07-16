@@ -8,6 +8,7 @@ using ps2ls.Forms;
 using ps2ls.Graphics.Materials;
 using System.Net;
 using System.Collections.Specialized;
+using Microsoft.Win32;
 
 namespace ps2ls.Assets.Pack
 {
@@ -253,10 +254,40 @@ namespace ps2ls.Assets.Pack
             return memoryStream;
         }
 
-        public void WriteManifest(string path)
+        /// <summary>
+        /// Try to detect the Planetside 2 asset directory by looking in the registry for Planetside 2 installation directories.
+        /// </summary>
+        public static string DetectAssetDirectory()
         {
-            AssetManifestWriter assetManifestWriter = new AssetManifestWriter();
-            assetManifestWriter.Write(path);
+            RegistryKey key = null;
+
+            // non-steam install
+            key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\App Paths\LaunchPad.exe");
+
+            if (key != null && key.GetValue("") != null)
+            {
+                String defaultDirectory;
+                defaultDirectory = key.GetValue("").ToString();
+                defaultDirectory = Path.GetDirectoryName(defaultDirectory) + @"\Resources\Assets";
+
+                if (Directory.Exists(defaultDirectory))
+                    return defaultDirectory;
+            }
+
+            // steam install
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 218230");
+
+            if (key != null && key.GetValue("InstallLocation") != null)
+            {
+                String defaultDirectory;
+                defaultDirectory = key.GetValue("InstallLocation").ToString();
+                defaultDirectory += @"\Resources\Assets";
+
+                if (Directory.Exists(defaultDirectory))
+                    return defaultDirectory;
+            }
+
+            return String.Empty;
         }
     }
 }

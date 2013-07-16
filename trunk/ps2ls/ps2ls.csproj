@@ -169,7 +169,6 @@
     <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Assets\Dme\Mesh.cs" />
     <Compile Include="Assets\Dme\Model.cs" />
-    <Compile Include="Assets\Dme\Vertex.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,22 +181,22 @@
     <Compile Include="Forms\GenericLoadingForm.Designer.cs">
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ModelBrowser.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowser.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ModelBrowser.Designer.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowser.Designer.cs">
       <DependentUpon>ModelBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ModelBrowserGLControl.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowserGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ModelBrowserGLControl.Designer.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowserGLControl.Designer.cs">
       <DependentUpon>ModelBrowserGLControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ModelBrowserModelStats.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowserModelStats.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ModelBrowserModelStats.Designer.cs">
+    <Compile Include="Forms\ModelBrowser\ModelBrowserModelStats.Designer.cs">
       <DependentUpon>ModelBrowserModelStats.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ModelExportForm.cs">
@@ -251,15 +250,15 @@
       <DependentUpon>GenericLoadingForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ModelBrowser.resx">
+    <EmbeddedResource Include="Forms\ModelBrowser\ModelBrowser.resx">
       <DependentUpon>ModelBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ModelBrowserGLControl.resx">
+    <EmbeddedResource Include="Forms\ModelBrowser\ModelBrowserGLControl.resx">
       <DependentUpon>ModelBrowserGLControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ModelBrowserModelStats.resx">
+    <EmbeddedResource Include="Forms\ModelBrowser\ModelBrowserModelStats.resx">
       <DependentUpon>ModelBrowserModelStats.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -393,6 +392,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\wrench-screwdriver.png" />
     <None Include="Resources\map-medium.png" />
     <None Include="Resources\map.png" />
     <None Include="Resources\ui-label.png" />
