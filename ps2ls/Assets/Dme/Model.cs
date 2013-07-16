@@ -23,6 +23,7 @@ namespace ps2ls.Assets.Dme
         public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
         public List<String> TextureStrings  { get; private set; }
+        //todo: create a 'skeleton' class to contain all bone info
         public BoneMap[] BoneMaps { get; private set; }
         public Matrix4[] Bones { get; private set; }
         public Vector3[] BonesMins { get; private set; }
@@ -74,14 +75,13 @@ namespace ps2ls.Assets.Dme
             {
                 return null;
             }
+
             Model model = new Model();
 
             model.Version = binaryReader.ReadUInt32();
 
             if (model.Version != 4)
-            {
                 return null;
-            }
 
             UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
 
@@ -116,9 +116,7 @@ namespace ps2ls.Assets.Dme
                 Mesh mesh = Mesh.LoadFromStream(binaryReader.BaseStream, model.Materials);
 
                 if (mesh != null)
-                {
                     model.Meshes[i] = mesh;
-                }
             }
 
             //bone maps
@@ -214,9 +212,7 @@ namespace ps2ls.Assets.Dme
 
                 //bone hashes
                 for (Int32 i = 0; i < boneCount; ++i)
-                {
                     model.BoneHashes[i] = binaryReader.ReadUInt32();
-                }
             }
 
             return model;

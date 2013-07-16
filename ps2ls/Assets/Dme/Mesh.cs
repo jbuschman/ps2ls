@@ -15,12 +15,10 @@ namespace ps2ls.Assets.Dme
         {
             public static VertexStream LoadFromStream(Stream stream, Int32 vertexCount, Int32 bytesPerVertex)
             {
-                VertexStream vertexStream = new VertexStream();
-
-                vertexStream.BytesPerVertex = bytesPerVertex;
-
                 BinaryReader binaryReader = new BinaryReader(stream);
 
+                VertexStream vertexStream = new VertexStream();
+                vertexStream.BytesPerVertex = bytesPerVertex;
                 vertexStream.Data = binaryReader.ReadBytes(vertexCount * bytesPerVertex);
 
                 return vertexStream;
@@ -50,11 +48,10 @@ namespace ps2ls.Assets.Dme
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
-            Mesh mesh = new Mesh();
-
             UInt32 bytesPerVertex = 0;
             UInt32 vertexStreamCount = 0;
 
+            Mesh mesh = new Mesh();
             mesh.MaterialIndex = binaryReader.ReadUInt32();
             mesh.Unknown1 = binaryReader.ReadUInt32();
             mesh.Unknown2 = binaryReader.ReadUInt32();
@@ -74,9 +71,7 @@ namespace ps2ls.Assets.Dme
                 VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (Int32)mesh.VertexCount, (Int32)bytesPerVertex);
 
                 if (vertexStream != null)
-                {
                     mesh.VertexStreams[j] = vertexStream;
-                }
             }
 
             // read indices

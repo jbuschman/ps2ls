@@ -16,13 +16,13 @@ namespace ps2ls.Forms.Controls
             RegularExpression
         }
 
-        private static Bitmap[] SearchTextTypeImages =
+        private static Bitmap[] searchTextTypeImages =
         {
             Properties.Resources.ui_label,
             Properties.Resources.regular_expression
         };
 
-        private static String[] SearchTextTypeNames =
+        private static String[] searchTextTypeNames =
         {
             "Textual",
             "Regular Expression"
@@ -40,8 +40,8 @@ namespace ps2ls.Forms.Controls
 
                 searchTextType = value;
 
-                this.Text = SearchTextTypeNames[(int)searchTextType];
-                this.Image = SearchTextTypeImages[(int)searchTextType];
+                this.Text = searchTextTypeNames[(int)searchTextType];
+                this.Image = searchTextTypeImages[(int)searchTextType];
 
                 if(SearchTextTypeChanged != null)
                     SearchTextTypeChanged.Invoke(null, EventArgs.Empty);
@@ -50,11 +50,11 @@ namespace ps2ls.Forms.Controls
 
         public SearchTextTypeToolStripDrownDownButton()
         {
-            this.Text = SearchTextTypeNames[(int)searchTextType];
-            this.Image = SearchTextTypeImages[(int)searchTextType];
+            this.Text = searchTextTypeNames[(int)searchTextType];
+            this.Image = searchTextTypeImages[(int)searchTextType];
 
-            this.DropDownItems.Add(SearchTextTypeNames[0], SearchTextTypeImages[0], TextualOnClickHandler);
-            this.DropDownItems.Add(SearchTextTypeNames[1], SearchTextTypeImages[1], RegularExpressionOnClickHandler);
+            this.DropDownItems.Add(searchTextTypeNames[0], searchTextTypeImages[0], TextualOnClickHandler);
+            this.DropDownItems.Add(searchTextTypeNames[1], searchTextTypeImages[1], RegularExpressionOnClickHandler);
         }
 
         private void TextualOnClickHandler(object sender, EventArgs args)
