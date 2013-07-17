@@ -392,6 +392,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\exclamation.png" />
+    <None Include="Resources\cross-circle.png" />
+    <None Include="Resources\tick-circle.png" />
     <None Include="Resources\wrench-screwdriver.png" />
     <None Include="Resources\map-medium.png" />
     <None Include="Resources\map.png" />
