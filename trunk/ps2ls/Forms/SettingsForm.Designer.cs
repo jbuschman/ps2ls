@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.assetsDirectoryIconPanel = new System.Windows.Forms.Panel();
             this.loadAssetsOnStartCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.assetDirectoryTextBox = new System.Windows.Forms.TextBox();
@@ -69,6 +70,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.assetsDirectoryIconPanel);
             this.groupBox1.Controls.Add(this.loadAssetsOnStartCheckBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.assetDirectoryTextBox);
@@ -80,6 +82,15 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Assets";
+            // 
+            // assetsDirectoryIconPanel
+            // 
+            this.assetsDirectoryIconPanel.BackgroundImage = global::ps2ls.Properties.Resources.tick_circle;
+            this.assetsDirectoryIconPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.assetsDirectoryIconPanel.Location = new System.Drawing.Point(460, 19);
+            this.assetsDirectoryIconPanel.Name = "assetsDirectoryIconPanel";
+            this.assetsDirectoryIconPanel.Size = new System.Drawing.Size(23, 23);
+            this.assetsDirectoryIconPanel.TabIndex = 6;
             // 
             // loadAssetsOnStartCheckBox
             // 
@@ -104,8 +115,9 @@
             // 
             this.assetDirectoryTextBox.Location = new System.Drawing.Point(89, 21);
             this.assetDirectoryTextBox.Name = "assetDirectoryTextBox";
-            this.assetDirectoryTextBox.Size = new System.Drawing.Size(394, 20);
+            this.assetDirectoryTextBox.Size = new System.Drawing.Size(365, 20);
             this.assetDirectoryTextBox.TabIndex = 3;
+            this.assetDirectoryTextBox.TextChanged += new System.EventHandler(this.assetDirectoryTextBox_TextChanged);
             // 
             // assetDirectoryBrowseButton
             // 
@@ -147,6 +159,7 @@
             this.noButton.TabIndex = 1;
             this.noButton.Text = "Apply";
             this.noButton.UseVisualStyleBackColor = true;
+            this.noButton.Click += new System.EventHandler(this.noButton_Click);
             // 
             // saveButton
             // 
@@ -157,6 +170,7 @@
             this.saveButton.TabIndex = 0;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // SettingsForm
             // 
@@ -194,6 +208,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button noButton;
         private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Panel assetsDirectoryIconPanel;
 
 
     }
