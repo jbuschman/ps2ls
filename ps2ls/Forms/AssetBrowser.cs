@@ -146,23 +146,27 @@ namespace ps2ls.Forms
                 }
                 else
                 {
-                    GenericDialog genericDialog = new GenericDialog();
-                    genericDialog.Message =
-                        "ps2ls has detected your PlanetSide 2 assets directory." +
-                        System.Environment.NewLine +
-                        System.Environment.NewLine +
-                        "Would you like to load all asset (*.pak) files found in " + Properties.Settings.Default.AssetDirectory + " ?";
-                    genericDialog.OptionVisible = true;
-                    genericDialog.OptionChecked = false;
-                    genericDialog.OptionText = "Always perform this action (recommended)";
+                    bool optionChecked;
 
-                    if(DialogResult.Yes == genericDialog.ShowDialog())
+                    DialogResult dialogResult = GenericDialog.ShowGenericDialog(
+                        "ps2ls",
+                        "ps2ls has detected your PlanetSide 2 assets directory." +
+                        System.Environment.NewLine + System.Environment.NewLine +
+                        "Would you like to load all asset (*.pak) files found in " + Properties.Settings.Default.AssetDirectory + " ?",
+                        GenericDialog.Types.Default,
+                        GenericDialog.Buttons.YesNo,
+                        "Always perform this action (recommended)",
+                        false,
+                        out optionChecked);
+
+                    if (optionChecked)
                     {
-                        if (genericDialog.OptionChecked)
-                        {
-                            Properties.Settings.Default.LoadAssetsOnStartup = true;
-                            Properties.Settings.Default.Save();
-                        }
+                        Properties.Settings.Default.LoadAssetsOnStartup = optionChecked;
+                        Properties.Settings.Default.Save();
+                    }
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
                         AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
                     }
                 }
@@ -379,17 +383,16 @@ namespace ps2ls.Forms
         {
             if (assetsDataGridView.SelectedRows.Count >= 100)
             {
-                GenericDialog genericDialog = new GenericDialog();
-                genericDialog.Message = "You are about to open " + assetsDataGridView.SelectedRows.Count + " files simulatenously.  Doing so may cause system instability." +
-                    Environment.NewLine +
-                    Environment.NewLine +
-                    "Are you sure you want to continue?";
-                genericDialog.Image = Properties.Resources.logo_48_warn;
+                DialogResult dialogResult = GenericDialog.ShowGenericDialog(
+                    "Warning",
+                    "You are about to open " + assetsDataGridView.SelectedRows.Count + " files simulatenously.  Doing so may cause system instability." +
+                    Environment.NewLine + Environment.NewLine +
+                    "Are you sure you want to continue?",
+                    GenericDialog.Types.Warning,
+                    GenericDialog.Buttons.YesNo);
 
-                if (genericDialog.ShowDialog() != DialogResult.Yes)
-                {
+                if (dialogResult != DialogResult.Yes)
                     return;
-                }
             }
 
             foreach (DataGridViewRow row in assetsDataGridView.SelectedRows)
