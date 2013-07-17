@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenericDialog));
             this.optionCheckBox = new System.Windows.Forms.CheckBox();
-            this.noButton = new System.Windows.Forms.Button();
-            this.yesButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.imagePanel = new System.Windows.Forms.Panel();
             this.messageLabel = new System.Windows.Forms.Label();
@@ -46,39 +46,39 @@
             this.optionCheckBox.AutoSize = true;
             this.optionCheckBox.Location = new System.Drawing.Point(12, 19);
             this.optionCheckBox.Name = "optionCheckBox";
-            this.optionCheckBox.Size = new System.Drawing.Size(148, 17);
+            this.optionCheckBox.Size = new System.Drawing.Size(104, 17);
             this.optionCheckBox.TabIndex = 2;
-            this.optionCheckBox.Text = "Always perform this action";
+            this.optionCheckBox.Text = "optionCheckBox";
             this.optionCheckBox.UseVisualStyleBackColor = true;
             // 
-            // noButton
+            // button1
             // 
-            this.noButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.noButton.Location = new System.Drawing.Point(397, 15);
-            this.noButton.Name = "noButton";
-            this.noButton.Size = new System.Drawing.Size(75, 23);
-            this.noButton.TabIndex = 1;
-            this.noButton.Text = "No";
-            this.noButton.UseVisualStyleBackColor = true;
-            this.noButton.Click += new System.EventHandler(this.noButton_Click);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(397, 15);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // yesButton
+            // button2
             // 
-            this.yesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.yesButton.Location = new System.Drawing.Point(316, 15);
-            this.yesButton.Name = "yesButton";
-            this.yesButton.Size = new System.Drawing.Size(75, 23);
-            this.yesButton.TabIndex = 0;
-            this.yesButton.Text = "Yes";
-            this.yesButton.UseVisualStyleBackColor = true;
-            this.yesButton.Click += new System.EventHandler(this.yesButton_Click);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(316, 15);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panel1.Controls.Add(this.optionCheckBox);
-            this.panel1.Controls.Add(this.noButton);
-            this.panel1.Controls.Add(this.yesButton);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.button2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 88);
             this.panel1.Name = "panel1";
@@ -101,6 +101,7 @@
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(390, 64);
             this.messageLabel.TabIndex = 0;
+            this.messageLabel.Text = "messageLabel";
             this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel2
@@ -138,8 +139,8 @@
         #endregion
 
         private System.Windows.Forms.CheckBox optionCheckBox;
-        private System.Windows.Forms.Button noButton;
-        private System.Windows.Forms.Button yesButton;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label messageLabel;
         private System.Windows.Forms.Panel imagePanel;
