@@ -24,7 +24,7 @@ namespace ps2ls.Forms.Controls
         {
             e.DrawBackground();
 
-            String text = ((ListBox)sender).Items[e.Index].ToString();
+            string text = ((ListBox)sender).Items[e.Index].ToString();
             Point point = new Point(0, e.Bounds.Y);
 
             if (Image != null)

@@ -12,63 +12,47 @@ namespace ps2ls.Assets.Pack
 {
     public class Pack
     {
-        [DescriptionAttribute("The path on disk to this pack file.")]
-        [ReadOnlyAttribute(true)]
         public string Path { get; private set; }
-
-        [BrowsableAttribute(false)]
-        public List<Asset> Assets { get; private set; }
-
-        [DescriptionAttribute("The number of assets contained in this pack file.")]
-        [ReadOnlyAttribute(true)]
-        public Int32 AssetCount { get { return Assets.Count; } }
-
-        [DescriptionAttribute("The total size in bytes of all assets contained in this pack file.")]
-        [ReadOnlyAttribute(true)]
-        public UInt32 Size
+        public int AssetCount { get { return Assets.Count; } }
+        public uint Size
         {
             get
             {
-                UInt32 size = 0;
+                uint size = 0;
 
-                foreach(Asset asset in Assets)
-                {
+                foreach(Asset asset in Assets.Values)
                     size += asset.Size;
-                }
 
                 return size;
             }
         }
 
-        [BrowsableAttribute(false)]
-        public String Name
+        public string Name
         {
             get { return System.IO.Path.GetFileName(Path); }
         }
 
-        [BrowsableAttribute(false)]
         public int Checksum
         {
             get
             {
                 int checksum = 0;
 
-                foreach (Asset asset in Assets)
+                foreach (Asset asset in Assets.Values)
                     checksum += asset.Crc32;
 
                 return checksum;
             }
         }
 
-        public Dictionary<Int32, Asset> assetLookupCache = new Dictionary<Int32, Asset>();
+        public Dictionary<int, Asset> Assets = new Dictionary<int, Asset>();
 
-        private Pack(String path)
+        private Pack(string path)
         {
             Path = path;
-            Assets = new List<Asset>();
         }
 
-        public static Pack LoadBinary(string path)
+        public static Pack Load(string path)
         {
             Pack pack = new Pack(path);
             FileStream fileStream = null;
@@ -85,8 +69,8 @@ namespace ps2ls.Assets.Pack
             }
 
             BinaryReaderBigEndian binaryReader = new BinaryReaderBigEndian(fileStream);
-            UInt32 nextChunkAbsoluteOffset = 0;
-            UInt32 fileCount = 0;
+            uint nextChunkAbsoluteOffset = 0;
+            uint fileCount = 0;
 
             do
             {
@@ -95,11 +79,10 @@ namespace ps2ls.Assets.Pack
                 nextChunkAbsoluteOffset = binaryReader.ReadUInt32();
                 fileCount = binaryReader.ReadUInt32();
 
-                for (UInt32 i = 0; i < fileCount; ++i)
+                for (uint i = 0; i < fileCount; ++i)
                 {
-                    Asset file = Asset.LoadBinary(pack, binaryReader.BaseStream);
-                    pack.assetLookupCache.Add(file.Name.GetHashCode(), file);
-                    pack.Assets.Add(file);
+                    Asset asset = Asset.LoadBinary(pack, binaryReader.BaseStream);
+                    pack.Assets.Add(asset.Name.GetHashCode(), asset);
                 }
             }
             while (nextChunkAbsoluteOffset != 0);
@@ -107,7 +90,7 @@ namespace ps2ls.Assets.Pack
             return pack;
         }
 
-        public Boolean ExtractAllAssetsToDirectory(String directory)
+        public Boolean ExtractAllAssetsToDirectory(string directory)
         {
             FileStream fileStream = null;
 
@@ -122,7 +105,7 @@ namespace ps2ls.Assets.Pack
                 return false;
             }
 
-            foreach (Asset asset in Assets)
+            foreach (Asset asset in Assets.Values)
             {
                 byte[] buffer = new byte[(int)asset.Size];
 
@@ -139,7 +122,7 @@ namespace ps2ls.Assets.Pack
             return true;
         }
 
-        public Boolean ExtractAssetsByNameToDirectory(IEnumerable<String> names, String directory)
+        public Boolean ExtractAssetsToDirectory(IEnumerable<string> names, string directory)
         {
             FileStream fileStream = null;
 
@@ -154,11 +137,11 @@ namespace ps2ls.Assets.Pack
                 return false;
             }
 
-            foreach(String name in names)
+            foreach(string name in names)
             {
                 Asset asset = null;
                 
-                if(false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
+                if(false == Assets.TryGetValue(name.GetHashCode(), out asset))
                 {
                     // could not find file, skip.
                     continue;
@@ -179,7 +162,7 @@ namespace ps2ls.Assets.Pack
             return true;
         }
 
-        public Boolean ExtractAssetByNameToDirectory(String name, String directory) 
+        public Boolean ExtractAssetToDirectory(string name, string directory) 
         {
             FileStream fileStream = null;
 
@@ -196,7 +179,7 @@ namespace ps2ls.Assets.Pack
 
             Asset asset = null;
 
-            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
+            if (false == Assets.TryGetValue(name.GetHashCode(), out asset))
             {
                 fileStream.Close();
 
@@ -217,14 +200,12 @@ namespace ps2ls.Assets.Pack
             return true;
         }
 
-        public MemoryStream CreateAssetMemoryStreamByName(String name)
+        public MemoryStream CreateAssetMemoryStreamByName(string name)
         {
             Asset asset = null;
 
-            if (false == assetLookupCache.TryGetValue(name.GetHashCode(), out asset))
-            {
+            if (!Assets.TryGetValue(name.GetHashCode(), out asset))
                 return null;
-            }
 
             FileStream file = null;
 
@@ -242,18 +223,18 @@ namespace ps2ls.Assets.Pack
             byte[] buffer = new byte[asset.Size];
 
             file.Seek(asset.AbsoluteOffset, SeekOrigin.Begin);
-            file.Read(buffer, 0, (Int32)asset.Size);
+            file.Read(buffer, 0, (int)asset.Size);
 
             MemoryStream memoryStream = new MemoryStream(buffer);
 
             return memoryStream;
         }
 
-        public Boolean CreateTemporaryFileAndOpen(String name)
+        public Boolean CreateTemporaryFileAndOpen(string name)
         {
-            String tempPath = System.IO.Path.GetTempPath();
+            string tempPath = System.IO.Path.GetTempPath();
 
-            if (ExtractAssetByNameToDirectory(name, tempPath))
+            if (ExtractAssetToDirectory(name, tempPath))
             {
                 Process.Start(tempPath + @"\" + name);
 

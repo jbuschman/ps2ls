@@ -19,6 +19,36 @@
                 <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
             </Array>
         </Object>
+        <Object Class="InputLayout" Name="POS_TEX">
+            <Array Name="Entries">
+                <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="0" />
+            </Array>
+        </Object>
+        <Object Class="InputLayout" Name="POS_TEX2">
+            <Array Name="Entries">
+                <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="1" />
+            </Array>
+        </Object>
+        <Object Class="InputLayout" Name="POS_TEX2_SKINBONE">
+            <Array Name="Entries">
+                <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="ubyte4n" Usage="Binormal" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="1" />
+            </Array>
+        </Object>
+        <Object Class="InputLayout" Name="POS_TEX2_SKINWEIGHTS">
+            <Array Name="Entries">
+                <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="ubyte4n" Usage="BlendWeight" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="D3dcolor" Usage="BlendIndices" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float2" Usage="Texcoord" UsageIndex="1" />
+            </Array>
+        </Object>
         <Object Class="InputLayout" Name="Color">
             <Array Name="Entries">
                 <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
@@ -103,16 +133,16 @@
         <Object Class="InputLayout" Name="TerrainLod0">
             <Array Name="Entries">
                 <Object Class="LayoutEntry" Stream="0" Type="Short2" Usage="Position" UsageIndex="0" />
-                <Object Class="LayoutEntry" Stream="1" Type="Short2" Usage="Texcoord" UsageIndex="0" />
-                <Object Class="LayoutEntry" Stream="1" Type="D3dcolor" Usage="Texcoord" UsageIndex="1" />
-                <Object Class="LayoutEntry" Stream="1" Type="D3dcolor" Usage="Texcoord" UsageIndex="2" />
+                <Object Class="LayoutEntry" Stream="0" Type="Short2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="0" Type="D3dcolor" Usage="Texcoord" UsageIndex="1" />
+                <Object Class="LayoutEntry" Stream="0" Type="D3dcolor" Usage="Texcoord" UsageIndex="2" />
             </Array>
         </Object>
         <Object Class="InputLayout" Name="TerrainLod">
             <Array Name="Entries">
                 <Object Class="LayoutEntry" Stream="0" Type="Short2" Usage="Position" UsageIndex="0" />
-                <Object Class="LayoutEntry" Stream="1" Type="Short2" Usage="Texcoord" UsageIndex="0" />
-                <Object Class="LayoutEntry" Stream="1" Type="D3dcolor" Usage="Texcoord" UsageIndex="1" />
+                <Object Class="LayoutEntry" Stream="0" Type="Short2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="0" Type="D3dcolor" Usage="Texcoord" UsageIndex="1" />
             </Array>
         </Object>
         <Object Class="InputLayout" Name="Flora">
@@ -382,6 +412,17 @@
                 <Object Class="LayoutEntry" Stream="1" Type="Float16_2" Usage="Texcoord" UsageIndex="1" />
             </Array>
         </Object>
+        <Object Class="InputLayout" Name="StructureDecalInstanced">
+            <Array Name="Entries">
+                <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="ubyte4n" Usage="Normal" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float16_2" Usage="Texcoord" UsageIndex="0" />
+                <Object Class="LayoutEntry" Stream="1" Type="Float16_2" Usage="Texcoord" UsageIndex="1" />
+                <Object Class="LayoutEntry" Stream="2" Type="Float4" Usage="Texcoord" UsageIndex="7" />
+                <Object Class="LayoutEntry" Stream="2" Type="Float4" Usage="Texcoord" UsageIndex="8" />
+                <Object Class="LayoutEntry" Stream="2" Type="Float4" Usage="Texcoord" UsageIndex="9" />
+            </Array>
+        </Object>
         <Object Class="InputLayout" Name="StructureTint">
             <Array Name="Entries">
                 <Object Class="LayoutEntry" Stream="0" Type="Float3" Usage="Position" UsageIndex="0" />
@@ -529,9 +570,13 @@
     <Array Name="ParameterGroups">
         <Object Class="ParameterGroup" Name="Application">
             <Array Name="Parameters">
+
+              <Object Class="FloatParameter"  Name="ForwardSpeed" Variable="ForwardSpeed" Default="0" />
               
                 <!-- FullscreenEffects (1) -->
-                <Object Class="IntParameter"    Name="FullScreenEffectID_1" Variable="FullScreenEffectID_1" Default="0" />
+                <Object Class="IntParameter"    Name="FullScreenEffectThermal" Variable="FullScreenEffectThermal" Default="0" />
+                <Object Class="IntParameter"    Name="FullScreenEffectDOF" Variable="FullScreenEffectDOF" Default="0" />
+                <Object Class="IntParameter"    Name="FullScreenEffectVR" Variable="FullScreenEffectVR" Default="0" />
                     <!-- Depth Of Field -->
                     <Object Class="FloatParameter"  Name="DepthOfFieldTransition" Variable="DepthOfFieldTransition" Default="0" />
                     <!-- Thermal Vision -->
@@ -543,6 +588,9 @@
                     <Object Class="FloatParameter"   Name="ThermalWhitePoint" Variable="ThermalWhitePoint" Default="0" />
                     <Object Class="FloatParameter"   Name="InfraRedWhitePoint" Variable="InfraRedWhitePoint" Default="0" />
                     <Object Class="FloatParameter"   Name="InfraRedScanLines" Variable="InfraRedScanLines" Default="0.8" />
+                    <Object Class="Float4Parameter"  Name="InfraRedOutlineColor" Variable="InfraRedOutlineColor" Default="1,1,1,0" />
+                    <Object Class="FloatParameter"   Name="InfraRedOutlineAlpha" Variable="InfraRedOutlineAlpha" Default="1" />
+                    <Object Class="FloatParameter"   Name="InfraRedOutlineWidth" Variable="InfraRedOutlineWidth" Default="3" />
                 <!-- ^^^^^^^^^^^^^^^^^^^^ -->
               
                 <!-- FullscreenEffects (2) -->
@@ -553,6 +601,7 @@
                     <Object Class="FloatParameter"  Name="DesaturationIntensity" Variable="DesaturationIntensity" Default="0" />
                     <Object Class="Float4Parameter" Name="StarsColor" Variable="StarsColor" Default="0,0,0,0" />
                     <Object Class="Float4Parameter" Name="FrameColor" Variable="FrameColor" Default="0,0,0,0" />
+                    <Object Class="Float4Parameter" Name="ColorBlend" Variable="ColorBlend" Default="0,0,0,0" />
                     <Object Class="Float4Parameter" Name="CameraDirectionDelta" Variable="CameraDirectionDelta" Default="0,0,0,0" />
                 <!-- ^^^^^^^^^^^^^^^^^^^^ -->
 
@@ -925,13 +974,6 @@
             </Array>
         </Object>
 
-        <!--FullscreenEffectsPass2-->
-        <Object Class="MaterialDefinition" Name="FullscreenEffectsPass2" Type="FullscreenEffectsPass2">
-            <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="FullscreenEffectsPass2.fxo" InputLayout="Post" />
-            </Array>
-        </Object>
-
         <!--ScreenFrameUI-->
         <Object Class="MaterialDefinition" Name="ScreenFrameUI" Type="ScreenFrameUI">
             <Array Name="DrawStyles">
@@ -972,6 +1014,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain1Layer.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrain_depth.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="Terrain" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="Terrain" />
             </Array>
         </Object>
 
@@ -981,6 +1024,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain2Layer.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrain_depth.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="Terrain" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Terrain" />
             </Array>
         </Object>
 
@@ -990,6 +1034,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain3Layer.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrain_depth.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="Terrain" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Terrain" />
             </Array>
         </Object>
 
@@ -999,6 +1044,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain4Layer.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrain_depth.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="Terrain" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Terrain" />
             </Array>
         </Object>
 
@@ -1008,6 +1054,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain5Layer.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrain_depth.fxo" InputLayout="Terrain" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="Terrain" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Terrain" />
             </Array>
         </Object>
 
@@ -1017,6 +1064,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain1LayerLod.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrainlod_depth.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="TerrainLod0" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="TerrainLod0" />
             </Array>
         </Object>
 
@@ -1026,6 +1074,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain2LayerLod.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrainlod_depth.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="TerrainLod0" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="TerrainLod0" />
             </Array>
         </Object>
 
@@ -1035,6 +1084,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain3LayerLod.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrainlod_depth.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="TerrainLod0" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="TerrainLod0" />
             </Array>
         </Object>
 
@@ -1044,6 +1094,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain4LayerLod.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrainlod_depth.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="TerrainLod0" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="TerrainLod0" />
             </Array>
         </Object>
 
@@ -1053,6 +1104,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Terrain5LayerLod.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="terrainlod_depth.fxo" InputLayout="TerrainLod0" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="terrain_rsm.fxo" InputLayout="TerrainLod0" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickTerrain.fxo" InputLayout="TerrainLod0" />
             </Array>
         </Object>
 
@@ -1115,6 +1167,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="bumpRigid.fxo" InputLayout="BumpRigid" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="BumpRigid" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="bumpRigid_rsm.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1142,6 +1195,7 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidHologram.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1154,6 +1208,7 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidHologram.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1166,6 +1221,7 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidHologram.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1179,6 +1235,7 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidHologram.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
         
@@ -1190,6 +1247,7 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidHologramInstanced.fxo" InputLayout="BumpRigidInstanced" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigidInstanced" />
             </Array>
         </Object>
 
@@ -1205,6 +1263,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="BumpRigidDeRes.fxo" InputLayout="BumpRigid" />
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpRigidDeResGlow.fxo" InputLayout="BumpRigid" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="RigidDeResDepth.fxo" InputLayout="BumpRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1222,6 +1281,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="BumpSkin.fxo" InputLayout="BumpUVSkin" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="skin_depth.fxo" InputLayout="BumpUVSkin" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="skin_rsm.fxo" InputLayout="BumpUVSkin" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpRigid" />
             </Array>
         </Object>
 
@@ -1239,6 +1299,7 @@
         <Object Class="MaterialDefinition" Name="Primitive3D" Type="Primitive3D">
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="Primitive3D.fxo" InputLayout="Color" />
+                <Object Class="DrawStyle" Name="Pick" Effect="Primitive3D.fxo" InputLayout="Color" />
             </Array>
         </Object>
 
@@ -1246,6 +1307,7 @@
         <Object Class="MaterialDefinition" Name="Primitive3DNoZ" Type="Primitive3DNoZ">
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="Primitive3DNoZ.fxo" InputLayout="Color" />
+                <Object Class="DrawStyle" Name="Pick" Effect="Primitive3DNoZ.fxo" InputLayout="Color" />
             </Array>
         </Object>
 
@@ -1588,7 +1650,15 @@
         <!--SpriteParticle-->
         <Object Class="MaterialDefinition" Name="SpriteParticle" Type="Particle">
             <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="spriteParticle.fxo" InputLayout="SpriteParticle" />
+                <Object Class="DrawStyle" Name="Normal" Effect="spriteParticle.fxo" Technique="SpriteParticle" InputLayout="SpriteParticle" />
+            </Array>
+        </Object>
+
+
+        <!--FullResSpriteParticle-->
+        <Object Class="MaterialDefinition" Name="FullResSpriteParticle" Type="FullResParticle">
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="spriteParticle.fxo" Technique="FullResSpriteParticle" InputLayout="SpriteParticle" />
             </Array>
         </Object>
 
@@ -1602,21 +1672,28 @@
         <!--BeamParticle-->
         <Object Class="MaterialDefinition" Name="BeamParticle" Type="Particle">
             <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="beamParticle.fxo" InputLayout="BeamParticle" />
+                <Object Class="DrawStyle" Name="Normal" Effect="beamParticle.fxo" Technique="BeamParticle" InputLayout="BeamParticle" />
             </Array>
         </Object>
 
         <!--FullResBeamParticle-->
         <Object Class="MaterialDefinition" Name="FullResBeamParticle" Type="FullResParticle">
             <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="beamParticle.fxo" InputLayout="BeamParticle" />
+                <Object Class="DrawStyle" Name="Normal" Effect="beamParticle.fxo" Technique="FullResBeamParticle" InputLayout="BeamParticle" />
             </Array>
         </Object>
 
         <!--StreakParticle-->
         <Object Class="MaterialDefinition" Name="StreakParticle" Type="FullResParticle">
             <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="streakParticle.fxo" InputLayout="StreakParticle" />
+                <Object Class="DrawStyle" Name="Normal" Effect="streakParticle.fxo" Technique="StreakParticle" InputLayout="StreakParticle" />
+            </Array>
+        </Object>
+
+        <!--HalfResStreakParticle-->
+        <Object Class="MaterialDefinition" Name="HalfResStreakParticle" Type="Particle">
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="streakParticle.fxo" Technique="HalfResStreakParticle" InputLayout="StreakParticle" />
             </Array>
         </Object>
 
@@ -1665,18 +1742,6 @@
             </Array>
         </Object>
 
-        <!--Water-->
-        <Object Class="MaterialDefinition" Name="Water" Type="Water">
-            <Array Name="Properties">
-                <String>ArtistSelectable</String>
-            </Array>
-            <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Normal" Effect="water.fxo" InputLayout="ClrNrmUV" />
-                <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="ClrNrmUV" />
-                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="ClrNrmUV" />
-            </Array>
-        </Object>
-
         <!--Flora-->
         <Object Class="MaterialDefinition" Name="Flora" Type="DeferredOpaque">
             <Array Name="DrawStyles">
@@ -1715,6 +1780,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Designer.fxo" InputLayout="Designer" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Designer" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="bumpRigid_rsm.fxo" InputLayout="Designer" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Designer" />
             </Array>
         </Object>
 
@@ -1739,6 +1805,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="Foliage.fxo" InputLayout="Foliage" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSidedSway_Depth.fxo" InputLayout="Foliage" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="TwoSided_rsm.fxo" InputLayout="Foliage" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickFoliage.fxo" InputLayout="Foliage" />
             </Array>
         </Object>
 
@@ -1749,6 +1816,32 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="FoliageInstanced.fxo" InputLayout="FoliageInstanced" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSidedSwayInstanced_Depth.fxo" InputLayout="FoliageInstanced" />
+            </Array>
+        </Object>
+
+        <!--FoliageGlowScroll-->
+        <Object Class="MaterialDefinition" Name="FoliageGlowScroll" Type="DeferredOpaque">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <String>SemiTransparent</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="InstancedVersion" Value="FoliageGlowScrollInstanced" />
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="FoliageGlowScroll.fxo" InputLayout="Foliage" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSidedSway_Depth.fxo" InputLayout="Foliage" />
+                <Object Class="DrawStyle" Name="CastRSM" Effect="TwoSided_rsm.fxo" InputLayout="Foliage" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickFoliage.fxo" InputLayout="Foliage" />
+            </Array>
+        </Object>
+
+        <!--FoliageGlowScrollInstanced-->
+        <Object Class="MaterialDefinition" Name="FoliageGlowScrollInstanced" Type="DeferredOpaque">
+            <Array Name="Properties">
+                <String>SemiTransparent</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="FoliageGlowScrollInstanced.fxo" InputLayout="FoliageInstanced" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSidedSwayInstanced_Depth.fxo" InputLayout="FoliageInstanced" />
             </Array>
         </Object>
@@ -1764,6 +1857,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="trunk.fxo" InputLayout="Trunk" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="sway_depth.fxo" InputLayout="Trunk" />
                 <!--<Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="Trunk" /> todo <klang may12>-->
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Trunk" />
             </Array>
         </Object>
 
@@ -1790,6 +1884,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="TwoSided.fxo" InputLayout="TwoSided" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSided_Depth.fxo" InputLayout="TwoSided" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="TwoSided_rsm.fxo" InputLayout="TwoSided" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="TwoSided" />
             </Array>
         </Object>
 
@@ -1802,6 +1897,7 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="TwoSidedInstanced.fxo" InputLayout="TwoSidedInstanced" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="TwoSidedInstanced_Depth.fxo" InputLayout="TwoSidedInstanced" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="TwoSidedInstanced" />
             </Array>
         </Object>
 
@@ -1816,6 +1912,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="structure.fxo" InputLayout="Structure" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Structure" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="Structure" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Structure" /> 
             </Array>
         </Object>
 
@@ -1832,6 +1929,30 @@
             </Array>
         </Object>
 
+        <!--SimpleGlowRigid-->
+        <Object Class="MaterialDefinition" Name="SimpleGlowRigid" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="SimpleGlow_Rigid.fxo" InputLayout="Post" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Post" />
+            </Array>
+        </Object>
+
+        <!--SimpleGlowSkinned-->
+        <Object Class="MaterialDefinition" Name="SimpleGlowSkinned" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="SimpleGlow_Skinned.fxo" InputLayout="Post" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Post" />
+            </Array>
+        </Object>
+
         <!--Glow-->
         <Object Class="MaterialDefinition" Name="Glow" Type="DeferredOpaque">
             <Array Name="Properties">
@@ -1845,6 +1966,70 @@
             </Array>
         </Object>
 
+        <!--AdditiveGlow-->
+        <Object Class="MaterialDefinition" Name="AdditiveGlow" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Glow" Effect="AdditiveGlow.fxo" InputLayout="Glow" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Glow" />
+            </Array>
+        </Object>
+
+        <!--GlowBlend1TextureTint-->
+        <Object Class="MaterialDefinition" Name="GlowBlend1TextureTint" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="PreParticleGlow" Effect="GlowBlend1TextureTint.fxo" Technique="Glow" InputLayout="POS_TEX" />
+                <Object Class="DrawStyle" Name="Normal" Effect="GlowBlend1TextureTint.fxo" Technique="Depth" InputLayout="POS_TEX" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="POS_TEX" />
+            </Array>
+        </Object>
+
+        <!--GlowBlend2TextureTint-->
+        <Object Class="MaterialDefinition" Name="GlowBlend2TextureTint" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="PreParticleGlow" Effect="GlowBlend2TextureTint.fxo" Technique="Glow" InputLayout="POS_TEX2" />
+                <Object Class="DrawStyle" Name="Normal" Effect="GlowBlend2TextureTint.fxo" Technique="Depth" InputLayout="POS_TEX2" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="POS_TEX2" />
+            </Array>
+        </Object>
+
+        <!--GlowBlend2TextureTintRigidSkin-->
+        <Object Class="MaterialDefinition" Name="GlowBlend2TextureTintRigidSkin" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="PreParticleGlow" Effect="GlowBlend2TextureTintRigidSkin.fxo" Technique="Glow" InputLayout="POS_TEX2_SKINBONE" />
+                <Object Class="DrawStyle" Name="Normal" Effect="GlowBlend2TextureTintRigidSkin.fxo" Technique="Depth" InputLayout="POS_TEX2_SKINBONE" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="POS_TEX2_SKINBONE" />
+            </Array>
+        </Object>
+
+        <!--GlowBlend2TextureTintSkin-->
+        <Object Class="MaterialDefinition" Name="GlowBlend2TextureTintSkin" Type="Glow">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="PreParticleGlow" Effect="GlowBlend2TextureTintSkin.fxo" Technique="Glow" InputLayout="POS_TEX2_SKINWEIGHTS" />
+                <Object Class="DrawStyle" Name="Normal" Effect="GlowBlend2TextureTintSkin.fxo" Technique="Depth" InputLayout="POS_TEX2_SKINWEIGHTS" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="POS_TEX2_SKINWEIGHTS" />
+            </Array>
+        </Object>
+        
         <!--StructureInstanced-->
         <Object Class="MaterialDefinition" Name="StructureInstanced" Type="DeferredOpaque">
             <Array Name="Properties">
@@ -1853,6 +2038,17 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="structureInstanced.fxo" InputLayout="StructureInstanced" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigidInstanced_depth.fxo" InputLayout="StructureInstanced" />
+            </Array>
+        </Object>
+
+        <!--StructureDecalInstanced-->
+        <Object Class="MaterialDefinition" Name="StructureDecalInstanced" Type="DeferredOpaque">
+            <Array Name="Properties">
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="structureDecalInstanced.fxo" InputLayout="StructureDecalInstanced" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="rigidInstanced_depth.fxo" InputLayout="StructureDecalInstanced" />
             </Array>
         </Object>
 
@@ -1868,6 +2064,7 @@
         <Object Class="DrawStyle" Name="Normal" Effect="structuresnow.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="Structure" /><!--NYI <klang July12>-->
+        <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Structure" />
       </Array>
     </Object>
 
@@ -1894,6 +2091,7 @@
         <Object Class="DrawStyle" Name="Normal" Effect="structureblend.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="Structure" />
+        <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Structure" />
       </Array>
     </Object>
 
@@ -1919,6 +2117,7 @@
         <Object Class="DrawStyle" Name="Normal" Effect="structureskinned.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastShadow" Effect="vehicle_depth.fxo" InputLayout="Structure" />
         <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="Structure" /><!--NYI <klang july12>-->
+        <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Structure" />
       </Array>
     </Object>
     
@@ -1928,6 +2127,7 @@
             <Array Name="Properties">
                 <String>ArtistSelectable</String>
                 <String>SemiTransparent</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="InstancedVersion" Value="StructureDecalInstanced" />
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="structureDecal.fxo" InputLayout="StructureDecal" />
@@ -1944,6 +2144,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="structuretint.fxo" InputLayout="StructureTint" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="StructureTint" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="StructureTint" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="StructureTint" />
             </Array>
         </Object>
 
@@ -1957,6 +2158,7 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="structurewsoverlay.fxo" InputLayout="StructureWsOverlay" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="StructureWsOverlay" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="structure_rsm.fxo" InputLayout="StructureWsOverlay" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="StructureWsOverlay" />
             </Array>
         </Object>
 
@@ -1966,11 +2168,29 @@
                 <String>ArtistSelectable</String>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="InstancedVersion" Value="ObjectInstanced" />
+                <Object Class="StringParameter" Type="ValidEffect" Name="Stealth" Value="ObjectStealth"/>
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="object.fxo" InputLayout="Object" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Object" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="bumpRigid_rsm.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Object" />
+            </Array>
+        </Object>
+
+        <!--ObjectStealth-->
+        <Object Class="MaterialDefinition" Name="ObjectStealth" Type="Stealth">
+            <Array Name="Properties">
+                <String>ArtistModelMaterialSelectable</String>
+                <Object Class="Parameter" Name="EffectName" Variable="Stealth"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Opaque" Effect="ObjectStealth.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Normal" Effect="ObjectStealth.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Glow" Effect="ObjectStealth.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="ObjectStealth_Distortion.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Object" />
             </Array>
         </Object>
 
@@ -1992,12 +2212,35 @@
                 <String>RigidSkinned</String>
                 <Object Class="StringParameter" Type="ValidEffect" Name="DeRes" Value="VehicleDeRes"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Shield" Value="VehicleShield"/>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Stealth" Value="VehicleStealth"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidSkinnedLODs"/>
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="vehicle.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="vehicle_depth.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="vehicle_rsm.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
+            </Array>
+        </Object>
+
+        <!--VehicleStealth-->
+        <Object Class="MaterialDefinition" Name="VehicleStealth" Type="Stealth">
+            <Array Name="Properties">
+                <String>ArtistModelMaterialSelectable</String>
+                <String>Skinned</String>
+                <Object Class="Parameter" Name="EffectName" Variable="Stealth"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <!--For Pipeline 3-->
+                <Object Class="DrawStyle" Name="Normal" Effect="VehicleStealth.fxo" InputLayout="Vehicle" /> 
+                <Object Class="DrawStyle" Name="Distortion" Effect="VehicleStealth_AddDistortion.fxo" InputLayout="Vehicle" />
+
+                <!--For Pipeline 1-->
+                <Object Class="DrawStyle" Name="Opaque" Effect="VehicleStealth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="LameGlow" Effect="VehicleStealth_Lame.fxo" InputLayout="Vehicle" />
+                
+                <Object Class="DrawStyle" Name="CastShadow" Effect="VehicleStealth_Depth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
             </Array>
         </Object>
 
@@ -2024,6 +2267,8 @@
                 <Object Class="DrawStyle" Name="Normal" Effect="VehicleDeRes.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="Glow" Effect="VehicleDeResGlow.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="VehicleDeResDepth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="CastRSM" Effect="vehicle_rsm.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
             </Array>
         </Object>
         
@@ -2039,6 +2284,7 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Distortion" Effect="VehicleShield_AddDistortion.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="Glow" Effect="VehicleShield_DistortionColor.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
             </Array>
         </Object>
         
@@ -2049,12 +2295,31 @@
                 <String>ArtistSelectable</String>
                 <Object Class="StringParameter" Type="ValidEffect" Name="DeRes" Value="VehicleRigidDeRes"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Shield" Value="VehicleRigidShield"/>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Stealth" Value="VehicleRigidStealth"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidSkinnedLODs"/>
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="vehiclerigid.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="vehiclerigid_rsm.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
+            </Array>
+        </Object>
+
+
+        <!--VehicleRigidStealth-->
+        <Object Class="MaterialDefinition" Name="VehicleRigidStealth" Type="Stealth">
+            <Array Name="Properties">
+                <String>ArtistModelMaterialSelectable</String>
+                <Object Class="Parameter" Name="EffectName" Variable="Stealth"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Opaque" Effect="VehicleRigidStealth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Normal" Effect="VehicleRigidStealth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="LameGlow" Effect="VehicleRigidStealth_Lame.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="VehicleRigidStealth_AddDistortion.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
             </Array>
         </Object>
         
@@ -2076,12 +2341,14 @@
         <!--VehicleRigidShield-->
         <Object Class="MaterialDefinition" Name="VehicleRigidShield" Type="Shield">
             <Array Name="Properties">
+                <String>ArtistSelectable</String>
                 <String>ArtistModelMaterialSelectable</String>
                 <Object Class="Parameter" Name="EffectName" Variable="Shield"/>
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Distortion" Effect="VehicleRigidShield_AddDistortion.fxo" InputLayout="Vehicle" />
                 <Object Class="DrawStyle" Name="Glow" Effect="VehicleRigidShield_DistortionColor.fxo" InputLayout="Vehicle" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Vehicle" />
             </Array>
         </Object>
         
@@ -2116,6 +2383,7 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="CharacterRigid.fxo" InputLayout="CharacterRigid" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="CharacterRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="CharacterRigid" />
             </Array>
         </Object>
 
@@ -2180,12 +2448,29 @@
             <Array Name="Properties">
                 <String>ArtistSelectable</String>
                 <Object Class="StringParameter" Type="ValidEffect" Name="DeRes" Value="TankTreadDeRes"/>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Stealth" Value="TankTreadStealth"/>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="SkinnedLODs"/>
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Normal" Effect="TankTread.fxo" InputLayout="TankTread" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="skin_depth.fxo" InputLayout="TankTread" />
                 <Object Class="DrawStyle" Name="CastRSM" Effect="skin_rsm.fxo" InputLayout="TankTread" />
+            </Array>
+        </Object>
+
+        <!--TankTreadStealth-->
+        <Object Class="MaterialDefinition" Name="TankTreadStealth" Type="Stealth">
+            <Array Name="Properties">
+                <String>ArtistModelMaterialSelectable</String>
+                <Object Class="Parameter" Name="EffectName" Variable="Stealth"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Opaque" Effect="TankTreadStealth.fxo" InputLayout="TankTread" />
+                <Object Class="DrawStyle" Name="Normal" Effect="TankTreadStealth.fxo" InputLayout="TankTread" />
+                <Object Class="DrawStyle" Name="Glow" Effect="TankTreadStealth.fxo" InputLayout="TankTread" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="TankTreadStealth_AddDistortion.fxo" InputLayout="TankTread" />
+                <Object Class="DrawStyle" Name="CastShadow" Effect="skin_depth.fxo" InputLayout="TankTread" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="TankTread" />
             </Array>
         </Object>
         
@@ -2284,23 +2569,118 @@
             </Array>
         </Object>
 
-
         <!--StreamWater-->
-        <Object Class="MaterialDefinition" Name="StreamWater" Type="DeferredTransparent">
+        <Object Class="MaterialDefinition" Name="StreamWater" Type="Water2013">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <String>WaterPlane</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="Water2013.fxo" Technique="Stream" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="PreLight" Effect="Water2013.fxo" Technique="SubsurfaceStream" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="Water2013.fxo" Technique="DistortionStream" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="VolumeDepth" Effect="Water2013.fxo" Technique="WaterDepth" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Object" />
+            </Array>
+        </Object>
+
+        <!--SwampWater-->
+        <Object Class="MaterialDefinition" Name="SwampWater" Type="Water2013">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <String>WaterPlane</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="Water2013.fxo" Technique="Swamp" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="PreLight" Effect="Water2013.fxo" Technique="SubsurfaceSwamp" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="Water2013.fxo" Technique="DistortionSwamp" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="VolumeDepth" Effect="Water2013.fxo" Technique="WaterDepth" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ClrNrmUV" />
+            </Array>
+        </Object>
+
+        <!--RiverWater-->
+        <Object Class="MaterialDefinition" Name="RiverWater" Type="Water2013">
+            <Array Name="Properties">
+                <String>WaterPlane</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="Water2013.fxo" Technique="River" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="PreLight" Effect="Water2013.fxo" Technique="SubsurfaceRiver" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="Water2013.fxo" Technique="DistortionRiver" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="VolumeDepth" Effect="Water2013.fxo" Technique="WaterDepth" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ClrNrmUV" />
+            </Array>
+        </Object>
+
+        <!--OceanWater-->
+        <Object Class="MaterialDefinition" Name="OceanWater" Type="Water2013">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <String>WaterPlane</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="Water2013.fxo" Technique="Ocean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="PreLight" Effect="Water2013.fxo" Technique="SubsurfaceOcean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="Water2013.fxo" Technique="DistortionOcean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="VolumeDepth" Effect="Water2013.fxo" Technique="WaterDepth" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ClrNrmUV" />
+            </Array>
+        </Object>
+
+        <!--Water-->
+        <Object Class="MaterialDefinition" Name="Water" Type="Water2013">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+                <String>WaterPlane</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Normal" Effect="Water2013.fxo" Technique="Ocean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="PreLight" Effect="Water2013.fxo" Technique="SubsurfaceOcean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Distortion" Effect="Water2013.fxo" Technique="DistortionOcean" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="VolumeDepth" Effect="Water2013.fxo" Technique="WaterDepth" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="MiniMap" Effect="waterMinimap.fxo" InputLayout="ClrNrmUV" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ClrNrmUV" />
+            </Array>
+        </Object>
+        
+        <!--GroundFog-->
+        <Object Class="MaterialDefinition" Name="GroundFog" Type="GroundFog">
             <Array Name="Properties">
                 <String>ArtistSelectable</String>
                 <String>SemiTransparent</String>
                 <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
             </Array>
             <Array Name="DrawStyles">
-                <Object Class="DrawStyle" Name="Opaque2" Effect="StreamWater.fxo" InputLayout="Object" />
-                <Object Class="DrawStyle" Name="Color" Effect="WaterColor.fxo" InputLayout="Object" />
-                <Object Class="DrawStyle" Name="CastShadow" Effect="rigid_depth.fxo" InputLayout="Object" />
-                <Object Class="DrawStyle" Name="CastRSM" Effect="objectglass_rsm.fxo" InputLayout="Object" />
-                <Object Class="DrawStyle" Name="MiniMap" Effect="StreamWater.fxo" InputLayout="Object" />
+                <Object Class="DrawStyle" Name="Normal" Effect="GroundFog.fxo" InputLayout="Object" />
             </Array>
-        </Object>        
-        
+        </Object>
+
+        <!--ObjectGrid-->
+        <Object Class="MaterialDefinition" Name="ObjectGrid" Type="ObjectGrid">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="PreParticleHalfResGlow" Effect="ObjectGrid.fxo" InputLayout="Structure" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Structure" />
+            </Array>
+        </Object>
+
+        <!--XRayGrid-->
+        <Object Class="MaterialDefinition" Name="XRayGrid" Type="XRayGrid">
+            <Array Name="Properties">
+                <String>ArtistSelectable</String>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Glow" Effect="XRayGrid.fxo" InputLayout="Post" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Post" />
+            </Array>
+        </Object>
 
         <!--CharacterStealth-->
         <Object Class="MaterialDefinition" Name="CharacterStealth" Type="Stealth">
@@ -2312,9 +2692,10 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Opaque" Effect="CharacterStealth.fxo" InputLayout="Character" />
                 <Object Class="DrawStyle" Name="Normal" Effect="CharacterStealth.fxo" InputLayout="Character" />
-                <Object Class="DrawStyle" Name="Glow" Effect="CharacterStealthLameColor.fxo" InputLayout="Character" />
+                <Object Class="DrawStyle" Name="Glow" Effect="CharacterStealth_DistortionColor.fxo" InputLayout="Character" />
                 <Object Class="DrawStyle" Name="Distortion" Effect="CharacterStealth_AddDistortion.fxo" InputLayout="Character" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="CharacterStealth_Depth.fxo" InputLayout="Character" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="Character" />
             </Array>
         </Object>
       
@@ -2332,6 +2713,7 @@
                 <Object Class="DrawStyle" Name="Glow" Effect="BumpSkinStealthLameColor.fxo" InputLayout="BumpUVSkin" />
                 <Object Class="DrawStyle" Name="Distortion" Effect="BumpSkinStealth_AddDistortion.fxo" InputLayout="BumpUVSkin" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="BumpSkinStealth_Depth.fxo" InputLayout="BumpUVSkin" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="BumpUVSkin" />
             </Array>
         </Object>
 
@@ -2349,6 +2731,7 @@
                 <Object Class="DrawStyle" Name="Glow" Effect="CharacterRigidStealthLameColor.fxo" InputLayout="CharacterRigid" />
                 <Object Class="DrawStyle" Name="Distortion" Effect="CharacterRigidStealth_AddDistortion.fxo" InputLayout="CharacterRigid" />
                 <Object Class="DrawStyle" Name="CastShadow" Effect="CharacterRigidStealth_Depth.fxo" InputLayout="CharacterRigid" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="CharacterRigid" />
             </Array>
         </Object>
         
@@ -2356,6 +2739,7 @@
         <!--CharacterShield-->
         <Object Class="MaterialDefinition" Name="CharacterShield" Type="Shield">
             <Array Name="Properties">
+                <String>ArtistSelectable</String>
                 <String>ArtistModelMaterialSelectable</String>
                 <String>Skinned</String>
                 <Object Class="Parameter" Name="EffectName" Variable="Shield"/>
@@ -2370,6 +2754,7 @@
         <!--BumpSkinShield-->
         <Object Class="MaterialDefinition" Name="BumpSkinShield" Type="Shield">
             <Array Name="Properties">
+                <String>ArtistSelectable</String>
                 <String>ArtistModelMaterialSelectable</String>
                 <String>Skinned</String>
                 <Object Class="Parameter" Name="EffectName" Variable="Shield"/>
@@ -2384,6 +2769,7 @@
         <!--CharacterRigidShield-->
         <Object Class="MaterialDefinition" Name="CharacterRigidShield" Type="Shield">
             <Array Name="Properties">
+                <String>ArtistSelectable</String>
                 <String>ArtistModelMaterialSelectable</String>
                 <Object Class="Parameter" Name="EffectName" Variable="Shield"/>
             </Array>
@@ -2404,6 +2790,7 @@
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Distortion" Effect="ForceFieldDistortion.fxo" InputLayout="ForceField" />
                 <Object Class="DrawStyle" Name="Glow" Effect="ForceFieldColor.fxo" InputLayout="ForceField" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ForceField" />
             </Array>
         </Object>
         
@@ -2417,7 +2804,23 @@
             </Array>
             <Array Name="DrawStyles">
                 <Object Class="DrawStyle" Name="Distortion" Effect="ForceFieldDistortion_planar.fxo" InputLayout="ForceField" />
-                <Object Class="DrawStyle" Name="Glow" Effect="ForceFieldColor_planar.fxo" InputLayout="ForceField" />
+                <Object Class="DrawStyle" Name="Glow" Effect="ForceFieldColor_planar.fxo" Technique="TECH_FORCE_FIELD_COLOR" InputLayout="ForceField" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ForceField" />
+            </Array>
+        </Object>
+
+
+        <!--ForceField_planar_volatile-->
+        <Object Class="MaterialDefinition" Name="ForceField_planar_volatile" Type="ForceField">
+            <Array Name="Properties">
+                <String>SemiTransparent</String>
+                <String>ArtistSelectable</String>
+                <Object Class="StringParameter" Type="ValidEffect" Name="Visualizer" Value="RigidLODs"/>
+            </Array>
+            <Array Name="DrawStyles">
+                <Object Class="DrawStyle" Name="Distortion" Effect="ForceFieldDistortion_planar.fxo" InputLayout="ForceField" />
+                <Object Class="DrawStyle" Name="Glow" Effect="ForceFieldColor_planar.fxo" Technique="TECH_FORCE_FIELD_COLOR_MODELPOS" InputLayout="ForceField" />
+                <Object Class="DrawStyle" Name="Pick" Effect="PickRigid.fxo" InputLayout="ForceField" />
             </Array>
         </Object>
         

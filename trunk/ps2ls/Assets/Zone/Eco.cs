@@ -11,16 +11,16 @@ namespace ps2ls.Assets.Zone
     {
         public class Layer
         {
-            public Single Density { get; private set; }
-            public Single MinScale { get; private set; }
-            public Single MaxScale { get; private set; }
-            public Single SlopePeak { get; private set; }
-            public Single SlopeExtent { get; private set; }
-            public Single MinElevation { get; private set; }
-            public Single MaxElevation { get; private set; }
-            public Byte Unknown0 { get; private set; }
-            public String Flora { get; private set; }
-            public UInt32 TintCount { get; private set; }
+            public float Density { get; private set; }
+            public float MinScale { get; private set; }
+            public float MaxScale { get; private set; }
+            public float SlopePeak { get; private set; }
+            public float SlopeExtent { get; private set; }
+            public float MinElevation { get; private set; }
+            public float MaxElevation { get; private set; }
+            public byte Unknown0 { get; private set; }
+            public string Flora { get; private set; }
+            public uint TintCount { get; private set; }
 
             public enum LoadError
             {
@@ -64,17 +64,17 @@ namespace ps2ls.Assets.Zone
             }
         }
 
-        public UInt32 Unknown0 { get; private set; }
-        public String Name { get; private set; }
-        public String ColorNxMap { get; private set; }
-        public String SpecNyMap { get; private set; }
-        public UInt32 DetailRepeat { get; private set; }
-        public Single BlendStrength { get; private set; }
-        public Single SpecMin { get; private set; }
-        public Single SpecMax { get; private set; }
-        public Single SpecSmoothnessMin { get; private set; }
-        public Single SpecSmoothnessMax { get; private set; }
-        public String PhysicsMaterial { get; private set; }
+        public uint Unknown0 { get; private set; }
+        public string Name { get; private set; }
+        public string ColorNxMap { get; private set; }
+        public string SpecNyMap { get; private set; }
+        public uint DetailRepeat { get; private set; }
+        public float BlendStrength { get; private set; }
+        public float SpecMin { get; private set; }
+        public float SpecMax { get; private set; }
+        public float SpecSmoothnessMin { get; private set; }
+        public float SpecSmoothnessMax { get; private set; }
+        public string PhysicsMaterial { get; private set; }
         public List<Layer> Layers { get; private set; }
 
         public enum LoadError
@@ -112,10 +112,10 @@ namespace ps2ls.Assets.Zone
             eco.SpecSmoothnessMax = binaryReader.ReadSingle();
             eco.PhysicsMaterial = ps2ls.IO.Utils.ReadNullTerminatedStringFromStream(stream);
 
-            UInt32 layerCount = binaryReader.ReadUInt32();
+            uint layerCount = binaryReader.ReadUInt32();
             eco.Layers = new List<Layer>((int)layerCount);
 
-            for (UInt32 i = 0; i < layerCount; ++i)
+            for (uint i = 0; i < layerCount; ++i)
             {
                 Layer layer;
                 
@@ -129,6 +129,11 @@ namespace ps2ls.Assets.Zone
             }
 
             return LoadError.None;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

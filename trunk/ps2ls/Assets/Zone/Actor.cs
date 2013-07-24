@@ -15,13 +15,13 @@ namespace ps2ls.Assets.Zone
             public Vector4 Translation;
             public Quaternion Rotation;
             public Vector4 Scale;
-            public UInt32 Unknown0;
-            public Byte Unknown1;
-            public Single Unknown2;
+            public uint Unknown0;
+            public byte Unknown1;
+            public float Unknown2;
         }
 
-        public String AdrFileName { get; private set; }
-        public Single Unknown0 { get; private set; }
+        public string AdrFileName { get; private set; }
+        public float Unknown0 { get; private set; }
         public InstanceInfo[] InstanceInfos { get; private set; }
 
         public enum LoadError
@@ -44,19 +44,22 @@ namespace ps2ls.Assets.Zone
             actor.AdrFileName = IO.Utils.ReadNullTerminatedStringFromStream(stream);
             actor.Unknown0 = binaryReader.ReadSingle();
 
-            UInt32 placementCounts = binaryReader.ReadUInt32();
+            uint placementCounts = binaryReader.ReadUInt32();
 
-            for(UInt32 i = 0; i < placementCounts; ++i)
+            for(uint i = 0; i < placementCounts; ++i)
             {
                 InstanceInfo placementInfo = new InstanceInfo();
+                placementInfo.Translation = new Vector4();
                 placementInfo.Translation.X = binaryReader.ReadSingle();
                 placementInfo.Translation.Y = binaryReader.ReadSingle();
                 placementInfo.Translation.Z = binaryReader.ReadSingle();
                 placementInfo.Translation.W = binaryReader.ReadSingle();
+                placementInfo.Rotation = new Quaternion();
                 placementInfo.Rotation.X = binaryReader.ReadSingle();
                 placementInfo.Rotation.Y = binaryReader.ReadSingle();
                 placementInfo.Rotation.Z = binaryReader.ReadSingle();
                 placementInfo.Rotation.W = binaryReader.ReadSingle();
+                placementInfo.Scale = new Vector4();
                 placementInfo.Scale.X = binaryReader.ReadSingle();
                 placementInfo.Scale.Y = binaryReader.ReadSingle();
                 placementInfo.Scale.Z = binaryReader.ReadSingle();

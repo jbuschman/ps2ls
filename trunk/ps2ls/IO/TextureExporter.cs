@@ -10,8 +10,8 @@ namespace ps2ls.IO
     {
         public class TextureFormatInfo
         {
-            public String Name { get; internal set; }
-            public String Extension { get; internal set; }
+            public string Name { get; internal set; }
+            public string Extension { get; internal set; }
             public ImageType ImageType { get; internal set; }
 
             internal TextureFormatInfo()

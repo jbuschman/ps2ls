@@ -12,7 +12,7 @@ namespace ps2ls.Forms.Controls
         private Timer timer = new Timer();
         public event EventHandler CustomTextChanged;
 
-        private Int32 TIMER_INTERVAL = 500;
+        private int TIMER_INTERVAL = 500;
 
         public SearchToolStripTextBox()
         {

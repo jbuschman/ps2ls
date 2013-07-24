@@ -23,7 +23,7 @@ namespace ps2ls.Forms
         {
             InitializeComponent();
 
-            textureListbox.Items.Clear();
+            texturesListBox.Items.Clear();
 
             Dock = DockStyle.Fill;
 
@@ -38,9 +38,9 @@ namespace ps2ls.Forms
         private void refreshTexturesListBox()
         {
             Cursor.Current = Cursors.WaitCursor;
-            textureListbox.BeginUpdate();
+            texturesListBox.BeginUpdate();
 
-            textureListbox.Items.Clear();
+            texturesListBox.Items.Clear();
 
             List<Asset> images = null;
             AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DDS, out images);
@@ -82,16 +82,16 @@ namespace ps2ls.Forms
                             break;
                     }
 
-                    textureListbox.Items.Add(asset);
+                    texturesListBox.Items.Add(asset);
                 }
             }
 
-            int textureCount = textureListbox.Items.Count;
+            int textureCount = texturesListBox.Items.Count;
             int texturesMax = assets != null ? assets.Count : 0;
 
             texturesCountLabel.Text = textureCount + "/" + texturesMax;
 
-            textureListbox.EndUpdate();
+            texturesListBox.EndUpdate();
             Cursor.Current = Cursors.WaitCursor;
         }
 
@@ -101,7 +101,7 @@ namespace ps2ls.Forms
 
             try
             {
-                asset = (Asset)textureListbox.SelectedItem;
+                asset = (Asset)texturesListBox.SelectedItem;
             }
             catch (InvalidCastException) { return; }
 
@@ -162,6 +162,28 @@ namespace ps2ls.Forms
         private void texturesMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             refreshTexturesListBox();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (texturesListBox.SelectedItems.Count == 0)
+                e.Cancel = true;
+
+            if (texturesListBox.SelectedItems.Count == 1)
+                extractToolStripMenuItem.Text = "Extract...";
+            else
+                extractToolStripMenuItem.Text = "Extract " + texturesListBox.SelectedItems.Count + "...";
+        }
+
+        private void extractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<Asset> assets = new List<Asset>();
+
+            foreach(object selectedItem in texturesListBox.SelectedItems)
+                assets.Add((Asset)selectedItem);
+
+            TextureExportForm textureExportForm = new TextureExportForm(assets);
+            textureExportForm.Show();
         }
     }
 }

@@ -102,7 +102,10 @@ namespace ps2ls.Forms
             catch(Exception) { return; }
 
             MemoryStream memoryStream = asset.Pack.CreateAssetMemoryStreamByName(asset.Name);
-            Zone.LoadError loadError = Zone.LoadFromStream(memoryStream, out zone);
+
+            string zoneName = Path.GetFileNameWithoutExtension(asset.Name);
+
+            Zone.LoadError loadError = Zone.LoadFromStream(zoneName, memoryStream, out zone);
 
             switch (loadError)
             {
