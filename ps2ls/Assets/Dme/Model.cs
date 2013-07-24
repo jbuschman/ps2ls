@@ -13,31 +13,31 @@ namespace ps2ls.Assets.Dme
 {
     public class Model
     {
-        public UInt32 Version { get; private set; }
-        public String Name { get; private set; }
-        public UInt32 Unknown0 { get; private set; }
-        public UInt32 Unknown1 { get; private set; }
-        public UInt32 Unknown2 { get; private set; }
+        public uint Version { get; private set; }
+        public string Name { get; private set; }
+        public uint Unknown0 { get; private set; }
+        public uint Unknown1 { get; private set; }
+        public uint Unknown2 { get; private set; }
         public Vector3 Min { get; private set; }
         public Vector3 Max { get; private set; }
         public List<Material> Materials { get; private set; }
         public Mesh[] Meshes { get; private set; }
-        public List<String> TextureStrings  { get; private set; }
+        public List<string> TextureStrings  { get; private set; }
         //todo: create a 'skeleton' class to contain all bone info
         public BoneMap[] BoneMaps { get; private set; }
         public Matrix4[] Bones { get; private set; }
         public Vector3[] BonesMins { get; private set; }
         public Vector3[] BonesMaxs { get; private set; }
-        public UInt32[] BoneHashes { get; private set; }
+        public uint[] BoneHashes { get; private set; }
 
         #region Attributes
-        public UInt32 VertexCount
+        public uint VertexCount
         {
             get
             {
-                UInt32 vertexCount = 0;
+                uint vertexCount = 0;
 
-                for (Int32 i = 0; i < Meshes.Length; ++i)
+                for (int i = 0; i < Meshes.Length; ++i)
                 {
                     vertexCount += Meshes[i].VertexCount;
                 }
@@ -45,13 +45,13 @@ namespace ps2ls.Assets.Dme
                 return vertexCount;
             }
         }
-        public UInt32 IndexCount
+        public uint IndexCount
         {
             get
             {
-                UInt32 indexCount = 0;
+                uint indexCount = 0;
 
-                for (Int32 i = 0; i < Meshes.Length; ++i)
+                for (int i = 0; i < Meshes.Length; ++i)
                 {
                     indexCount += Meshes[i].IndexCount;
                 }
@@ -61,7 +61,7 @@ namespace ps2ls.Assets.Dme
         }
         #endregion
 
-        public static Model LoadFromStream(String name, Stream stream)
+        public static Model LoadFromStream(string name, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
@@ -83,12 +83,12 @@ namespace ps2ls.Assets.Dme
             if (model.Version != 4)
                 return null;
 
-            UInt32 modelHeaderOffset = binaryReader.ReadUInt32();
+            uint modelHeaderOffset = binaryReader.ReadUInt32();
 
             model.Name = name;
 
             //textures & materials
-            model.TextureStrings = new List<String>();
+            model.TextureStrings = new List<string>();
             model.Materials = new List<Material>();
 
             Dma.Dma.LoadFromStream(binaryReader.BaseStream, model.TextureStrings, model.Materials);
@@ -107,11 +107,11 @@ namespace ps2ls.Assets.Dme
             model.Max = max;
 
             //meshes
-            UInt32 meshCount = binaryReader.ReadUInt32();
+            uint meshCount = binaryReader.ReadUInt32();
 
             model.Meshes = new Mesh[meshCount];
 
-            for (Int32 i = 0; i < meshCount; ++i)
+            for (int i = 0; i < meshCount; ++i)
             {
                 Mesh mesh = Mesh.LoadFromStream(binaryReader.BaseStream, model.Materials);
 
@@ -120,35 +120,35 @@ namespace ps2ls.Assets.Dme
             }
 
             //bone maps
-            UInt32 boneMapCount = binaryReader.ReadUInt32();
+            uint boneMapCount = binaryReader.ReadUInt32();
 
             model.BoneMaps = new BoneMap[boneMapCount];
 
-            for (Int32 i = 0; i < boneMapCount; ++i)
+            for (int i = 0; i < boneMapCount; ++i)
             {
                 BoneMap boneMap = BoneMap.LoadFromStream(binaryReader.BaseStream);
                 model.BoneMaps[i] = boneMap;
             }
 
             //bone map entries
-            UInt32 boneMapEntryCount = binaryReader.ReadUInt32();
+            uint boneMapEntryCount = binaryReader.ReadUInt32();
 
             BoneMapEntry[] boneMapEntries = new BoneMapEntry[boneMapEntryCount];
 
-            for (Int32 i = 0; i < boneMapEntryCount; ++i)
+            for (int i = 0; i < boneMapEntryCount; ++i)
             {
                 BoneMapEntry boneMapEntry = BoneMapEntry.LoadFromStream(binaryReader.BaseStream);
 
                 boneMapEntries[i] = boneMapEntry;
             }
 
-            for (Int32 i = 0; i < model.BoneMaps.Length; ++i)
+            for (int i = 0; i < model.BoneMaps.Length; ++i)
             {
-                UInt32 end = 0;
+                uint end = 0;
 
                 if (model.BoneMaps[i].BoneCount > 0)
                 {
-                    for (Int32 j = 0; j < model.BoneMaps[i].BoneCount; ++j)
+                    for (int j = 0; j < model.BoneMaps[i].BoneCount; ++j)
                     {
                         if (boneMapEntries[j].GlobalIndex + model.BoneMaps[i].Delta > end)
                         {
@@ -160,16 +160,16 @@ namespace ps2ls.Assets.Dme
                 model.BoneMaps[i].BoneEnd = end;
             }
 
-            UInt32 boneCount = binaryReader.ReadUInt32();
+            uint boneCount = binaryReader.ReadUInt32();
 
             model.Bones = new Matrix4[boneCount];
             model.BonesMins = new Vector3[boneCount];
             model.BonesMaxs = new Vector3[boneCount];
-            model.BoneHashes = new UInt32[boneCount];
+            model.BoneHashes = new uint[boneCount];
 
             if (boneCount > 0)
             {
-                for (Int32 i = 0; i < boneCount; ++i)
+                for (int i = 0; i < boneCount; ++i)
                 {
                     Matrix4 boneMatrix = Matrix4.Identity;
 
@@ -195,7 +195,7 @@ namespace ps2ls.Assets.Dme
                 }
                 
                 //bones bounding box
-                for(Int32 i = 0; i < boneCount; ++i)
+                for(int i = 0; i < boneCount; ++i)
                 {
                     Vector3 boneMin = new Vector3();
                     boneMin.X = binaryReader.ReadSingle();
@@ -211,7 +211,7 @@ namespace ps2ls.Assets.Dme
                 }
 
                 //bone hashes
-                for (Int32 i = 0; i < boneCount; ++i)
+                for (int i = 0; i < boneCount; ++i)
                     model.BoneHashes[i] = binaryReader.ReadUInt32();
             }
 

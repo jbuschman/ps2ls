@@ -57,8 +57,8 @@ namespace ps2ls.Assets.Pack
 
             Asset asset = new Asset(pack);
 
-            UInt32 count = reader.ReadUInt32();
-            asset.Name = new String(reader.ReadChars((Int32)count));
+            uint count = reader.ReadUInt32();
+            asset.Name = new String(reader.ReadChars((int)count));
             asset.AbsoluteOffset = reader.ReadUInt32();
             asset.Size = reader.ReadUInt32();
             asset.Crc32 = reader.ReadInt32();
@@ -134,10 +134,10 @@ namespace ps2ls.Assets.Pack
         [BrowsableAttribute(false)]
         public Pack Pack { get; private set; }
 
-        public String Name { get; private set; }
-        public UInt32 Size { get; private set; }
-        public UInt32 AbsoluteOffset { get; private set; }
-        public Int32 Crc32 { get; private set; }
+        public string Name { get; private set; }
+        public uint Size { get; private set; }
+        public uint AbsoluteOffset { get; private set; }
+        public int Crc32 { get; private set; }
 
         public Asset.Types Type { get; private set; }
 

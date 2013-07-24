@@ -8,8 +8,8 @@ namespace ps2ls.Assets.Dme
 {
     public struct BoneMapEntry
     {
-        public UInt16 BoneIndex;
-        public UInt16 GlobalIndex;
+        public ushort BoneIndex;
+        public ushort GlobalIndex;
 
         public static BoneMapEntry LoadFromStream(Stream stream)
         {
@@ -26,15 +26,15 @@ namespace ps2ls.Assets.Dme
 
     public struct BoneMap
     {
-        public UInt32 Unknown0;
-        public UInt32 BoneStart;
-        public UInt32 BoneCount;
-        public UInt32 Delta;
-        public UInt32 Unknown1;
-        public UInt32 BoneEnd;
-        public UInt32 VertexCount;
-        public UInt32 Unknown2;
-        public UInt32 IndexCount;
+        public uint Unknown0;
+        public uint BoneStart;
+        public uint BoneCount;
+        public uint Delta;
+        public uint Unknown1;
+        public uint BoneEnd;
+        public uint VertexCount;
+        public uint Unknown2;
+        public uint IndexCount;
 
         public static BoneMap LoadFromStream(Stream stream)
         {

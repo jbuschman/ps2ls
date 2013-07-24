@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ps2ls.IO;
 using System.Runtime.InteropServices;
 using lzhamNET;
+using DevIL;
 
 namespace ps2ls.Assets.Cnk
 {
@@ -24,16 +25,16 @@ namespace ps2ls.Assets.Cnk
             {
             }
 
-            public Int32 X { get; private set; }
-            public Int32 Y { get; private set; }
-            public Int32 Unknown0 { get; private set; }
-            public Int32 Unknown1 { get; private set; }
-            public Int32 EcoCount { get; private set; }
-            public Int32 Index { get; private set; }
-            public Int32 Unknown2 { get; private set; }
-            public UInt32 ImageSize { get; private set; }
+            public int X { get; private set; }
+            public int Y { get; private set; }
+            public int Unknown0 { get; private set; }
+            public int Unknown1 { get; private set; }
+            public int EcoCount { get; private set; }
+            public int Index { get; private set; }
+            public int Unknown2 { get; private set; }
+            public uint ImageSize { get; private set; }
             public byte[] ImageData { get; private set; }
-            public UInt32 LayerTextureCount { get; private set; }
+            public uint LayerTextureCount { get; private set; }
             public byte[] LayerTextures { get; private set; }
 
             public static LoadError LoadFromStream(Stream stream, out Tile tile)
@@ -53,14 +54,14 @@ namespace ps2ls.Assets.Cnk
                 tile.Unknown1 = binaryReader.ReadInt32();
                 tile.EcoCount = binaryReader.ReadInt32();
 
-                for (Int32 i = 0; i < tile.EcoCount; ++i)
+                for (int i = 0; i < tile.EcoCount; ++i)
                 {
-                    UInt32 ev = binaryReader.ReadUInt32();
-                    UInt32 fc = binaryReader.ReadUInt32();
+                    uint ev = binaryReader.ReadUInt32();
+                    uint fc = binaryReader.ReadUInt32();
 
-                    for (Int32 j = 0; j < fc; ++j)
+                    for (int j = 0; j < fc; ++j)
                     {
-                        UInt32 fv = binaryReader.ReadUInt32();
+                        uint fv = binaryReader.ReadUInt32();
                         stream.Seek(fv * 8, SeekOrigin.Current);
                     }
                 }
@@ -75,9 +76,9 @@ namespace ps2ls.Assets.Cnk
 
                     MemoryStream memoryStream = new MemoryStream(tile.ImageData);
 
-                    DevIL.ImageExporter asd = new DevIL.ImageExporter();
-                    DevIL.ImageImporter asd2 = new DevIL.ImageImporter();
-                    DevIL.Image image = asd2.LoadImageFromStream(memoryStream);
+                    ImageExporter asd = new DevIL.ImageExporter();
+                    ImageImporter asd2 = new DevIL.ImageImporter();
+                    Image image = asd2.LoadImageFromStream(memoryStream);
                     memoryStream.Close();
 
                     asd.SaveImage(image, @"C:\Users\Colin\Desktop\" + tile.Index + ".dds");
@@ -99,10 +100,10 @@ namespace ps2ls.Assets.Cnk
 
             private RenderBatch() { }
 
-            public UInt32 IndexOffset { get; private set; }
-            public UInt32 IndexCount { get; private set; }
-            public UInt32 VertexOffset { get; private set; }
-            public UInt32 VertexCount { get; private set; }
+            public uint IndexOffset { get; private set; }
+            public uint IndexCount { get; private set; }
+            public uint VertexOffset { get; private set; }
+            public uint VertexCount { get; private set; }
 
             public static LoadError LoadFromStream(Stream stream, out RenderBatch renderBatch)
             {
@@ -127,12 +128,12 @@ namespace ps2ls.Assets.Cnk
 
             private Vertex() { }
 
-            public Int16 X { get; private set; }
-            public Int16 Y { get; private set; }
-            public Int16 FarHeight { get; private set; }
-            public Int16 NearHeight { get; private set; }
-            public Byte[] C0 { get; private set; }
-            public Byte[] C1 { get; private set; }
+            public short X { get; private set; }
+            public short Y { get; private set; }
+            public short FarHeight { get; private set; }
+            public short NearHeight { get; private set; }
+            public byte[] C0 { get; private set; }
+            public byte[] C1 { get; private set; }
 
             public static LoadError LoadFromStream(Stream stream, out Vertex vertex)
             {
@@ -148,6 +149,11 @@ namespace ps2ls.Assets.Cnk
 
                 return LoadError.None;
             }
+
+            public override string ToString()
+            {
+                return string.Format("{0}, {1}, {2}", X, Y, NearHeight);
+            }
         }
 
         public Tile[] Tiles { get; private set; }
@@ -155,7 +161,7 @@ namespace ps2ls.Assets.Cnk
         public Vertex[] Vertices { get; private set; }
         public RenderBatch[] RenderBatches { get; private set; }
 
-        public const UInt32 VERSION = 1;
+        public const uint VERSION = 1;
 
         public enum LoadError
         {
@@ -231,10 +237,10 @@ namespace ps2ls.Assets.Cnk
             cnk0 = new Cnk0();
 
             //tiles
-            UInt32 tileCount = binaryReader.ReadUInt32();
+            uint tileCount = binaryReader.ReadUInt32();
             cnk0.Tiles = new Tile[tileCount];
 
-            for (UInt32 i = 0; i < tileCount; ++i)
+            for (uint i = 0; i < tileCount; ++i)
             {
                 Tile tile;
 
@@ -248,19 +254,19 @@ namespace ps2ls.Assets.Cnk
             }
 
             //unknown block
-            UInt32 unknown0 = binaryReader.ReadUInt32();
-            UInt32 unknown1 = binaryReader.ReadUInt32();
+            uint unknown0 = binaryReader.ReadUInt32();
+            uint unknown1 = binaryReader.ReadUInt32();
             binaryReader.BaseStream.Seek(unknown1 * 4, SeekOrigin.Current);
 
             //indices
-            UInt32 indexCount = binaryReader.ReadUInt32();
-            cnk0.Indices = new UInt16[indexCount];
+            uint indexCount = binaryReader.ReadUInt32();
+            cnk0.Indices = new ushort[indexCount];
 
             for (int i = 0; i < indexCount; ++i)
                 cnk0.Indices[i] = binaryReader.ReadUInt16();
 
             //vertices
-            UInt32 vertexCount = binaryReader.ReadUInt32();
+            uint vertexCount = binaryReader.ReadUInt32();
             cnk0.Vertices = new Vertex[vertexCount];
 
             for (int i = 0; i < vertexCount; ++i)
@@ -277,10 +283,10 @@ namespace ps2ls.Assets.Cnk
             }
 
             //render batches
-            UInt32 renderBatchCount = binaryReader.ReadUInt32();
+            uint renderBatchCount = binaryReader.ReadUInt32();
             cnk0.RenderBatches = new RenderBatch[renderBatchCount];
 
-            for (UInt32 i = 0; i < renderBatchCount; ++i)
+            for (uint i = 0; i < renderBatchCount; ++i)
             {
                 RenderBatch renderBatch;
                 if (RenderBatch.LoadFromStream(binaryReader.BaseStream, out renderBatch) != RenderBatch.LoadError.None)

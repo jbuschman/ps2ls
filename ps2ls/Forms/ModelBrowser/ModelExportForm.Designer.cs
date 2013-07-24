@@ -353,6 +353,7 @@
             // modelsListBox
             // 
             this.modelsListBox.FormattingEnabled = true;
+            this.modelsListBox.HorizontalScrollbar = true;
             this.modelsListBox.Location = new System.Drawing.Point(12, 12);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.Size = new System.Drawing.Size(260, 69);

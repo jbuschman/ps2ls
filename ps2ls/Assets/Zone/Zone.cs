@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ps2ls.Assets.Cnk;
+using ps2ls.Assets.Pack;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,18 +11,19 @@ namespace ps2ls.Assets.Zone
 {
     public class Zone
     {
-        public Int32 QuadsPerTile { get; private set; }
-        public Single TileSize { get; private set; }
-        public UInt32 Unknown1 { get; private set; }
-        public UInt32 VerticesPerTile { get; private set; }
-        public UInt32 TilesPerChunk { get; private set; }
-        public Int32 StartX { get; private set; }
-        public Int32 StartY { get; private set; }
-        public UInt32 ChunksX { get; private set; }
-        public UInt32 ChunksY { get; private set; }
+        public int QuadsPerTile { get; private set; }
+        public float TileSize { get; private set; }
+        public uint Unknown1 { get; private set; }
+        public uint VerticesPerTile { get; private set; }
+        public uint TilesPerChunk { get; private set; }
+        public int StartX { get; private set; }
+        public int StartY { get; private set; }
+        public uint ChunksX { get; private set; }
+        public uint ChunksY { get; private set; }
         public Eco[] Ecos { get; private set; }
         public Flora[] Floras { get; private set; }
         public Actor[] Actors { get; private set; }
+        public Cnk0[,] Cnk0s { get; private set; }
 
         public enum LoadError
         {
@@ -28,14 +31,15 @@ namespace ps2ls.Assets.Zone
             NullStream,
             BadHeader,
             BadEco,
-            BadFlora
+            BadFlora,
+            BadCnk
         };
 
         private Zone()
         {
         }
 
-        public static LoadError LoadFromStream(Stream stream, out Zone zone)
+        public static LoadError LoadFromStream(string name, Stream stream, out Zone zone)
         {
             //https://github.com/RoyAwesome/ps2ls/wiki/Zone
             if (stream == null)
@@ -72,10 +76,10 @@ namespace ps2ls.Assets.Zone
             zone.ChunksY = binaryReader.ReadUInt32();
 
             //ecos
-            UInt32 ecoCount = binaryReader.ReadUInt32();
+            uint ecoCount = binaryReader.ReadUInt32();
             zone.Ecos = new Eco[ecoCount];
 
-            for (UInt32 i = 0; i < ecoCount; ++i)
+            for (uint i = 0; i < ecoCount; ++i)
             {
                 Eco eco;
                 if (Eco.LoadFromStream(stream, out eco) != Eco.LoadError.None)
@@ -88,10 +92,10 @@ namespace ps2ls.Assets.Zone
             }
 
             //flora
-            UInt32 floraCount = binaryReader.ReadUInt32();
+            uint floraCount = binaryReader.ReadUInt32();
             zone.Floras = new Flora[floraCount];
 
-            for (UInt32 i = 0; i < floraCount; ++i)
+            for (uint i = 0; i < floraCount; ++i)
             {
                 Flora flora;
                 if(Flora.LoadFromStream(stream, out flora) != Flora.LoadError.None)
@@ -103,20 +107,47 @@ namespace ps2ls.Assets.Zone
                 zone.Floras[i] = flora;
             }
 
-            //actors
-            UInt32 actorCount = binaryReader.ReadUInt32();
-            zone.Actors = new Actor[actorCount];
+            //todo: invisible walls
+            //todo: runtime objects (actors)
+            //todo: lights
 
-            for (UInt32 i = 0; i < floraCount; ++i)
+            ////actors
+            //uint actorCount = binaryReader.ReadUInt32();
+            //zone.Actors = new Actor[actorCount];
+
+            //for (uint i = 0; i < actorCount; ++i)
+            //{
+            //    Actor actor;
+            //    if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
+            //    {
+            //        zone = null;
+            //        return LoadError.BadFlora;
+            //    }
+
+            //    zone.Actors[i] = actor;
+            //}
+
+            zone.Cnk0s = new Cnk0[32, 32];
+
+            //cnk0s
+            for (int x = zone.StartX; x <= -zone.StartX; x += 4)
             {
-                Actor actor;
-                if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
+                for (int y = zone.StartY; y <= -zone.StartY; y += 4)
                 {
-                    zone = null;
-                    return LoadError.BadFlora;
-                }
+                    string cnk0FileName = string.Format("{0}_{1}_{2}.cnk0", name, x, y);
 
-                zone.Actors[i] = actor;
+                    Cnk0 cnk0;
+                    MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(cnk0FileName);
+                    Cnk0.LoadError loadError = Cnk0.LoadFromStream(memoryStream, out cnk0);
+
+                    if (loadError != Cnk0.LoadError.None)
+                    {
+                        zone = null;
+                        return LoadError.BadCnk;
+                    }
+
+                    zone.Cnk0s[x, y] = cnk0;
+                }
             }
 
             return LoadError.None;

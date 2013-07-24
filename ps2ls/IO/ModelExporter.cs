@@ -56,11 +56,11 @@ namespace ps2ls.IO
 
     public interface ModelExporter
     {
-        String Name { get; }
-        String Extension { get; }
+        string Name { get; }
+        string Extension { get; }
         Boolean CanExportNormals { get; }
         Boolean CanExportTextureCoordinates { get; }
 
-        void ExportModelToDirectoryWithExportOptions(Model model, String directory, ModelExportOptions exportOptions);
+        void ExportModelToDirectoryWithExportOptions(Model model, string directory, ModelExportOptions exportOptions);
     }
 }

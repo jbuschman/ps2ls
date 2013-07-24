@@ -19,7 +19,7 @@ namespace ps2ls.Forms
             InitializeComponent();
         }
 
-        public List<String> FileNames { get; set; }
+        public List<string> FileNames { get; set; }
 
         private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
 
@@ -97,15 +97,15 @@ namespace ps2ls.Forms
         {
             List<object> arguments = (List<object>)arg;
 
-            String directory = (String)arguments[0];
-            List<String> fileNames = (List<String>)arguments[1];
+            string directory = (String)arguments[0];
+            List<string> fileNames = (List<string>)arguments[1];
             string wav = (string)arguments[2];
 
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
 
             initFmod();
 
-            Int32 result = 0;
+            int result = 0;
 
             return result;
         }

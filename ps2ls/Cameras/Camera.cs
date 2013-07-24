@@ -55,8 +55,8 @@ namespace ps2ls.Cameras
                     ProjectionChanged.Invoke(this, null);
             }
         }
-        private Single aspectRatio;
-        public Single AspectRatio
+        private float aspectRatio;
+        public float AspectRatio
         {
             get { return aspectRatio; }
             set
@@ -70,8 +70,8 @@ namespace ps2ls.Cameras
                     AspectRatioChanged.Invoke(this, null);
             }
         }
-        private Single fieldOfView;
-        public Single FieldOfView
+        private float fieldOfView;
+        public float FieldOfView
         {
             get { return fieldOfView; }
             set
@@ -85,8 +85,8 @@ namespace ps2ls.Cameras
                     FieldOfViewChanged.Invoke(this, null);
             }
         }
-        private Single nearPlaneDistance;
-        public Single NearPlaneDistance
+        private float nearPlaneDistance;
+        public float NearPlaneDistance
         {
             get
             {
@@ -103,8 +103,8 @@ namespace ps2ls.Cameras
                     NearPlaneDistanceChanged.Invoke(this, null);
             }
         }
-        private Single farPlaneDistance;
-        public Single FarPlaneDistance
+        private float farPlaneDistance;
+        public float FarPlaneDistance
         {
             get
             {
@@ -139,8 +139,8 @@ namespace ps2ls.Cameras
                     PositionChanged.Invoke(this, null);
             }
         }
-        private Single pitch;
-        public Single Pitch
+        private float pitch;
+        public float Pitch
         {
             get { return pitch; }
             set
@@ -154,8 +154,8 @@ namespace ps2ls.Cameras
                     PitchChanged.Invoke(this, null);
             }
         }
-        private Single yaw;
-        public Single Yaw
+        private float yaw;
+        public float Yaw
         {
             get { return yaw; }
             set

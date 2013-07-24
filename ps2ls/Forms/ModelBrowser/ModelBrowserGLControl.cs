@@ -155,7 +155,7 @@ namespace ps2ls.Forms
         }
 
         //TODO: move this elsehwere
-        private void compileShader(Int32 shader, String source)
+        private void compileShader(int shader, string source)
         {
             ErrorCode e;
 
@@ -164,11 +164,11 @@ namespace ps2ls.Forms
             GL.CompileShader(shader);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
-            String info = String.Empty;
+            string info = String.Empty;
             GL.GetShaderInfoLog(shader, out info);
             Console.WriteLine(info);
 
-            Int32 compileResult;
+            int compileResult;
             GL.GetShader(shader, ShaderParameter.CompileStatus, out compileResult);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
@@ -189,13 +189,13 @@ namespace ps2ls.Forms
             shaderProgram = GL.CreateProgram();
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
-            Int32 vertexShader = GL.CreateShader(ShaderType.VertexShader);
+            int vertexShader = GL.CreateShader(ShaderType.VertexShader);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
-            Int32 fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+            int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
             //TODO: Use external shader source files.
-            String vertexShaderSource = @"
+            string vertexShaderSource = @"
 void main(void)
 {
     gl_Position = ftransform();
@@ -203,7 +203,7 @@ void main(void)
     gl_TexCoord[0] = gl_MultiTexCoord0;
 }
 ";
-            String fragmentShaderSource = @"
+            string fragmentShaderSource = @"
 uniform sampler2D colorMap;
 
 void main(void)
@@ -235,7 +235,7 @@ void main(void)
             GL.LinkProgram(shaderProgram);
             if ((e = GL.GetError()) != ErrorCode.NoError) { Console.WriteLine(e); }
 
-            String info;
+            string info;
             GL.GetProgramInfoLog(shaderProgram, out info);
 
             Console.WriteLine(info);
@@ -287,8 +287,8 @@ void main(void)
                 location = e.Location;
             }
 
-            Int32 deltaX = e.Location.X - location.X;
-            Int32 deltaY = e.Location.Y - location.Y;
+            int deltaX = e.Location.X - location.X;
+            int deltaY = e.Location.Y - location.Y;
 
             switch (inputType)
             {
@@ -411,20 +411,20 @@ void main(void)
                 int loc = GL.GetUniformLocation(shaderProgram, "colorMap");
                 GL.Uniform1(loc, 0);
 
-                for (Int32 i = 0; i < Model.Meshes.Length; ++i)
+                for (int i = 0; i < Model.Meshes.Length; ++i)
                 {
                     Mesh mesh = Model.Meshes[i];
 
                     //pin handles to stream data
                     GCHandle[] streamDataGCHandles = new GCHandle[mesh.VertexStreams.Length];
 
-                    for (Int32 j = 0; j < streamDataGCHandles.Length; ++j)
+                    for (int j = 0; j < streamDataGCHandles.Length; ++j)
                     {
                         streamDataGCHandles[j] = GCHandle.Alloc(mesh.VertexStreams[j].Data, GCHandleType.Pinned);
                     }
 
                     //fetch material definition and vertex layout
-                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(Int32)mesh.MaterialIndex].MaterialDefinitionHash];
+                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
                     VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
                     GL.Color3(meshColors[i % meshColors.Length]);
@@ -445,8 +445,8 @@ void main(void)
 
                     //position
                     VertexLayout.Entry.DataTypes positionDataType = VertexLayout.Entry.DataTypes.None;
-                    Int32 positionStream = 0;
-                    Int32 positionOffset = 0;
+                    int positionStream = 0;
+                    int positionOffset = 0;
                     bool positionExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
 
                     if (positionExists)
@@ -459,8 +459,8 @@ void main(void)
 
                     //normal
                     VertexLayout.Entry.DataTypes normalDataType = VertexLayout.Entry.DataTypes.None;
-                    Int32 normalStream = 0;
-                    Int32 normalOffset = 0;
+                    int normalStream = 0;
+                    int normalOffset = 0;
                     bool normalExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
 
                     if (normalExists)
@@ -473,8 +473,8 @@ void main(void)
 
                     //texture coordiantes
                     VertexLayout.Entry.DataTypes texCoord0DataType = VertexLayout.Entry.DataTypes.None;
-                    Int32 texCoord0Stream = 0;
-                    Int32 texCoord0Offset = 0;
+                    int texCoord0Stream = 0;
+                    int texCoord0Offset = 0;
                     bool texCoord0Exists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0Stream, out texCoord0Offset);
 
                     if (texCoord0Exists)
@@ -504,7 +504,7 @@ void main(void)
                     GCHandle indexDataHandle = GCHandle.Alloc(mesh.IndexData, GCHandleType.Pinned);
                     IntPtr indexData = indexDataHandle.AddrOfPinnedObject();
 
-                    GL.DrawElements(BeginMode.Triangles, (Int32)mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
+                    GL.DrawElements(BeginMode.Triangles, (int)mesh.IndexCount, DrawElementsType.UnsignedShort, indexData);
 
                     indexDataHandle.Free();
 
@@ -513,7 +513,7 @@ void main(void)
                     GL.DisableClientState(ArrayCap.TextureCoordArray);
 
                     //free stream data handles
-                    for (Int32 j = 0; j < streamDataGCHandles.Length; ++j)
+                    for (int j = 0; j < streamDataGCHandles.Length; ++j)
                     {
                         streamDataGCHandles[j].Free();
                     }

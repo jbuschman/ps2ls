@@ -26,7 +26,7 @@ namespace ps2ls.Graphics.Materials
                 Short4,
             }
 
-            private static String[] dataTypeStrings =
+            private static string[] dataTypeStrings =
             {
                 "Float3",
                 "D3dcolor",
@@ -39,7 +39,7 @@ namespace ps2ls.Graphics.Materials
                 "Short4"
             };
 
-            public static Int32[] dataTypeSizes =
+            public static int[] dataTypeSizes =
             {
                 12, //Float3
                 4,  //D3dcolor
@@ -65,7 +65,7 @@ namespace ps2ls.Graphics.Materials
                 Normal
             }
 
-            private static String[] dataUsageStrings =
+            private static string[] dataUsageStrings =
             {
                 "Position",
                 "Color",
@@ -77,14 +77,14 @@ namespace ps2ls.Graphics.Materials
                 "Normal"
             };
 
-            public UInt32 Stream;
+            public uint Stream;
             public DataTypes DataType;
             public DataUsages DataUsage;
-            public UInt32 DataUsageIndex;
+            public uint DataUsageIndex;
 
-            public static void GetDataTypeFromString(String typeString, out DataTypes type)
+            public static void GetDataTypeFromString(string typeString, out DataTypes type)
             {
-                for (Int32 i = 0; i < dataTypeStrings.Length; ++i)
+                for (int i = 0; i < dataTypeStrings.Length; ++i)
                 {
                     if (String.Compare(typeString, dataTypeStrings[i], true) == 0)
                     {
@@ -96,9 +96,9 @@ namespace ps2ls.Graphics.Materials
                 type = DataTypes.None;
             }
 
-            public static void GetDataUsageFromString(String usageString, out DataUsages usage)
+            public static void GetDataUsageFromString(string usageString, out DataUsages usage)
             {
-                for (Int32 i = 0; i < dataUsageStrings.Length; ++i)
+                for (int i = 0; i < dataUsageStrings.Length; ++i)
                 {
                     if (String.Compare(usageString, dataUsageStrings[i], true) == 0)
                     {
@@ -110,14 +110,14 @@ namespace ps2ls.Graphics.Materials
                 usage = DataUsages.None;
             }
 
-            public static Int32 GetDataTypeSize(DataTypes type)
+            public static int GetDataTypeSize(DataTypes type)
             {
-                return dataTypeSizes[(Int32)type];
+                return dataTypeSizes[(int)type];
             }
         }
 
-        public String Name { get; private set; }
-        public UInt32 NameHash { get; private set; }
+        public string Name { get; private set; }
+        public uint NameHash { get; private set; }
         public List<Entry> Entries { get; private set; }
 
         private VertexLayout()
@@ -153,11 +153,11 @@ namespace ps2ls.Graphics.Materials
                 entry.Stream = UInt32.Parse(navigator.GetAttribute("Stream", String.Empty));
 
                 //data type
-                String dataTypeString = navigator.GetAttribute("Type", String.Empty);
+                string dataTypeString = navigator.GetAttribute("Type", String.Empty);
                 Entry.GetDataTypeFromString(dataTypeString, out entry.DataType);
 
                 //data usage
-                String dataUsageString = navigator.GetAttribute("Usage", String.Empty);
+                string dataUsageString = navigator.GetAttribute("Usage", String.Empty);
                 Entry.GetDataUsageFromString(dataUsageString, out entry.DataUsage);
 
                 //data usage index
@@ -179,9 +179,9 @@ namespace ps2ls.Graphics.Materials
             return GetEntryCountByDataUsage(usage) > 0;
         }
 
-        public Int32 GetEntryCountByDataUsage(Entry.DataUsages usage)
+        public int GetEntryCountByDataUsage(Entry.DataUsages usage)
         {
-            Int32 count = 0;
+            int count = 0;
 
             foreach (Entry entry in Entries)
             {
@@ -194,13 +194,13 @@ namespace ps2ls.Graphics.Materials
             return count;
         }
 
-        public Boolean GetEntryInfoFromDataUsageAndUsageIndex(Entry.DataUsages dataUsage, Int32 usageIndex, out Entry.DataTypes dataType, out Int32 stream, out Int32 offset)
+        public Boolean GetEntryInfoFromDataUsageAndUsageIndex(Entry.DataUsages dataUsage, int usageIndex, out Entry.DataTypes dataType, out int stream, out int offset)
         {
             dataType = Entry.DataTypes.None;
             stream = 0;
             offset = 0;
 
-            UInt32 previousStream = 0;
+            uint previousStream = 0;
 
             foreach (Entry entry in Entries)
             {
@@ -209,7 +209,7 @@ namespace ps2ls.Graphics.Materials
                     offset = 0;
                 }
 
-                stream = (Int32)entry.Stream;
+                stream = (int)entry.Stream;
 
                 if (entry.DataUsage == dataUsage && entry.DataUsageIndex == usageIndex)
                 {

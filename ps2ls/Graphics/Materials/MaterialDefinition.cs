@@ -9,10 +9,10 @@ namespace ps2ls.Graphics.Materials
 {
     public class MaterialDefinition
     {
-        public String Name { get; private set; }
-        public UInt32 NameHash { get; private set; }
-        public String Type { get; private set; }
-        public UInt32 TypeHash { get; private set; }
+        public string Name { get; private set; }
+        public uint NameHash { get; private set; }
+        public string Type { get; private set; }
+        public uint TypeHash { get; private set; }
         public List<DrawStyle> DrawStyles { get; private set; }
 
         private MaterialDefinition()

@@ -8,8 +8,8 @@ namespace ps2ls.Cameras
 {
     public class ArcBallCamera : Camera
     {
-        public Single distance;
-        public Single Distance
+        public float distance;
+        public float Distance
         {
             get { return distance; }
             set

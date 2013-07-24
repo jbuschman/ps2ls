@@ -114,7 +114,7 @@ namespace ps2ls.Graphics.Materials
             }
         }
 
-        public MaterialDefinition GetMaterialDefinitionFromHash(UInt32 materialDefinitionHash)
+        public MaterialDefinition GetMaterialDefinitionFromHash(uint materialDefinitionHash)
         {
             MaterialDefinition materialDefinition = null;
 

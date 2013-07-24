@@ -22,7 +22,7 @@ namespace ps2ls.Forms.Controls
             Properties.Resources.regular_expression
         };
 
-        private static String[] searchTextTypeNames =
+        private static string[] searchTextTypeNames =
         {
             "Textual",
             "Regular Expression"

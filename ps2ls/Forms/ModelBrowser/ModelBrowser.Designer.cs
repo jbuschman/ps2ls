@@ -55,6 +55,8 @@
             this.smoothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.snapCameraToModelButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -96,6 +98,8 @@
             this.modelsListBox.FormattingEnabled = true;
             this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
             this.modelsListBox.Items.AddRange(new object[] {
+            "default",
+            "default",
             "default",
             "default",
             "default",
@@ -242,7 +246,7 @@
             // modelBrowserGLControl
             // 
             this.modelBrowserGLControl.BackColor = System.Drawing.Color.Black;
-            arcBallCamera1.AspectRatio = 1.198068F;
+            arcBallCamera1.AspectRatio = 0.4278261F;
             arcBallCamera1.Distance = 10F;
             arcBallCamera1.FarPlaneDistance = 65536F;
             arcBallCamera1.FieldOfView = 1.291544F;
@@ -258,18 +262,20 @@
             this.modelBrowserGLControl.Model = null;
             this.modelBrowserGLControl.Name = "modelBrowserGLControl";
             this.modelBrowserGLControl.RenderMode = ps2ls.Forms.ModelBrowserGLControl.RenderModes.Smooth;
-            this.modelBrowserGLControl.Size = new System.Drawing.Size(496, 414);
+            this.modelBrowserGLControl.Size = new System.Drawing.Size(246, 575);
             this.modelBrowserGLControl.SnapCameraToModelOnModelChange = true;
             this.modelBrowserGLControl.TabIndex = 1;
             this.modelBrowserGLControl.VSync = false;
             // 
             // modelBrowserModelStats
             // 
-            this.modelBrowserModelStats.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.modelBrowserModelStats.Location = new System.Drawing.Point(0, 439);
+            this.modelBrowserModelStats.Dock = System.Windows.Forms.DockStyle.Right;
+            this.modelBrowserModelStats.Location = new System.Drawing.Point(246, 25);
+            this.modelBrowserModelStats.MaximumSize = new System.Drawing.Size(250, 1024);
+            this.modelBrowserModelStats.MinimumSize = new System.Drawing.Size(250, 0);
             this.modelBrowserModelStats.Model = null;
             this.modelBrowserModelStats.Name = "modelBrowserModelStats";
-            this.modelBrowserModelStats.Size = new System.Drawing.Size(496, 161);
+            this.modelBrowserModelStats.Size = new System.Drawing.Size(250, 575);
             this.modelBrowserModelStats.TabIndex = 3;
             // 
             // toolStrip1
@@ -280,7 +286,9 @@
             this.toolStripSeparator3,
             this.toolStripDropDownButton1,
             this.toolStripSeparator1,
-            this.snapCameraToModelButton});
+            this.snapCameraToModelButton,
+            this.toolStripSeparator4,
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(496, 25);
@@ -349,6 +357,21 @@
             this.snapCameraToModelButton.Text = "Snap Camera To Model";
             this.snapCameraToModelButton.CheckedChanged += new System.EventHandler(this.snapCameraToModelButton_CheckedChanged);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // ModelBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -399,5 +422,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripComboBox modelsMaxComboBox;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

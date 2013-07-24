@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextureBrowser));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -40,8 +41,10 @@
             this.pictureWindow = new System.Windows.Forms.PictureBox();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.texturesCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.textureListbox = new ps2ls.Forms.Controls.CustomListBox();
+            this.texturesListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.extractToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureWindow)).BeginInit();
             this.statusStrip2.SuspendLayout();
@@ -49,6 +52,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -157,32 +161,36 @@
             this.statusStrip2.TabIndex = 4;
             this.statusStrip2.Text = "statusStrip2";
             // 
-            // imagesCountLabel
+            // texturesCountLabel
             // 
             this.texturesCountLabel.Image = global::ps2ls.Properties.Resources.document_search_result;
-            this.texturesCountLabel.Name = "imagesCountLabel";
+            this.texturesCountLabel.Name = "texturesCountLabel";
             this.texturesCountLabel.Size = new System.Drawing.Size(40, 17);
             this.texturesCountLabel.Text = "0/0";
             // 
-            // textureListbox
+            // texturesListBox
             // 
-            this.textureListbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textureListbox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.textureListbox.FormattingEnabled = true;
-            this.textureListbox.Image = global::ps2ls.Properties.Resources.image;
-            this.textureListbox.Items.AddRange(new object[] {
+            this.texturesListBox.ContextMenuStrip = this.contextMenuStrip1;
+            this.texturesListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.texturesListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.texturesListBox.FormattingEnabled = true;
+            this.texturesListBox.Image = global::ps2ls.Properties.Resources.image;
+            this.texturesListBox.Items.AddRange(new object[] {
+            "default",
+            "default",
+            "default",
             "default",
             "default",
             "default",
             "default",
             "default",
             "ImageListBox"});
-            this.textureListbox.Location = new System.Drawing.Point(0, 25);
-            this.textureListbox.Name = "textureListbox";
-            this.textureListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.textureListbox.Size = new System.Drawing.Size(300, 553);
-            this.textureListbox.TabIndex = 0;
-            this.textureListbox.SelectedIndexChanged += new System.EventHandler(this.textureListbox_SelectedIndexChanged);
+            this.texturesListBox.Location = new System.Drawing.Point(0, 25);
+            this.texturesListBox.Name = "texturesListBox";
+            this.texturesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.texturesListBox.Size = new System.Drawing.Size(300, 553);
+            this.texturesListBox.TabIndex = 0;
+            this.texturesListBox.SelectedIndexChanged += new System.EventHandler(this.textureListbox_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
@@ -193,7 +201,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.textureListbox);
+            this.splitContainer1.Panel1.Controls.Add(this.texturesListBox);
             this.splitContainer1.Panel1.Controls.Add(this.statusStrip2);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
             this.splitContainer1.Panel1MinSize = 300;
@@ -204,6 +212,22 @@
             this.splitContainer1.Size = new System.Drawing.Size(800, 600);
             this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 5;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.extractToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(119, 26);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // extractToolStripMenuItem
+            // 
+            this.extractToolStripMenuItem.Image = global::ps2ls.Properties.Resources.drive_download;
+            this.extractToolStripMenuItem.Name = "extractToolStripMenuItem";
+            this.extractToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.extractToolStripMenuItem.Text = "Extract...";
+            this.extractToolStripMenuItem.Click += new System.EventHandler(this.extractToolStripMenuItem_Click);
             // 
             // TextureBrowser
             // 
@@ -222,13 +246,14 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Controls.CustomListBox textureListbox;
+        private Controls.CustomListBox texturesListBox;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private Controls.SearchToolStripTextBox searchText;
         private System.Windows.Forms.ToolStripButton clearSearchTextButton;
@@ -241,5 +266,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripComboBox texturesMaxComboBox;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem extractToolStripMenuItem;
     }
 }

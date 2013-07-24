@@ -39,7 +39,7 @@ namespace ps2ls.IO
             return Name + " (*." + Extension + ")";
         }
 
-        public void ExportModelToDirectoryWithExportOptions(Model model, String directory, ModelExportOptions exportOptions)
+        public void ExportModelToDirectoryWithExportOptions(Model model, string directory, ModelExportOptions exportOptions)
         {
             if (model == null || directory == null || exportOptions == null )
             {
@@ -64,7 +64,7 @@ namespace ps2ls.IO
                 ImageImporter imageImporter = new ImageImporter();
                 ImageExporter imageExporter = new ImageExporter();
 
-                foreach(String textureString in model.TextureStrings)
+                foreach(string textureString in model.TextureStrings)
                 {
                     MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(textureString);
 
@@ -80,28 +80,28 @@ namespace ps2ls.IO
                 }
             }
 
-            String path = directory + @"\" + Path.GetFileNameWithoutExtension(model.Name) + ".obj";
+            string path = directory + @"\" + Path.GetFileNameWithoutExtension(model.Name) + ".obj";
 
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
             StreamWriter streamWriter = new StreamWriter(fileStream);
 
-            for (Int32 i = 0; i < model.Meshes.Length; ++i)
+            for (int i = 0; i < model.Meshes.Length; ++i)
             {
                 Mesh mesh = model.Meshes[i];
 
-                MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(Int32)mesh.MaterialIndex].MaterialDefinitionHash];
+                MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
                 VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
                 //position
                 VertexLayout.Entry.DataTypes positionDataType;
-                Int32 positionOffset;
-                Int32 positionStreamIndex;
+                int positionOffset;
+                int positionStreamIndex;
 
                 vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
                 
                 Mesh.VertexStream positionStream = mesh.VertexStreams[positionStreamIndex];
 
-                for (Int32 j = 0; j < mesh.VertexCount; ++j)
+                for (int j = 0; j < mesh.VertexCount; ++j)
                 {
                     Vector3 position = readVector3(exportOptions, positionOffset, positionStream, j);
 
@@ -116,8 +116,8 @@ namespace ps2ls.IO
                 if (exportOptions.TextureCoordinates)
                 {
                     VertexLayout.Entry.DataTypes texCoord0DataType;
-                    Int32 texCoord0Offset = 0;
-                    Int32 texCoord0StreamIndex = 0;
+                    int texCoord0Offset = 0;
+                    int texCoord0StreamIndex = 0;
 
                     Boolean texCoord0Present = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0StreamIndex, out texCoord0Offset);
 
@@ -125,7 +125,7 @@ namespace ps2ls.IO
                     {
                         Mesh.VertexStream texCoord0Stream = mesh.VertexStreams[texCoord0StreamIndex];
 
-                        for (Int32 j = 0; j < mesh.VertexCount; ++j)
+                        for (int j = 0; j < mesh.VertexCount; ++j)
                         {
                             Vector2 texCoord;
 
@@ -152,17 +152,17 @@ namespace ps2ls.IO
             }
 
             //faces
-            UInt32 vertexCount = 0;
+            uint vertexCount = 0;
 
-            for (Int32 i = 0; i < model.Meshes.Length; ++i)
+            for (int i = 0; i < model.Meshes.Length; ++i)
             {
                 Mesh mesh = model.Meshes[i];
 
                 streamWriter.WriteLine("g Mesh" + i);
 
-                for (Int32 j = 0; j < mesh.IndexCount; j += 3)
+                for (int j = 0; j < mesh.IndexCount; j += 3)
                 {
-                    UInt32 index0, index1, index2;
+                    uint index0, index1, index2;
 
                     switch (mesh.IndexSize)
                     {
@@ -201,13 +201,13 @@ namespace ps2ls.IO
                     }
                 }
 
-                vertexCount += (UInt32)mesh.VertexCount;
+                vertexCount += (uint)mesh.VertexCount;
             }
 
             streamWriter.Close();
         }
 
-        private static Vector3 readVector3(ModelExportOptions exportOptions, Int32 offset, Mesh.VertexStream vertexStream, Int32 index)
+        private static Vector3 readVector3(ModelExportOptions exportOptions, int offset, Mesh.VertexStream vertexStream, int index)
         {
             Vector3 vector3 = new Vector3();
 

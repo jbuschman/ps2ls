@@ -9,7 +9,7 @@ namespace ps2ls.IO
 {
     public static class Utils
     {
-        public static String ReadNullTerminatedStringFromStream(Stream stream)
+        public static string ReadNullTerminatedStringFromStream(Stream stream)
         {
             if (stream == null)
                 return String.Empty;

@@ -94,8 +94,8 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.statusStrip3);
             this.splitContainer1.Panel1.Controls.Add(this.zonesListBox);
+            this.splitContainer1.Panel1.Controls.Add(this.statusStrip3);
             this.splitContainer1.Panel1.Controls.Add(this.toolStrip1);
             this.splitContainer1.Panel1MinSize = 150;
             // 
@@ -139,10 +139,11 @@
             "default",
             "default",
             "default",
+            "default",
             "default"});
             this.zonesListBox.Location = new System.Drawing.Point(0, 25);
             this.zonesListBox.Name = "zonesListBox";
-            this.zonesListBox.Size = new System.Drawing.Size(300, 125);
+            this.zonesListBox.Size = new System.Drawing.Size(300, 103);
             this.zonesListBox.TabIndex = 1;
             this.zonesListBox.SelectedIndexChanged += new System.EventHandler(this.zonesListBox_SelectedIndexChanged);
             // 
@@ -162,6 +163,7 @@
             this.customListBox1.FormattingEnabled = true;
             this.customListBox1.Image = global::ps2ls.Properties.Resources.map_medium;
             this.customListBox1.Items.AddRange(new object[] {
+            "default",
             "default",
             "default",
             "default",

@@ -13,7 +13,7 @@ namespace ps2ls.Assets.Dme
     {
         public class VertexStream
         {
-            public static VertexStream LoadFromStream(Stream stream, Int32 vertexCount, Int32 bytesPerVertex)
+            public static VertexStream LoadFromStream(Stream stream, int vertexCount, int bytesPerVertex)
             {
                 BinaryReader binaryReader = new BinaryReader(stream);
 
@@ -24,21 +24,20 @@ namespace ps2ls.Assets.Dme
                 return vertexStream;
             }
 
-            public Int32 BytesPerVertex { get; private set; }
-            public Byte[] Data { get; private set; }
+            public int BytesPerVertex { get; private set; }
+            public byte[] Data { get; private set; }
         }
 
         public VertexStream[] VertexStreams { get; private set; }
-        public Byte[] IndexData { get; private set; }
-
-        public UInt32 MaterialIndex { get; set; }
-        public UInt32 Unknown1 { get; set; }
-        public UInt32 Unknown2 { get; set; }
-        public UInt32 Unknown3 { get; set; }
-        public UInt32 Unknown4 { get; set; }
-        public UInt32 VertexCount { get; set; }
-        public UInt32 IndexCount { get; private set; }
-        public UInt32 IndexSize { get; private set; }
+        public byte[] IndexData { get; private set; }
+        public uint MaterialIndex { get; private set; }
+        public uint Unknown1 { get; private set; }
+        public uint Unknown2 { get; private set; }
+        public uint Unknown3 { get; private set; }
+        public uint Unknown4 { get; private set; }
+        public uint VertexCount { get; private set; }
+        public uint IndexCount { get; private set; }
+        public uint IndexSize { get; private set; }
 
         private Mesh()
         {
@@ -48,8 +47,8 @@ namespace ps2ls.Assets.Dme
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
-            UInt32 bytesPerVertex = 0;
-            UInt32 vertexStreamCount = 0;
+            uint bytesPerVertex = 0;
+            uint vertexStreamCount = 0;
 
             Mesh mesh = new Mesh();
             mesh.MaterialIndex = binaryReader.ReadUInt32();
@@ -61,21 +60,21 @@ namespace ps2ls.Assets.Dme
             mesh.IndexCount = binaryReader.ReadUInt32();
             mesh.VertexCount = binaryReader.ReadUInt32();
 
-            mesh.VertexStreams = new VertexStream[(Int32)vertexStreamCount];
+            mesh.VertexStreams = new VertexStream[(int)vertexStreamCount];
 
             // read vertex streams
-            for (Int32 j = 0; j < vertexStreamCount; ++j)
+            for (int j = 0; j < vertexStreamCount; ++j)
             {
                 bytesPerVertex = binaryReader.ReadUInt32();
 
-                VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (Int32)mesh.VertexCount, (Int32)bytesPerVertex);
+                VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (int)mesh.VertexCount, (int)bytesPerVertex);
 
                 if (vertexStream != null)
                     mesh.VertexStreams[j] = vertexStream;
             }
 
             // read indices
-            mesh.IndexData = binaryReader.ReadBytes((Int32)mesh.IndexCount * (Int32)mesh.IndexSize);
+            mesh.IndexData = binaryReader.ReadBytes((int)mesh.IndexCount * (int)mesh.IndexSize);
 
             return mesh;
         }

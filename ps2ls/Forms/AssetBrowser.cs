@@ -46,7 +46,7 @@ namespace ps2ls.Forms
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                AssetManager.Instance.LoadBinaryFromPaths(packOpenFileDialog.FileNames);
+                AssetManager.Instance.LoadFromFileNames(packOpenFileDialog.FileNames);
             }
         }
 
@@ -71,10 +71,10 @@ namespace ps2ls.Forms
                     }
                     catch (Exception) { continue; }
 
-                    assets.AddRange(pack.Assets);
+                    assets.AddRange(pack.Assets.Values);
                 }
 
-                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath, null);
             }
         }
 
@@ -107,7 +107,7 @@ namespace ps2ls.Forms
                     assets.Add(file);
                 }
 
-                AssetManager.Instance.ExtractByAssetsToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath);
+                AssetManager.Instance.ExtractToDirectoryAsync(assets, packFolderBrowserDialog.SelectedPath, null);
             }
         }
 
@@ -122,7 +122,7 @@ namespace ps2ls.Forms
 
             e.DrawBackground();
 
-            String text = ((ListBox)sender).Items[e.Index].ToString();
+            string text = ((ListBox)sender).Items[e.Index].ToString();
             Image icon = Properties.Resources.box_small;
             Point point = new Point(0, e.Bounds.Y);
 
@@ -142,7 +142,7 @@ namespace ps2ls.Forms
             {
                 if (Properties.Settings.Default.LoadAssetsOnStartup)
                 {
-                    AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
+                    AssetManager.Instance.LoadFromDirectory(Properties.Settings.Default.AssetDirectory);
                 }
                 else
                 {
@@ -167,7 +167,7 @@ namespace ps2ls.Forms
 
                     if (dialogResult == DialogResult.Yes)
                     {
-                        AssetManager.Instance.LoadBinaryFromDirectory(Properties.Settings.Default.AssetDirectory);
+                        AssetManager.Instance.LoadFromDirectory(Properties.Settings.Default.AssetDirectory);
                     }
                 }
             }
@@ -181,7 +181,7 @@ namespace ps2ls.Forms
 
             ListBox.SelectedObjectCollection packs = packsListBox.SelectedItems;
 
-            Int32 rowMax = 0;
+            int rowMax = 0;
 
             try
             {
@@ -192,7 +192,7 @@ namespace ps2ls.Forms
                 rowMax = Int32.MaxValue;
             }
 
-            Int32 totalFileCount = 0;
+            int totalFileCount = 0;
 
             // Rather than adding the rows one at a time, do it in a batch
             List<DataGridViewRow> rowsToBeAdded = new List<DataGridViewRow>();
@@ -209,29 +209,25 @@ namespace ps2ls.Forms
             {
                 totalFileCount += pack.Assets.Count;
 
-                foreach (Asset asset in pack.Assets)
+                foreach (Asset asset in pack.Assets.Values)
                 {
                     switch (searchTextTypeToolStripDrownDownButton1.SearchTextType)
                     {
                         case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:
                             {
                                 if (!asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()))
-                                {
                                     continue;
-                                }
                             }
                             break;
                         case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.RegularExpression:
                             {
                                 if (regex == null || !regex.IsMatch(asset.Name))
-                                {
                                     continue;
-                                }
                             }
                             break;
                     }
 
-                    String extension = System.IO.Path.GetExtension(asset.Name);
+                    string extension = System.IO.Path.GetExtension(asset.Name);
 
                     Image icon = Asset.GetImageFromType(asset.Type);
 
@@ -242,15 +238,11 @@ namespace ps2ls.Forms
                     rowsToBeAdded.Add(row);
 
                     if (rowsToBeAdded.Count >= rowMax)
-                    {
                         break;
-                    }
                 }
 
                 if (rowsToBeAdded.Count >= rowMax)
-                {
                     break;
-                }
             }
 
             assetsDataGridView.Rows.AddRange(rowsToBeAdded.ToArray());
@@ -285,13 +277,9 @@ namespace ps2ls.Forms
             }
 
             if (packsListBox.SelectedItems.Count == 1)
-            {
                 extractPacksToolStripMenuItem.Text = "Extract...";
-            }
             else
-            {
                 extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + "...";
-            }
         }
 
         private void extractPacksToolStripMenuItem_Click(object sender, EventArgs e)
@@ -306,10 +294,8 @@ namespace ps2ls.Forms
             packsListBox.ClearSelected();
             packsListBox.Items.Clear();
 
-            foreach (Pack pack in AssetManager.Instance.Packs)
-            {
+            foreach (Pack pack in AssetManager.Instance.Packs.Values)
                 packsListBox.Items.Add(pack);
-            }
 
             packsListBox.EndUpdate();
         }
@@ -330,12 +316,6 @@ namespace ps2ls.Forms
             refreshAssetsDataGridView();
 
             clearSearchButton.Enabled = searchTextBox.Text.Length > 0;
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            AssetManifestWriter writer = new AssetManifestWriter();
-            writer.Write(@"C:\Users\Colin\Desktop\" + 0 + @".ps2lsmanifest");
         }
 
         private void assetsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

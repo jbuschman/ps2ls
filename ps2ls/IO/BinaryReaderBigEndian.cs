@@ -18,28 +18,28 @@ namespace ps2ls.IO
             return base.Read(buffer, index, count);
         }
 
-        public override Int16 ReadInt16()
+        public override short ReadInt16()
         {
             byte[] bytes = base.ReadBytes(2);
             Array.Reverse(bytes);
             return BitConverter.ToInt16(bytes, 0);
         }
 
-        public override UInt16 ReadUInt16()
+        public override ushort ReadUInt16()
         {
             byte[] bytes = base.ReadBytes(2);
             Array.Reverse(bytes);
             return BitConverter.ToUInt16(bytes, 0);
         }
 
-        public override Int32 ReadInt32()
+        public override int ReadInt32()
         {
             byte[] bytes = base.ReadBytes(4);
             Array.Reverse(bytes);
             return BitConverter.ToInt32(bytes, 0);
         }
 
-        public override UInt32 ReadUInt32()
+        public override uint ReadUInt32()
         {
             byte[] bytes = base.ReadBytes(4);
             Array.Reverse(bytes);
@@ -60,7 +60,7 @@ namespace ps2ls.IO
             return BitConverter.ToUInt64(bytes, 0);
         }
 
-        public override Single ReadSingle()
+        public override float ReadSingle()
         {
             byte[] bytes = base.ReadBytes(4);
             Array.Reverse(bytes);

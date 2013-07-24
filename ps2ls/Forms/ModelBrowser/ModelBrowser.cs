@@ -18,6 +18,8 @@ using System.Xml;
 using System.Runtime.InteropServices;
 using ps2ls.Forms.Controls;
 using System.Text.RegularExpressions;
+using ps2ls.Assets.Dma;
+using ps2ls.Cryptography;
 
 namespace ps2ls.Forms
 {
@@ -111,7 +113,7 @@ namespace ps2ls.Forms
             Cursor.Current = Cursors.WaitCursor;
             modelsListBox.BeginUpdate();
 
-            Int32 modelsMax = 0;
+            int modelsMax = 0;
 
             try
             {
@@ -169,8 +171,8 @@ namespace ps2ls.Forms
                 }
             }
 
-            Int32 count = modelsListBox.Items.Count;
-            Int32 max = assets != null ? assets.Count : 0;
+            int count = modelsListBox.Items.Count;
+            int max = assets != null ? assets.Count : 0;
 
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
 
@@ -222,7 +224,7 @@ namespace ps2ls.Forms
 
         private void extractSelectedModels()
         {
-            List<String> fileNames = new List<string>();
+            List<string> fileNames = new List<string>();
 
             foreach (object selectedItem in modelsListBox.SelectedItems)
             {
@@ -289,6 +291,105 @@ namespace ps2ls.Forms
         private void modelsMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             refreshModelsListBox();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            List<Asset> assets;
+            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out assets);
+
+            Dictionary<string, List<string>> effectParameterNameLists = new Dictionary<string, List<String>>();
+            FileStream fileStream = new FileStream(@"C:\Users\Colin\Desktop\fxo_dump.txt", FileMode.OpenOrCreate);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+
+            foreach (Asset asset in assets)
+            {
+                MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(asset.Name);
+                Model model = Model.LoadFromStream(asset.Name, memoryStream);
+
+                if (model == null)
+                    continue;
+
+                foreach (Material material in model.Materials)
+                {
+                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.GetMaterialDefinitionFromHash(material.MaterialDefinitionHash);
+
+                    foreach (DrawStyle drawStyle in materialDefinition.DrawStyles)
+                    {
+                        if (!effectParameterNameLists.ContainsKey(drawStyle.Effect))
+                        {
+                            List<string> parameterNames = new List<string>();
+                            effectParameterNameLists.Add(drawStyle.Effect, parameterNames);
+                        }
+
+                        MemoryStream effectMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(drawStyle.Effect);
+
+                        if (effectMemoryStream == null)
+                            continue;
+
+                        BinaryReader binaryReader = new BinaryReader(effectMemoryStream, Encoding.ASCII);
+
+                        StringBuilder stringBuilder = new StringBuilder();
+                        List<string> words = new List<string>();
+
+                        const int MINIMUM_WORD_LENGTH = 3;
+                        const int MAXUMUM_WORD_LENGTH = 32;
+
+                        List<Material.Parameter> materialParametersNotFound = new List<Material.Parameter>();
+                        materialParametersNotFound.AddRange(material.Parameters);
+
+                        for (int wordLength = MINIMUM_WORD_LENGTH; wordLength <= MAXUMUM_WORD_LENGTH; ++wordLength)
+                        {
+                            effectMemoryStream.Position = 0;
+
+                            while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length - wordLength)
+                            {
+                                String word = new String(binaryReader.ReadChars(wordLength));
+                                uint wordHash = Jenkins.OneAtATime(word);
+                                uint wordHash2 = Jenkins.OneAtATime(word.ToLower());
+
+                                for (int i = materialParametersNotFound.Count - 1; i >= 0; --i)
+                                {
+                                    if ((materialParametersNotFound[i].Type == Material.Parameter.D3DXParameterType.Texture) &&
+                                        wordHash == materialParametersNotFound[i].NameHash ||
+                                        wordHash2 == materialParametersNotFound[i].NameHash)
+                                    {
+                                        if (!effectParameterNameLists[drawStyle.Effect].Contains(word))
+                                            effectParameterNameLists[drawStyle.Effect].Add(word);
+
+                                        materialParametersNotFound.RemoveAt(i);
+                                        break;
+                                    }
+                                }
+
+                                binaryReader.BaseStream.Position -= (wordLength - 1);
+
+                                if (materialParametersNotFound.Count == 0)
+                                    break;
+                            }
+
+                            if (materialParametersNotFound.Count == 0)
+                                break;
+                        }
+
+                        effectMemoryStream.Close();
+                    }
+                }
+            }
+
+            foreach(KeyValuePair<string, List<string>> effectParameterNameList in effectParameterNameLists)
+            {
+                streamWriter.WriteLine(string.Format("[{0}]", effectParameterNameList.Key));
+
+                foreach (string parameterName in effectParameterNameList.Value)
+                {
+                    streamWriter.WriteLine(parameterName);
+                }
+
+                streamWriter.WriteLine();
+            }
+
+            streamWriter.Close();
         }
     }
 }

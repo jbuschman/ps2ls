@@ -9,8 +9,8 @@ namespace ps2ls.Assets.Adr
     {
         public class Tag
         {
-            public Byte ID { get; private set; }
-            public Byte[] Data { get; private set; }
+            public byte ID { get; private set; }
+            public byte[] Data { get; private set; }
 
             private Tag()
             {
@@ -24,8 +24,8 @@ namespace ps2ls.Assets.Adr
 
                 tag.ID = binaryReader.ReadByte();
 
-                Byte b;
-                UInt32 size;
+                byte b;
+                uint size;
 
                 b = binaryReader.ReadByte();
 
@@ -39,14 +39,14 @@ namespace ps2ls.Assets.Adr
                 }
                 else
                 {
-                    size = ((UInt32)b & 0x7F) << 8;
+                    size = ((uint)b & 0x7F) << 8;
 
                     b = binaryReader.ReadByte();
 
                     size |= b;
                 }
 
-                tag.Data = binaryReader.ReadBytes((Int32)size);
+                tag.Data = binaryReader.ReadBytes((int)size);
 
                 return tag;
             }

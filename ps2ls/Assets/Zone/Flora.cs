@@ -9,12 +9,12 @@ namespace ps2ls.Assets.Zone
 {
     public class Flora
     {
-        public String Name { get; private set; }
-        public String Texture { get; private set; }
-        public String ModelFile { get; private set; }
+        public string Name { get; private set; }
+        public string Texture { get; private set; }
+        public string ModelFile { get; private set; }
         public Boolean Unknown0 { get; private set; }
-        public Single Unknown1 { get; private set; }
-        public Single Unknown2 { get; private set; }
+        public float Unknown1 { get; private set; }
+        public float Unknown2 { get; private set; }
 
         public enum LoadError
         {
@@ -45,6 +45,11 @@ namespace ps2ls.Assets.Zone
             flora.Unknown2 = binaryReader.ReadSingle();
 
             return LoadError.None;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

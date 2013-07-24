@@ -277,7 +277,7 @@ namespace ps2ls.Forms
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            List<String> fileNames = new List<string>();
+            List<string> fileNames = new List<string>();
 
             foreach (object selectedItem in soundListBox.SelectedItems)
             {

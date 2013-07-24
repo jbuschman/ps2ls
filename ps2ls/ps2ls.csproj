@@ -84,7 +84,6 @@
     <Compile Include="Assets\Cnk\Cnk0.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
-    <Compile Include="Assets\Pack\AssetManifestWriter.cs" />
     <Compile Include="Assets\Zone\Actor.cs" />
     <Compile Include="Assets\Zone\Eco.cs" />
     <Compile Include="Assets\Zone\Flora.cs" />
@@ -199,10 +198,10 @@
     <Compile Include="Forms\ModelBrowser\ModelBrowserModelStats.Designer.cs">
       <DependentUpon>ModelBrowserModelStats.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ModelExportForm.cs">
+    <Compile Include="Forms\ModelBrowser\ModelExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ModelExportForm.Designer.cs">
+    <Compile Include="Forms\ModelBrowser\ModelExportForm.Designer.cs">
       <DependentUpon>ModelExportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Assets\Pack\Pack.cs" />
@@ -262,7 +261,7 @@
       <DependentUpon>ModelBrowserModelStats.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ModelExportForm.resx">
+    <EmbeddedResource Include="Forms\ModelBrowser\ModelExportForm.resx">
       <DependentUpon>ModelExportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AssetBrowser.resx">
@@ -392,6 +391,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <None Include="Resources\materials_3.xml" />
     <None Include="Resources\exclamation.png" />
     <None Include="Resources\cross-circle.png" />
     <None Include="Resources\tick-circle.png" />
@@ -406,7 +406,6 @@
     <None Include="Resources\folder-open-document.png" />
     <None Include="Resources\logo_48.png" />
     <None Include="Resources\clipboard-list.png" />
-    <None Include="Resources\materials_3.xml" />
     <None Include="Resources\robot.png" />
     <None Include="Resources\robotic-arm.png" />
     <None Include="Resources\sphere-aabb2.png" />

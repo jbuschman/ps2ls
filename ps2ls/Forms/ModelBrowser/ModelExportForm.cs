@@ -11,9 +11,16 @@ namespace ps2ls.Forms
 {
     public partial class ModelExportForm : Form
     {
-        public struct ModelAxesPreset
+        public class ModelAxesPreset
         {
-            public String Name;
+            public ModelAxesPreset(string name, Axes upAxis, Axes leftAxis)
+            {
+                Name = name;
+                UpAxis = upAxis;
+                LeftAxis = leftAxis;
+            }
+
+            public string Name;
             public Axes UpAxis;
             public Axes LeftAxis;
 
@@ -28,34 +35,17 @@ namespace ps2ls.Forms
             InitializeComponent();
         }
 
-        public List<String> FileNames { get; set; }
-
+        public List<string> FileNames { get; set; }
+        public BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
         private GenericLoadingForm loadingForm;
-        private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
         private ModelExportOptions modelExportOptions = new ModelExportOptions();
 
         private static List<ModelAxesPreset> modelAxesPresets = new List<ModelAxesPreset>();
 
-        private static void createModelAxesPresets()
-        {
-            modelAxesPresets = new List<ModelAxesPreset>();
-
-            ModelAxesPreset modelAxesPreset = new ModelAxesPreset();
-            modelAxesPreset.Name = "Default";
-            modelAxesPreset.UpAxis = Axes.Y;
-            modelAxesPreset.LeftAxis = Axes.X;
-            modelAxesPresets.Add(modelAxesPreset);
-
-            modelAxesPreset = new ModelAxesPreset();
-            modelAxesPreset.Name = "Autodesk® 3ds Max";
-            modelAxesPreset.UpAxis = Axes.Z;
-            modelAxesPreset.LeftAxis = Axes.Y;
-            modelAxesPresets.Add(modelAxesPreset);
-        }
-
         static ModelExportForm()
         {
-            createModelAxesPresets();
+            modelAxesPresets.Add(new ModelAxesPreset("Default", Axes.Y, Axes.X));
+            modelAxesPresets.Add(new ModelAxesPreset("Autodesk® 3ds Max", Axes.Z, Axes.Y));
         }
 
         private void exportDoWork(object sender, DoWorkEventArgs e)
@@ -69,7 +59,7 @@ namespace ps2ls.Forms
 
             Close();
 
-            MessageBox.Show("Successfully exported " + (Int32)e.Result + " models.");
+            MessageBox.Show("Successfully exported " + (int)e.Result + " models.");
         }
 
         private void exportProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -81,40 +71,36 @@ namespace ps2ls.Forms
             }
         }
 
-        private Int32 exportModel(object sender, object argument)
+        private int exportModel(object sender, object argument)
         {
             List<object> arguments = (List<object>)argument;
 
             ModelExporter modelExporter = (ModelExporter)arguments[0];
-            String directory = (String)arguments[1];
-            List<String> fileNames = (List<String>)arguments[2];
+            string directory = (String)arguments[1];
+            List<string> fileNames = (List<string>)arguments[2];
             ModelExportOptions exportOptions = (ModelExportOptions)arguments[3];
 
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
 
-            Int32 result = 0;
+            int result = 0;
 
-            for (Int32 i = 0; i < fileNames.Count; ++i)
+            for (int i = 0; i < fileNames.Count; ++i)
             {
-                String fileName = fileNames[i];
+                string fileName = fileNames[i];
 
                 MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(fileName);
 
                 if (memoryStream == null)
-                {
                     continue;
-                }
 
                 Model model = Model.LoadFromStream(fileName, memoryStream);
 
                 if (model == null)
-                {
                     continue;
-                }
 
                 modelExporter.ExportModelToDirectoryWithExportOptions(model, directory, exportOptions);
 
-                Int32 percent = (Int32)(((Single)i / (Single)fileNames.Count) * 100);
+                int percent = (int)(((Single)i / (Single)fileNames.Count) * 100);
 
                 backgroundWorker.ReportProgress(percent, fileName);
 
@@ -138,9 +124,7 @@ namespace ps2ls.Forms
             modelAxesPresetComboBox.Items.Clear();
 
             foreach (ModelAxesPreset modelAxesPreset in modelAxesPresets)
-            {
                 modelAxesPresetComboBox.Items.Add(modelAxesPreset);
-            }
 
             modelAxesPresetComboBox.SelectedIndex = modelAxesPresetComboBox.Items.Count > 0 ? 0 : -1;
         }
@@ -150,9 +134,7 @@ namespace ps2ls.Forms
             textureFormatComboBox.Items.Clear();
 
             foreach (TextureExporter.TextureFormatInfo textureFormat in TextureExporter.TextureFormats)
-            {
                 textureFormatComboBox.Items.Add(textureFormat);
-            }
 
             textureFormatComboBox.SelectedIndex = textureFormatComboBox.Items.Count > 0 ? 0 : -1;
         }
@@ -225,7 +207,7 @@ namespace ps2ls.Forms
 
         private void loadModelsListBox()
         {
-            foreach (String fileName in FileNames)
+            foreach (string fileName in FileNames)
                 modelsListBox.Items.Add(fileName);
         }
 
@@ -284,8 +266,8 @@ namespace ps2ls.Forms
         private void modelAxesPresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ModelAxesPreset modelAxesPreset = (ModelAxesPreset)modelAxesPresetComboBox.SelectedItem;
-            leftAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.LeftAxis;
-            upAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.UpAxis;
+            leftAxisComboBox.SelectedIndex = (int)modelAxesPreset.LeftAxis;
+            upAxisComboBox.SelectedIndex = (int)modelAxesPreset.UpAxis;
         }
 
         private void applyCurrentStateToExportOptions()
