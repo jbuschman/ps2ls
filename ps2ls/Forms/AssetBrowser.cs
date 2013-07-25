@@ -138,7 +138,7 @@ namespace ps2ls.Forms
         {
             filesMaxComboBox.SelectedIndex = 3; //infinity
 
-            if (Properties.Settings.Default.AssetDirectory != String.Empty)
+            if (Properties.Settings.Default.AssetDirectory != string.Empty)
             {
                 if (Properties.Settings.Default.LoadAssetsOnStartup)
                 {

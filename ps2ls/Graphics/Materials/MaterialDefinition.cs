@@ -17,9 +17,9 @@ namespace ps2ls.Graphics.Materials
 
         private MaterialDefinition()
         {
-            Name = String.Empty;
+            Name = string.Empty;
             NameHash = 0;
-            Type = String.Empty;
+            Type = string.Empty;
             TypeHash = 0;
             DrawStyles = new List<DrawStyle>();
         }
@@ -34,11 +34,11 @@ namespace ps2ls.Graphics.Materials
             MaterialDefinition materialDefinition = new MaterialDefinition();
 
             //name
-            materialDefinition.Name = navigator.GetAttribute("Name", String.Empty);
+            materialDefinition.Name = navigator.GetAttribute("Name", string.Empty);
             materialDefinition.NameHash = Jenkins.OneAtATime(materialDefinition.Name);
 
             //type
-            materialDefinition.Type = navigator.GetAttribute("Type", String.Empty);
+            materialDefinition.Type = navigator.GetAttribute("Type", string.Empty);
             materialDefinition.TypeHash = Jenkins.OneAtATime(materialDefinition.Type);
 
             //draw styles

@@ -59,6 +59,24 @@ namespace ps2ls.Assets.Dme
                 return indexCount;
             }
         }
+        public Vector3 Extents
+        {
+            get
+            {
+                return new Vector3(
+                Math.Max(Math.Abs(Max.X), Math.Abs(Min.X)),
+                Math.Max(Math.Abs(Max.Y), Math.Abs(Min.Y)),
+                Math.Max(Math.Abs(Max.Z), Math.Abs(Min.Z))
+                );
+            }
+        }
+        public uint TriangleCount
+        {
+            get
+            {
+                return IndexCount / 3;
+            }
+        }
         #endregion
 
         public static Model LoadFromStream(string name, Stream stream)

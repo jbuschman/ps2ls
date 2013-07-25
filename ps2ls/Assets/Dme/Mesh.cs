@@ -11,21 +11,58 @@ namespace ps2ls.Assets.Dme
 {
     public class Mesh
     {
-        public class VertexStream
+        public class VertexStreamReader
         {
+            public VertexStream BaseStream { get; private set; }
+
+            public VertexStreamReader(VertexStream stream)
+            {
+                if (stream == null)
+                    throw new ArgumentNullException();
+
+                BaseStream = stream;
+            }
+
+            public byte[] Read(VertexLayout.Entry.DataTypes dataType, int offset, int count)
+            {
+                int dataTypeSize = VertexLayout.Entry.GetDataTypeSize(dataType);
+                byte[] buffer = new byte[dataTypeSize * count];
+                BaseStream.Read(buffer, offset, dataTypeSize * count);
+                return buffer;
+
+                                None = -1,
+                Short2,
+                Short4,
+                Float1,
+                Float2,
+                Float3,
+                Float4,
+                D3dcolor,
+                ubyte4n,
+                float16_2,
+            }
+        }
+
+        public class VertexStream : Stream
+        {
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                throw new NotImplementedException();
+            }
+
             public static VertexStream LoadFromStream(Stream stream, int vertexCount, int bytesPerVertex)
             {
                 BinaryReader binaryReader = new BinaryReader(stream);
 
                 VertexStream vertexStream = new VertexStream();
                 vertexStream.BytesPerVertex = bytesPerVertex;
-                vertexStream.Data = binaryReader.ReadBytes(vertexCount * bytesPerVertex);
+                byte[] bytes = binaryReader.ReadBytes(vertexCount * bytesPerVertex);
+                vertexStream.Write(bytes, 0, bytes.Length);
 
                 return vertexStream;
             }
 
             public int BytesPerVertex { get; private set; }
-            public byte[] Data { get; private set; }
         }
 
         public VertexStream[] VertexStreams { get; private set; }

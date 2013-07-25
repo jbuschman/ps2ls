@@ -419,13 +419,11 @@ void main(void)
                     GCHandle[] streamDataGCHandles = new GCHandle[mesh.VertexStreams.Length];
 
                     for (int j = 0; j < streamDataGCHandles.Length; ++j)
-                    {
                         streamDataGCHandles[j] = GCHandle.Alloc(mesh.VertexStreams[j].Data, GCHandleType.Pinned);
-                    }
 
                     //fetch material definition and vertex layout
-                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
-                    VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
+                    MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
+                    VertexLayout vertexLayout = MaterialDefinitionLibrary.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
                     GL.Color3(meshColors[i % meshColors.Length]);
 
@@ -514,9 +512,7 @@ void main(void)
 
                     //free stream data handles
                     for (int j = 0; j < streamDataGCHandles.Length; ++j)
-                    {
                         streamDataGCHandles[j].Free();
-                    }
                 }
 
                 GL.UseProgram(0);
@@ -533,14 +529,9 @@ void main(void)
                 return;
 
             Vector3 center = (model.Max + model.Min) / 2.0f;
-            Vector3 extents = new Vector3(
-                Math.Max(Math.Abs(model.Max.X), Math.Abs(model.Min.X)),
-                Math.Max(Math.Abs(model.Max.Y), Math.Abs(model.Min.Y)),
-                Math.Max(Math.Abs(model.Max.Z), Math.Abs(model.Min.Z))
-                );
 
             Camera.Target = center;
-            Camera.Distance = extents.Length;
+            Camera.Distance = model.Extents.Length;
         }
     }
 }

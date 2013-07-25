@@ -36,15 +36,13 @@ namespace ps2ls.IO
 
         public override string ToString()
         {
-            return Name + " (*." + Extension + ")";
+            return string.Format("{0} (*.{1})", Name, Extension);
         }
 
         public void ExportModelToDirectoryWithExportOptions(Model model, string directory, ModelExportOptions exportOptions)
         {
             if (model == null || directory == null || exportOptions == null )
-            {
                 return;
-            }
 
             NumberFormatInfo format = new NumberFormatInfo();
             format.NumberDecimalSeparator = ".";
@@ -89,8 +87,8 @@ namespace ps2ls.IO
             {
                 Mesh mesh = model.Meshes[i];
 
-                MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
-                VertexLayout vertexLayout = MaterialDefinitionManager.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
+                MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
+                VertexLayout vertexLayout = MaterialDefinitionLibrary.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
 
                 //position
                 VertexLayout.Entry.DataTypes positionDataType;

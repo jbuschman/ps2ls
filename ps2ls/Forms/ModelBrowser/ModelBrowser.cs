@@ -312,7 +312,7 @@ namespace ps2ls.Forms
 
                 foreach (Material material in model.Materials)
                 {
-                    MaterialDefinition materialDefinition = MaterialDefinitionManager.Instance.GetMaterialDefinitionFromHash(material.MaterialDefinitionHash);
+                    MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.GetMaterialDefinitionFromHash(material.MaterialDefinitionHash);
 
                     foreach (DrawStyle drawStyle in materialDefinition.DrawStyles)
                     {
