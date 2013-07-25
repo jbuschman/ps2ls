@@ -22,7 +22,7 @@ namespace ps2ls.Forms
         {
             string assetsDirectory = AssetManager.DetectAssetDirectory();
 
-            if (assetsDirectory == String.Empty)
+            if (assetsDirectory == string.Empty)
             {
                 GenericDialog.ShowGenericDialog(
                     "Error",

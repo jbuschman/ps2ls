@@ -12,7 +12,7 @@ namespace ps2ls.IO
         public static string ReadNullTerminatedStringFromStream(Stream stream)
         {
             if (stream == null)
-                return String.Empty;
+                return string.Empty;
 
             BinaryReader binaryReader = new BinaryReader(stream);
             StringBuilder stringBuilder = new StringBuilder();
