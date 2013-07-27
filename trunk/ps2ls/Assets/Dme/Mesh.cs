@@ -11,58 +11,16 @@ namespace ps2ls.Assets.Dme
 {
     public class Mesh
     {
-        public class VertexStreamReader
+        public class VertexStream : MemoryStream
         {
-            public VertexStream BaseStream { get; private set; }
-
-            public VertexStreamReader(VertexStream stream)
+            public VertexStream(int bytesPerVertex, byte[] data)
             {
-                if (stream == null)
-                    throw new ArgumentNullException();
-
-                BaseStream = stream;
-            }
-
-            public byte[] Read(VertexLayout.Entry.DataTypes dataType, int offset, int count)
-            {
-                int dataTypeSize = VertexLayout.Entry.GetDataTypeSize(dataType);
-                byte[] buffer = new byte[dataTypeSize * count];
-                BaseStream.Read(buffer, offset, dataTypeSize * count);
-                return buffer;
-
-                                None = -1,
-                Short2,
-                Short4,
-                Float1,
-                Float2,
-                Float3,
-                Float4,
-                D3dcolor,
-                ubyte4n,
-                float16_2,
-            }
-        }
-
-        public class VertexStream : Stream
-        {
-            public override int Read(byte[] buffer, int offset, int count)
-            {
-                throw new NotImplementedException();
-            }
-
-            public static VertexStream LoadFromStream(Stream stream, int vertexCount, int bytesPerVertex)
-            {
-                BinaryReader binaryReader = new BinaryReader(stream);
-
-                VertexStream vertexStream = new VertexStream();
-                vertexStream.BytesPerVertex = bytesPerVertex;
-                byte[] bytes = binaryReader.ReadBytes(vertexCount * bytesPerVertex);
-                vertexStream.Write(bytes, 0, bytes.Length);
-
-                return vertexStream;
+                BytesPerVertex = bytesPerVertex;
+                Data = data;
             }
 
             public int BytesPerVertex { get; private set; }
+            public byte[] Data { get; private set; }
         }
 
         public VertexStream[] VertexStreams { get; private set; }
@@ -103,8 +61,8 @@ namespace ps2ls.Assets.Dme
             for (int j = 0; j < vertexStreamCount; ++j)
             {
                 bytesPerVertex = binaryReader.ReadUInt32();
-
-                VertexStream vertexStream = VertexStream.LoadFromStream(binaryReader.BaseStream, (int)mesh.VertexCount, (int)bytesPerVertex);
+                byte[] buffer = binaryReader.ReadBytes((int)mesh.VertexCount * (int)bytesPerVertex);
+                VertexStream vertexStream = new VertexStream((int)bytesPerVertex, buffer);
 
                 if (vertexStream != null)
                     mesh.VertexStreams[j] = vertexStream;

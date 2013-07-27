@@ -12,7 +12,7 @@ using OpenTK;
 
 namespace ps2ls.IO
 {
-    public class ObjModelExporter : ModelExporter
+    public class ObjModelExporter : IModelExporter
     {
         public string Name
         {
@@ -78,7 +78,7 @@ namespace ps2ls.IO
                 }
             }
 
-            string path = directory + @"\" + Path.GetFileNameWithoutExtension(model.Name) + ".obj";
+            string path = string.Format(@"{0}\{1}.{2}", directory, Path.GetFileNameWithoutExtension(model.Name), Extension);
 
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write);
             StreamWriter streamWriter = new StreamWriter(fileStream);
@@ -95,19 +95,25 @@ namespace ps2ls.IO
                 int positionOffset;
                 int positionStreamIndex;
 
-                vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
-                
-                Mesh.VertexStream positionStream = mesh.VertexStreams[positionStreamIndex];
+                bool positionPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
 
-                for (int j = 0; j < mesh.VertexCount; ++j)
+                if (positionPresent)
                 {
-                    Vector3 position = readVector3(exportOptions, positionOffset, positionStream, j);
+                    Mesh.VertexStream positionStream = mesh.VertexStreams[positionStreamIndex];
 
-                    position.X *= exportOptions.Scale.X;
-                    position.Y *= exportOptions.Scale.Y;
-                    position.Z *= exportOptions.Scale.Z;
+                    for (int j = 0; j < mesh.VertexCount; ++j)
+                    {
+                        Vector3 position = Vector3.Zero;
+                        position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
+                        position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
+                        position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
 
-                    streamWriter.WriteLine("v " + position.X.ToString(format) + " " + position.Y.ToString(format) + " " + position.Z.ToString(format));
+                        //todo: convert x/y/z coordinates
+
+                        position.Scale(exportOptions.Scale);
+
+                        streamWriter.WriteLine("v {0} {1} {2}", position.X.ToString(format), position.Y.ToString(format), position.Z.ToString(format));
+                    }
                 }
 
                 //texture coordinates
@@ -117,7 +123,7 @@ namespace ps2ls.IO
                     int texCoord0Offset = 0;
                     int texCoord0StreamIndex = 0;
 
-                    Boolean texCoord0Present = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0StreamIndex, out texCoord0Offset);
+                    bool texCoord0Present = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0StreamIndex, out texCoord0Offset);
 
                     if (texCoord0Present)
                     {
@@ -125,7 +131,7 @@ namespace ps2ls.IO
 
                         for (int j = 0; j < mesh.VertexCount; ++j)
                         {
-                            Vector2 texCoord;
+                            Vector2 texCoord = Vector2.Zero;
 
                             switch (texCoord0DataType)
                             {
@@ -137,13 +143,61 @@ namespace ps2ls.IO
                                     texCoord.X = Half.FromBytes(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + texCoord0Offset + 0).ToSingle();
                                     texCoord.Y = 1.0f - Half.FromBytes(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + texCoord0Offset + 2).ToSingle();
                                     break;
-                                default:
-                                    texCoord.X = 0;
-                                    texCoord.Y = 0;
-                                    break;
                             }
 
-                            streamWriter.WriteLine("vt " + texCoord.X.ToString(format) + " " + texCoord.Y.ToString(format));
+                            streamWriter.WriteLine("vt {0} {2}", texCoord.X.ToString(format), texCoord.Y.ToString(format));
+                        }
+                    }
+
+                    if (exportOptions.Normals)
+                    {
+                        VertexLayout.Entry.DataTypes normalDataType;
+                        int normalOffset = 0;
+                        int normalStreamIndex = 0;
+
+                        bool normalPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStreamIndex, out normalOffset);
+
+                        if (normalPresent)
+                        {
+                            Mesh.VertexStream normalStream = mesh.VertexStreams[positionStreamIndex];
+
+                            for(int j = 0; j < mesh.VertexCount; ++j)
+                            {
+                                Vector3 normal = Vector3.Zero;
+
+                                switch (texCoord0DataType)
+                                {
+                                    case VertexLayout.Entry.DataTypes.Float3:
+                                        normal.X = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 0);
+                                        normal.Y = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 4);
+                                        normal.Z = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 8);
+                                        break;
+                                    case VertexLayout.Entry.DataTypes.ubyte4n:
+                                        normal.X = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 0] - 127) / 128.0f;
+                                        normal.Y = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 1] - 127) / 128.0f;
+                                        normal.Z = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 2] - 127) / 128.0f;
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            VertexLayout.Entry.DataTypes binormalDataType;
+                            int binormalOffset = 0;
+                            int binormalStreamIndex = 0;
+
+                            bool binormalPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Binormal, 0, out binormalDataType, out binormalStreamIndex, out binormalOffset);
+
+                            VertexLayout.Entry.DataTypes tangentDataType;
+                            int tangentOffset = 0;
+                            int tangentStreamIndex = 0;
+
+                            bool tangentPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Tangent, 0, out tangentDataType, out tangentOffset, out tangentStreamIndex);
+
+                            if (binormalPresent && tangentPresent)
+                            {
+
+                            }
                         }
                     }
                 }
@@ -156,11 +210,13 @@ namespace ps2ls.IO
             {
                 Mesh mesh = model.Meshes[i];
 
-                streamWriter.WriteLine("g Mesh" + i);
+                streamWriter.WriteLine("g Mesh{0}", i);
 
                 for (int j = 0; j < mesh.IndexCount; j += 3)
                 {
-                    uint index0, index1, index2;
+                    uint index0 = 0;
+                    uint index1 = 0;
+                    uint index2 = 0;
 
                     switch (mesh.IndexSize)
                     {
@@ -174,28 +230,23 @@ namespace ps2ls.IO
                             index1 = vertexCount + BitConverter.ToUInt32(mesh.IndexData, (j * 4) + 4) + 1;
                             index2 = vertexCount + BitConverter.ToUInt32(mesh.IndexData, (j * 4) + 8) + 1;
                             break;
-                        default:
-                            index0 = 0;
-                            index1 = 0;
-                            index2 = 0;
-                            break;
                     }
 
                     if (exportOptions.Normals && exportOptions.TextureCoordinates)
                     {
-                        streamWriter.WriteLine("f " + index2 + "/" + index2 + "/" + index2 + " " + index1 + "/" + index1 + "/" + index1 + " " + index0 + "/" + index0 + "/" + index0);
+                        streamWriter.WriteLine("f {0}/{0}/{0} {1}/{1}/{1} {2}/{2}/{2}", index2, index1, index0);
                     }
                     else if (exportOptions.Normals)
                     {
-                        streamWriter.WriteLine("f " + index2 + "//" + index2 + " " + index1 + "//" + index1 + " " + index0 + "//" + index0);
+                        streamWriter.WriteLine("f {0}//{0} {1}//{1} {2}//{2}", index2, index1, index0);
                     }
                     else if (exportOptions.TextureCoordinates)
                     {
-                        streamWriter.WriteLine("f " + index2 + "/" + index2 + " " + index1 + "/" + index1 + " " + index0 + "/" + index0);
+                        streamWriter.WriteLine("f {0}/{0} {1}/{1} {2}/{2}", index2, index1, index0);
                     }
                     else
                     {
-                        streamWriter.WriteLine("f " + index2 + " " + index1 + " " + index0);
+                        streamWriter.WriteLine("f {0} {1} {2}", index2, index1, index0);
                     }
                 }
 
@@ -203,52 +254,6 @@ namespace ps2ls.IO
             }
 
             streamWriter.Close();
-        }
-
-        private static Vector3 readVector3(ModelExportOptions exportOptions, int offset, Mesh.VertexStream vertexStream, int index)
-        {
-            Vector3 vector3 = new Vector3();
-
-            switch (exportOptions.LeftAxis)
-            {
-                case Axes.X:
-                    vector3.X = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 0);
-                    break;
-                case Axes.Y:
-                    vector3.Y = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 0);
-                    break;
-                case Axes.Z:
-                    vector3.Z = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 0);
-                    break;
-            }
-
-            switch (exportOptions.UpAxis)
-            {
-                case Axes.X:
-                    vector3.X = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 4);
-                    break;
-                case Axes.Y:
-                    vector3.Y = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 4);
-                    break;
-                case Axes.Z:
-                    vector3.Z = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 4);
-                    break;
-            }
-
-            switch (exportOptions.ForwardAxis)
-            {
-                case Axes.X:
-                    vector3.X = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 8);
-                    break;
-                case Axes.Y:
-                    vector3.Y = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 8);
-                    break;
-                case Axes.Z:
-                    vector3.Z = BitConverter.ToSingle(vertexStream.Data, (vertexStream.BytesPerVertex * index) + offset + 8);
-                    break;
-            }
-
-            return vector3;
         }
     }
 }

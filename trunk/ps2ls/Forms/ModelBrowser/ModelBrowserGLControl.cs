@@ -445,7 +445,7 @@ void main(void)
                     VertexLayout.Entry.DataTypes positionDataType = VertexLayout.Entry.DataTypes.None;
                     int positionStream = 0;
                     int positionOffset = 0;
-                    bool positionExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
+                    bool positionExists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStream, out positionOffset);
 
                     if (positionExists)
                     {
@@ -459,7 +459,7 @@ void main(void)
                     VertexLayout.Entry.DataTypes normalDataType = VertexLayout.Entry.DataTypes.None;
                     int normalStream = 0;
                     int normalOffset = 0;
-                    bool normalExists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
+                    bool normalExists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStream, out normalOffset);
 
                     if (normalExists)
                     {
@@ -473,7 +473,7 @@ void main(void)
                     VertexLayout.Entry.DataTypes texCoord0DataType = VertexLayout.Entry.DataTypes.None;
                     int texCoord0Stream = 0;
                     int texCoord0Offset = 0;
-                    bool texCoord0Exists = vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0Stream, out texCoord0Offset);
+                    bool texCoord0Exists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0Stream, out texCoord0Offset);
 
                     if (texCoord0Exists)
                     {

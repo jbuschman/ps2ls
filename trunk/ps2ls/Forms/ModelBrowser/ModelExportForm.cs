@@ -75,7 +75,7 @@ namespace ps2ls.Forms
         {
             List<object> arguments = (List<object>)argument;
 
-            ModelExporter modelExporter = (ModelExporter)arguments[0];
+            IModelExporter modelExporter = (IModelExporter)arguments[0];
             string directory = (String)arguments[1];
             List<string> fileNames = (List<string>)arguments[2];
             ModelExportOptions exportOptions = (ModelExportOptions)arguments[3];
@@ -110,7 +110,7 @@ namespace ps2ls.Forms
             return result;
         }
 
-        private void applyModelExporterOptions(ModelExporter modelExporter)
+        private void applyModelExporterOptions(IModelExporter modelExporter)
         {
             normalsCheckBox.Checked = modelExporter.CanExportNormals;
             normalsCheckBox.Enabled = modelExporter.CanExportNormals;
@@ -185,7 +185,7 @@ namespace ps2ls.Forms
             if (modelFormatComboBox.SelectedItem == null)
                 return;
 
-            ModelExporter modelExporter = (ModelExporter)modelFormatComboBox.SelectedItem;
+            IModelExporter modelExporter = (IModelExporter)modelFormatComboBox.SelectedItem;
 
             applyModelExporterOptions(modelExporter);
         }

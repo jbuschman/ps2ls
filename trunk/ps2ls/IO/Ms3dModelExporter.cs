@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ps2ls.IO
 {
-    public class Ms3dModelExporter : ModelExporter
+    public class Ms3dModelExporter : IModelExporter
     {
         private const int MAX_VERTICES = 65534;
         private const int MAX_TRIANGLES = 65534;
@@ -78,14 +78,12 @@ namespace ps2ls.IO
                 int positionOffset;
                 int positionStreamIndex;
 
-                vertexLayout.GetEntryInfoFromDataUsageAndUsageIndex(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
+                vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
                 
                 Mesh.VertexStream positionStream = mesh.VertexStreams[positionStreamIndex];
 
-
                 foreach (Mesh.VertexStream vertexStream in mesh.VertexStreams)
                 {
-                    materialDefinition.DrawStyles[0].VertexLayoutNameHash
                 }
             }
 
