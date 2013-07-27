@@ -54,7 +54,7 @@ namespace ps2ls.IO
         public TextureExporter.TextureFormatInfo TextureFormat;
     }
 
-    public interface ModelExporter
+    public interface IModelExporter
     {
         string Name { get; }
         string Extension { get; }

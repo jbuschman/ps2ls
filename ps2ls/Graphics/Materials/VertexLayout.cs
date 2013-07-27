@@ -194,7 +194,7 @@ namespace ps2ls.Graphics.Materials
             return count;
         }
 
-        public Boolean GetEntryInfoFromDataUsageAndUsageIndex(Entry.DataUsages dataUsage, int usageIndex, out Entry.DataTypes dataType, out int stream, out int offset)
+        public Boolean GetEntryInfo(Entry.DataUsages dataUsage, int usageIndex, out Entry.DataTypes dataType, out int stream, out int offset)
         {
             dataType = Entry.DataTypes.None;
             stream = 0;
