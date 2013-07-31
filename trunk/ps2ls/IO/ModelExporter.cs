@@ -46,11 +46,11 @@ namespace ps2ls.IO
                 return Axes.Z;
             }
         }
-        public Boolean Normals;
-        public Boolean TextureCoordinates;
+        public bool Normals;
+        public bool TextureCoordinates;
         public Vector3 Scale;
-        public Boolean Textures;
-        public Boolean Package;
+        public bool Textures;
+        public bool Package;
         public TextureExporter.TextureFormatInfo TextureFormat;
     }
 
@@ -58,8 +58,8 @@ namespace ps2ls.IO
     {
         string Name { get; }
         string Extension { get; }
-        Boolean CanExportNormals { get; }
-        Boolean CanExportTextureCoordinates { get; }
+        bool CanExportNormals { get; }
+        bool CanExportTextureCoordinates { get; }
 
         void ExportModelToDirectoryWithExportOptions(Model model, string directory, ModelExportOptions exportOptions);
     }

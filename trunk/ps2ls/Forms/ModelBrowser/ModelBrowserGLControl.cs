@@ -422,8 +422,7 @@ void main(void)
                         streamDataGCHandles[j] = GCHandle.Alloc(mesh.VertexStreams[j].Data, GCHandleType.Pinned);
 
                     //fetch material definition and vertex layout
-                    MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
-                    VertexLayout vertexLayout = MaterialDefinitionLibrary.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
+                    VertexLayout vertexLayout = mesh.GetVertexLayout(0);
 
                     GL.Color3(meshColors[i % meshColors.Length]);
 

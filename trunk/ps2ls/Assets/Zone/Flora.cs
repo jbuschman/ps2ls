@@ -12,7 +12,7 @@ namespace ps2ls.Assets.Zone
         public string Name { get; private set; }
         public string Texture { get; private set; }
         public string ModelFile { get; private set; }
-        public Boolean Unknown0 { get; private set; }
+        public bool Unknown0 { get; private set; }
         public float Unknown1 { get; private set; }
         public float Unknown2 { get; private set; }
 

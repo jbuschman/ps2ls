@@ -26,7 +26,7 @@ namespace ps2ls.IO
 
         public bool CanExportNormals
         {
-            get { return false; }
+            get { return true; }
         }
 
         public bool CanExportTextureCoordinates
@@ -44,8 +44,8 @@ namespace ps2ls.IO
             if (model == null || directory == null || exportOptions == null )
                 return;
 
-            NumberFormatInfo format = new NumberFormatInfo();
-            format.NumberDecimalSeparator = ".";
+            NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
+            numberFormatInfo.NumberDecimalSeparator = ".";
 
             if (exportOptions.Package)
             {
@@ -65,12 +65,10 @@ namespace ps2ls.IO
                 foreach(string textureString in model.TextureStrings)
                 {
                     MemoryStream textureMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(textureString);
-
                     if(textureMemoryStream == null)
                         continue;
 
                     Image textureImage = imageImporter.LoadImageFromStream(textureMemoryStream);
-
                     if(textureImage == null)
                         continue;
 
@@ -87,118 +85,36 @@ namespace ps2ls.IO
             {
                 Mesh mesh = model.Meshes[i];
 
-                MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.MaterialDefinitions[model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash];
-                VertexLayout vertexLayout = MaterialDefinitionLibrary.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
-
-                //position
-                VertexLayout.Entry.DataTypes positionDataType;
-                int positionOffset;
-                int positionStreamIndex;
-
-                bool positionPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Position, 0, out positionDataType, out positionStreamIndex, out positionOffset);
-
-                if (positionPresent)
+                //positions
+                List<Vector3> positions;
+                if (mesh.GetPositions(out positions, 0))
                 {
-                    Mesh.VertexStream positionStream = mesh.VertexStreams[positionStreamIndex];
-
-                    for (int j = 0; j < mesh.VertexCount; ++j)
+                    foreach (Vector3 position in positions)
                     {
-                        Vector3 position = Vector3.Zero;
-                        position.X = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 0);
-                        position.Y = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 4);
-                        position.Z = BitConverter.ToSingle(positionStream.Data, (positionStream.BytesPerVertex * j) + positionOffset + 8);
-
-                        //todo: convert x/y/z coordinates
-
-                        position.Scale(exportOptions.Scale);
-
-                        streamWriter.WriteLine("v {0} {1} {2}", position.X.ToString(format), position.Y.ToString(format), position.Z.ToString(format));
+                        Vector3 scaledPosition = Vector3.Multiply(position, exportOptions.Scale);
+                        streamWriter.WriteLine("v {0} {1} {2}", scaledPosition.X.ToString(numberFormatInfo), scaledPosition.Y.ToString(numberFormatInfo), scaledPosition.Z.ToString(numberFormatInfo));
                     }
                 }
 
                 //texture coordinates
                 if (exportOptions.TextureCoordinates)
                 {
-                    VertexLayout.Entry.DataTypes texCoord0DataType;
-                    int texCoord0Offset = 0;
-                    int texCoord0StreamIndex = 0;
-
-                    bool texCoord0Present = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Texcoord, 0, out texCoord0DataType, out texCoord0StreamIndex, out texCoord0Offset);
-
-                    if (texCoord0Present)
+                    Vector2[] texCoords;
+                    if (mesh.GetTexCoords(out texCoords, 0))
                     {
-                        Mesh.VertexStream texCoord0Stream = mesh.VertexStreams[texCoord0StreamIndex];
-
-                        for (int j = 0; j < mesh.VertexCount; ++j)
-                        {
-                            Vector2 texCoord = Vector2.Zero;
-
-                            switch (texCoord0DataType)
-                            {
-                                case VertexLayout.Entry.DataTypes.Float2:
-                                    texCoord.X = BitConverter.ToSingle(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + 0);
-                                    texCoord.Y = 1.0f - BitConverter.ToSingle(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + 4);
-                                    break;
-                                case VertexLayout.Entry.DataTypes.float16_2:
-                                    texCoord.X = Half.FromBytes(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + texCoord0Offset + 0).ToSingle();
-                                    texCoord.Y = 1.0f - Half.FromBytes(texCoord0Stream.Data, (j * texCoord0Stream.BytesPerVertex) + texCoord0Offset + 2).ToSingle();
-                                    break;
-                            }
-
-                            streamWriter.WriteLine("vt {0} {2}", texCoord.X.ToString(format), texCoord.Y.ToString(format));
-                        }
+                        foreach (Vector2 texcoord in texCoords)
+                            streamWriter.WriteLine("vt {0} {1}", texcoord.X.ToString(numberFormatInfo), (-texcoord.Y).ToString(numberFormatInfo));
                     }
+                }
 
-                    if (exportOptions.Normals)
+                //normals
+                if (exportOptions.Normals)
+                {
+                    Vector3[] normals;
+                    if (mesh.GetNormals(out normals, 0))
                     {
-                        VertexLayout.Entry.DataTypes normalDataType;
-                        int normalOffset = 0;
-                        int normalStreamIndex = 0;
-
-                        bool normalPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Normal, 0, out normalDataType, out normalStreamIndex, out normalOffset);
-
-                        if (normalPresent)
-                        {
-                            Mesh.VertexStream normalStream = mesh.VertexStreams[positionStreamIndex];
-
-                            for(int j = 0; j < mesh.VertexCount; ++j)
-                            {
-                                Vector3 normal = Vector3.Zero;
-
-                                switch (texCoord0DataType)
-                                {
-                                    case VertexLayout.Entry.DataTypes.Float3:
-                                        normal.X = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 0);
-                                        normal.Y = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 4);
-                                        normal.Z = BitConverter.ToSingle(normalStream.Data, (j * normalStream.BytesPerVertex) + 8);
-                                        break;
-                                    case VertexLayout.Entry.DataTypes.ubyte4n:
-                                        normal.X = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 0] - 127) / 128.0f;
-                                        normal.Y = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 1] - 127) / 128.0f;
-                                        normal.Z = (float)(normalStream.Data[(j * normalStream.BytesPerVertex) + 2] - 127) / 128.0f;
-                                        break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            VertexLayout.Entry.DataTypes binormalDataType;
-                            int binormalOffset = 0;
-                            int binormalStreamIndex = 0;
-
-                            bool binormalPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Binormal, 0, out binormalDataType, out binormalStreamIndex, out binormalOffset);
-
-                            VertexLayout.Entry.DataTypes tangentDataType;
-                            int tangentOffset = 0;
-                            int tangentStreamIndex = 0;
-
-                            bool tangentPresent = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Tangent, 0, out tangentDataType, out tangentOffset, out tangentStreamIndex);
-
-                            if (binormalPresent && tangentPresent)
-                            {
-
-                            }
-                        }
+                        foreach (Vector3 normal in normals)
+                            streamWriter.WriteLine("vn {0} {1} {2}", normal.X.ToString(numberFormatInfo), normal.Y.ToString(numberFormatInfo), normal.Z.ToString(numberFormatInfo));
                     }
                 }
             }
@@ -212,27 +128,16 @@ namespace ps2ls.IO
 
                 streamWriter.WriteLine("g Mesh{0}", i);
 
+                uint[] indices;
+                mesh.GetIndices(out indices);
+
                 for (int j = 0; j < mesh.IndexCount; j += 3)
                 {
-                    uint index0 = 0;
-                    uint index1 = 0;
-                    uint index2 = 0;
+                    uint index0 = indices[j + 0];
+                    uint index1 = indices[j + 1];
+                    uint index2 = indices[j + 2];
 
-                    switch (mesh.IndexSize)
-                    {
-                        case 2:
-                            index0 = vertexCount + BitConverter.ToUInt16(mesh.IndexData, (j * 2) + 0) + 1;
-                            index1 = vertexCount + BitConverter.ToUInt16(mesh.IndexData, (j * 2) + 2) + 1;
-                            index2 = vertexCount + BitConverter.ToUInt16(mesh.IndexData, (j * 2) + 4) + 1;
-                            break;
-                        case 4:
-                            index0 = vertexCount + BitConverter.ToUInt32(mesh.IndexData, (j * 4) + 0) + 1;
-                            index1 = vertexCount + BitConverter.ToUInt32(mesh.IndexData, (j * 4) + 4) + 1;
-                            index2 = vertexCount + BitConverter.ToUInt32(mesh.IndexData, (j * 4) + 8) + 1;
-                            break;
-                    }
-
-                    if (exportOptions.Normals && exportOptions.TextureCoordinates)
+                    if (exportOptions.TextureCoordinates && exportOptions.Normals)
                     {
                         streamWriter.WriteLine("f {0}/{0}/{0} {1}/{1}/{1} {2}/{2}/{2}", index2, index1, index0);
                     }
