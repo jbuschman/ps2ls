@@ -84,6 +84,7 @@
     <Compile Include="Assets\Cnk\Cnk0.cs" />
     <Compile Include="Assets\Dma\Material.cs" />
     <Compile Include="Assets\Dme\BoneMap.cs" />
+    <Compile Include="Assets\Dme\VertexStream.cs" />
     <Compile Include="Assets\Zone\Actor.cs" />
     <Compile Include="Assets\Zone\Eco.cs" />
     <Compile Include="Assets\Zone\Flora.cs" />
@@ -215,7 +216,6 @@
       <DependentUpon>AssetBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="IO\ModelExportException.cs" />
-    <Compile Include="IO\Ms3dModelExporter.cs" />
     <Compile Include="IO\ObjModelExporter.cs" />
     <Compile Include="IO\TextureExporter.cs" />
     <Compile Include="IO\Utils.cs" />

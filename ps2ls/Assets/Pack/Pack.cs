@@ -90,7 +90,7 @@ namespace ps2ls.Assets.Pack
             return pack;
         }
 
-        public Boolean ExtractAllAssetsToDirectory(string directory)
+        public bool ExtractAllAssetsToDirectory(string directory)
         {
             FileStream fileStream = null;
 
@@ -122,7 +122,7 @@ namespace ps2ls.Assets.Pack
             return true;
         }
 
-        public Boolean ExtractAssetsToDirectory(IEnumerable<string> names, string directory)
+        public bool ExtractAssetsToDirectory(IEnumerable<string> names, string directory)
         {
             FileStream fileStream = null;
 
@@ -162,7 +162,7 @@ namespace ps2ls.Assets.Pack
             return true;
         }
 
-        public Boolean ExtractAssetToDirectory(string name, string directory) 
+        public bool ExtractAssetToDirectory(string name, string directory) 
         {
             FileStream fileStream = null;
 
@@ -230,7 +230,7 @@ namespace ps2ls.Assets.Pack
             return memoryStream;
         }
 
-        public Boolean CreateTemporaryFileAndOpen(string name)
+        public bool CreateTemporaryFileAndOpen(string name)
         {
             string tempPath = System.IO.Path.GetTempPath();
 

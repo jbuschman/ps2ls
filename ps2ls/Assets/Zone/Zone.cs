@@ -130,6 +130,8 @@ namespace ps2ls.Assets.Zone
             zone.Cnk0s = new Cnk0[32, 32];
 
             //cnk0s
+            int z = 0;
+            int w = 0;
             for (int x = zone.StartX; x <= -zone.StartX; x += 4)
             {
                 for (int y = zone.StartY; y <= -zone.StartY; y += 4)
@@ -146,8 +148,10 @@ namespace ps2ls.Assets.Zone
                         return LoadError.BadCnk;
                     }
 
-                    zone.Cnk0s[x, y] = cnk0;
+                    zone.Cnk0s[z, w++] = cnk0;
                 }
+
+                z++;
             }
 
             return LoadError.None;

@@ -59,7 +59,7 @@ namespace ps2ls.Graphics.Materials
             //vertex layouts
             loadVertexLayoutsByXPathNavigator(navigator.Clone());
 
-            //TODO: parameter groups
+            //TODO: parameter groups?
 
             //material definitions
             loadMaterialDefinitionsByXPathNavigator(navigator.Clone());
