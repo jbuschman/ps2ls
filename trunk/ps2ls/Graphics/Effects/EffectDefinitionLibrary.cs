@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
+using System.Xml.Serialization;
 
 namespace ps2ls.Graphics.Effects
 {
@@ -15,14 +17,7 @@ namespace ps2ls.Graphics.Effects
         public static void CreateInstance()
         {
             instance = new EffectDefinitionLibrary();
-
-            StringReader stringReader = new StringReader(Properties.Resources.materials_3);
-            instance.loadFromStringReader(stringReader);
-        }
-
-        private bool loadFromStringReader(StringReader stringReader)
-        {
-            throw new NotImplementedException();
+            instance.load();
         }
 
         public static void DeleteInstance()
@@ -33,6 +28,28 @@ namespace ps2ls.Graphics.Effects
         public static EffectDefinitionLibrary Instance { get { return instance; } }
         #endregion
 
-        public Dictionary<string, EffectDefinition> EffectsDefinitions;
+        [XmlElement]
+        public List<EffectDefinition> EffectsDefinitions { get; private set; }
+
+        EffectDefinitionLibrary()
+        {
+            EffectsDefinitions = new List<EffectDefinition>();
+        }
+
+        private void load()
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(EffectDefinitionLibrary));
+
+            EffectDefinition a = new EffectDefinition();
+            EffectDefinition b = new EffectDefinition();
+            a.Name = "BumpRigid.fxo";
+            b.Name = "FoliagePick.fxo";
+            EffectsDefinitions.Add(a);
+            EffectsDefinitions.Add(b);
+
+            FileStream fileStream = new FileStream("test.xml", FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write);
+            xmlSerializer.Serialize(fileStream, this);
+            fileStream.Close();
+        }
     }
 }

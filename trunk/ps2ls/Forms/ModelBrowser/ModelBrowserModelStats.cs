@@ -18,6 +18,7 @@ namespace ps2ls.Forms
     public partial class ModelBrowserModelStats : UserControl
     {
         private Model model = null;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Model Model
         {
             get { return model; }

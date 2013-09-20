@@ -11,15 +11,8 @@ namespace ps2ls.Forms
 {
     public partial class ModelExportForm : Form
     {
-        public class ModelAxesPreset
+        public struct ModelAxesPreset
         {
-            public ModelAxesPreset(string name, Axes upAxis, Axes leftAxis)
-            {
-                Name = name;
-                UpAxis = upAxis;
-                LeftAxis = leftAxis;
-            }
-
             public string Name;
             public Axes UpAxis;
             public Axes LeftAxis;
@@ -34,19 +27,35 @@ namespace ps2ls.Forms
         {
             InitializeComponent();
         }
-        private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
-        private GenericLoadingForm loadingForm;
-        private ModelExportOptions modelExportOptions = new ModelExportOptions();
 
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<string> FileNames { get; set; }
+        public List<String> FileNames { get; set; }
+
+        private GenericLoadingForm loadingForm;
+        private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();
+        private ModelExportOptions modelExportOptions = new ModelExportOptions();
 
         private static List<ModelAxesPreset> modelAxesPresets = new List<ModelAxesPreset>();
 
+        private static void createModelAxesPresets()
+        {
+            modelAxesPresets = new List<ModelAxesPreset>();
+
+            ModelAxesPreset modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Default";
+            modelAxesPreset.UpAxis = Axes.Y;
+            modelAxesPreset.LeftAxis = Axes.X;
+            modelAxesPresets.Add(modelAxesPreset);
+
+            modelAxesPreset = new ModelAxesPreset();
+            modelAxesPreset.Name = "Autodesk® 3ds Max";
+            modelAxesPreset.UpAxis = Axes.Z;
+            modelAxesPreset.LeftAxis = Axes.Y;
+            modelAxesPresets.Add(modelAxesPreset);
+        }
+
         static ModelExportForm()
         {
-            modelAxesPresets.Add(new ModelAxesPreset("Default", Axes.Y, Axes.X));
-            modelAxesPresets.Add(new ModelAxesPreset("Autodesk® 3ds Max", Axes.Z, Axes.Y));
+            createModelAxesPresets();
         }
 
         private void exportDoWork(object sender, DoWorkEventArgs e)
@@ -60,7 +69,7 @@ namespace ps2ls.Forms
 
             Close();
 
-            MessageBox.Show("Successfully exported " + (int)e.Result + " models.");
+            MessageBox.Show("Successfully exported " + (Int32)e.Result + " models.");
         }
 
         private void exportProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -72,36 +81,40 @@ namespace ps2ls.Forms
             }
         }
 
-        private int exportModel(object sender, object argument)
+        private Int32 exportModel(object sender, object argument)
         {
             List<object> arguments = (List<object>)argument;
 
-            IModelExporter modelExporter = (IModelExporter)arguments[0];
+            ModelExporter modelExporter = (ModelExporter)arguments[0];
             string directory = (String)arguments[1];
-            List<string> fileNames = (List<string>)arguments[2];
+            List<String> fileNames = (List<String>)arguments[2];
             ModelExportOptions exportOptions = (ModelExportOptions)arguments[3];
 
             BackgroundWorker backgroundWorker = (BackgroundWorker)sender;
 
-            int result = 0;
+            Int32 result = 0;
 
-            for (int i = 0; i < fileNames.Count; ++i)
+            for (Int32 i = 0; i < fileNames.Count; ++i)
             {
                 string fileName = fileNames[i];
 
                 MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(fileName);
 
                 if (memoryStream == null)
+                {
                     continue;
+                }
 
                 Model model = Model.LoadFromStream(fileName, memoryStream);
 
                 if (model == null)
+                {
                     continue;
+                }
 
                 modelExporter.ExportModelToDirectoryWithExportOptions(model, directory, exportOptions);
 
-                int percent = (int)(((Single)i / (Single)fileNames.Count) * 100);
+                Int32 percent = (Int32)(((Single)i / (Single)fileNames.Count) * 100);
 
                 backgroundWorker.ReportProgress(percent, fileName);
 
@@ -111,7 +124,7 @@ namespace ps2ls.Forms
             return result;
         }
 
-        private void applyModelExporterOptions(IModelExporter modelExporter)
+        private void applyModelExporterOptions(ModelExporter modelExporter)
         {
             normalsCheckBox.Checked = modelExporter.CanExportNormals;
             normalsCheckBox.Enabled = modelExporter.CanExportNormals;
@@ -125,7 +138,9 @@ namespace ps2ls.Forms
             modelAxesPresetComboBox.Items.Clear();
 
             foreach (ModelAxesPreset modelAxesPreset in modelAxesPresets)
+            {
                 modelAxesPresetComboBox.Items.Add(modelAxesPreset);
+            }
 
             modelAxesPresetComboBox.SelectedIndex = modelAxesPresetComboBox.Items.Count > 0 ? 0 : -1;
         }
@@ -135,7 +150,9 @@ namespace ps2ls.Forms
             textureFormatComboBox.Items.Clear();
 
             foreach (TextureExporter.TextureFormatInfo textureFormat in TextureExporter.TextureFormats)
+            {
                 textureFormatComboBox.Items.Add(textureFormat);
+            }
 
             textureFormatComboBox.SelectedIndex = textureFormatComboBox.Items.Count > 0 ? 0 : -1;
         }
@@ -186,7 +203,7 @@ namespace ps2ls.Forms
             if (modelFormatComboBox.SelectedItem == null)
                 return;
 
-            IModelExporter modelExporter = (IModelExporter)modelFormatComboBox.SelectedItem;
+            ModelExporter modelExporter = (ModelExporter)modelFormatComboBox.SelectedItem;
 
             applyModelExporterOptions(modelExporter);
         }
@@ -267,8 +284,8 @@ namespace ps2ls.Forms
         private void modelAxesPresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ModelAxesPreset modelAxesPreset = (ModelAxesPreset)modelAxesPresetComboBox.SelectedItem;
-            leftAxisComboBox.SelectedIndex = (int)modelAxesPreset.LeftAxis;
-            upAxisComboBox.SelectedIndex = (int)modelAxesPreset.UpAxis;
+            leftAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.LeftAxis;
+            upAxisComboBox.SelectedIndex = (Int32)modelAxesPreset.UpAxis;
         }
 
         private void applyCurrentStateToExportOptions()

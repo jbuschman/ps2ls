@@ -11,6 +11,17 @@ using ps2ls.Cryptography;
 
 namespace ps2ls.Assets.Dme
 {
+    public class ModelInstance
+    {
+        public ModelInstance(Model model)
+        {
+            this.Model = model;
+        }
+
+        public Model Model;
+        public Matrix4 Transform;
+    }
+
     public class Model
     {
         public uint Version { get; private set; }

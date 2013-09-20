@@ -19,6 +19,7 @@ namespace ps2ls.Forms
             InitializeComponent();
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public List<string> FileNames { get; set; }
 
         private BackgroundWorker exportBackgroundWorker = new BackgroundWorker();

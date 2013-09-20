@@ -18,10 +18,15 @@ namespace ps2ls.Forms
 {
     public partial class MainForm : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public AssetBrowser AssetBrowser { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ModelBrowser ModelBrowser { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public TextureBrowser TextureBrowser { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public SoundBrowser SoundBrowser { get; private set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ZoneBrowser ZoneBrowser { get; private set; }
 
         public MainForm()
@@ -47,7 +52,7 @@ namespace ps2ls.Forms
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutBox.Instance.ShowDialog();
+            new AboutBox().ShowDialog();
         }
 
         private void Form1_Load(object sender, EventArgs e)

@@ -62,24 +62,17 @@ namespace ps2ls.Forms
             Smooth
         }
 
-        public enum InputTypes
-        {
-            None,
-            Rotate,
-            Pan,
-            Zoom
-        }
-
-        private Model model;
+        private ModelInstance modelInstance = new ModelInstance(null);
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Model Model
         {
-            get { return model; }
+            get { return modelInstance.Model; }
             set
             {
-                if (model == value)
+                if (modelInstance.Model == value)
                     return;
 
-                model = value;
+                modelInstance.Model = value;
 
                 if (ModelChanged != null)
                     ModelChanged.Invoke(this, EventArgs.Empty);
@@ -128,15 +121,16 @@ namespace ps2ls.Forms
         public event EventHandler RenderModeChanged;
 
         public bool SnapCameraToModelOnModelChange { get; set; }
-        public ArcBallCamera Camera { get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Camera Camera { get; set; }
 
-        private InputTypes inputType;
-        private Point location;
         private int shaderProgram;
 
         public ModelBrowserGLControl()
         {
-            Camera = new ArcBallCamera();
+            ArcBallCamera arcBallCamera = new ArcBallCamera();
+            arcBallCamera.Controller = new ArcBallCameraController(arcBallCamera);
+            Camera = arcBallCamera;
 
             InitializeComponent();
 
@@ -261,70 +255,27 @@ void main(void)
 
         private void ModelBrowserGLControl_MouseDown(object sender, MouseEventArgs e)
         {
-            switch (e.Button)
-            {
-                case System.Windows.Forms.MouseButtons.Left:
-                    inputType = InputTypes.Rotate;
-                    break;
-                case System.Windows.Forms.MouseButtons.Right:
-                    inputType = InputTypes.Pan;
-                    break;
-                case System.Windows.Forms.MouseButtons.Middle:
-                    inputType = InputTypes.Zoom;
-                    break;
-            }
+            if (Camera.Controller != null)
+                Camera.Controller.OnMouseDown(sender, e);
         }
 
         private void ModelBrowserGLControl_MouseUp(object sender, MouseEventArgs e)
         {
-            inputType = InputTypes.None;
+            if (Camera.Controller != null)
+                Camera.Controller.OnMouseUp(sender, e);
         }
 
         private void ModelBrowserGLControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (location.X == 0 && location.Y == 0)
-            {
-                location = e.Location;
-            }
-
-            int deltaX = e.Location.X - location.X;
-            int deltaY = e.Location.Y - location.Y;
-
-            switch (inputType)
-            {
-                case InputTypes.Pan:
-                    {
-                        Matrix4 world = Matrix4.CreateFromAxisAngle(Vector3.UnitX, Camera.Pitch) * Matrix4.CreateFromAxisAngle(Vector3.UnitY, Camera.Yaw);
-
-                        Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
-                        forward.Y = 0;
-                        forward.Normalize();
-
-                        Vector3 up = Vector3.UnitY;
-                        Vector3 left = Vector3.Cross(up, forward);
-
-                        Camera.Target += (up * deltaY) * 0.00390625f;
-                        Camera.Target += (left * deltaX) * 0.00390625f;
-                    }
-                    break;
-                case InputTypes.Rotate:
-                    {
-                        Camera.Yaw -= MathHelper.DegreesToRadians(0.25f * deltaX);
-                        Camera.Pitch += MathHelper.DegreesToRadians(0.25f * deltaY);
-                    }
-                    break;
-                case InputTypes.Zoom:
-                    {
-                        Camera.Distance -= deltaY * 0.015625f;
-                    }
-                    break;
-            }
-
-            location = e.Location;
+            if (Camera.Controller != null)
+                Camera.Controller.OnMouseMove(sender, e);
         }
 
         private void ModelBrowserGLControl_KeyDown(object sender, KeyEventArgs e)
         {
+            if (Camera.Controller != null)
+                Camera.Controller.OnKeyDown(sender, e);
+
             switch (e.KeyCode)
             {
                 case Keys.F5:
@@ -351,6 +302,9 @@ void main(void)
             //clear
             GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            if (Camera == null)
+                return;
 
             //projection matrix
             Matrix4 projection = Camera.Projection;
@@ -524,13 +478,13 @@ void main(void)
 
         private void snapCameraToModel()
         {
-            if(model == null)
+            if(Model == null)
                 return;
 
-            Vector3 center = (model.Max + model.Min) / 2.0f;
+            Vector3 center = (Model.Max + Model.Min) / 2.0f;
 
-            Camera.Target = center;
-            Camera.Distance = model.Extents.Length;
+            //Camera.Target = center;
+            //Camera.Distance = Model.Extents.Length;
         }
     }
 }

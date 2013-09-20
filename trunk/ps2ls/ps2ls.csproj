@@ -89,6 +89,8 @@
     <Compile Include="Assets\Zone\Eco.cs" />
     <Compile Include="Assets\Zone\Flora.cs" />
     <Compile Include="Assets\Zone\Zone.cs" />
+    <Compile Include="Cameras\ArcBallCameraController.cs" />
+    <Compile Include="Cameras\CameraController.cs" />
     <Compile Include="Cameras\QuakeCamera.cs" />
     <Compile Include="Forms\Controls\SearchTextBox.cs">
       <SubType>Component</SubType>
@@ -290,16 +292,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Shaders\blur_horizontal.frag" />
-    <None Include="Shaders\blur_vertical.frag" />
     <None Include="Shaders\default.frag" />
     <None Include="Shaders\default.vert" />
     <None Include="Shaders\depth.frag" />
     <None Include="Shaders\depth.vert" />
     <None Include="Shaders\diffuse.frag" />
     <None Include="Shaders\diffuse.vert" />
-    <None Include="Shaders\null.frag" />
-    <None Include="Shaders\null.vert" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

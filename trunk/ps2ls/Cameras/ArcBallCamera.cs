@@ -8,6 +8,13 @@ namespace ps2ls.Cameras
 {
     public class ArcBallCamera : Camera
     {
+        private const float DISTANCE_DEFAULT = 10.0f;
+        private const float DISTANCE_MIN = 1.0f;
+        private const float DISTANCE_MAX = 1024.0f;
+
+        private const float YAW_DEFAULT = -45.0f;
+        private const float PITCH_DEFAULT = 45.0f;
+
         public float distance;
         public float Distance
         {
@@ -17,7 +24,7 @@ namespace ps2ls.Cameras
                 if (distance == value)
                     return;
 
-                distance = value;
+                distance = Utils.Clamp(value, DISTANCE_MIN, DISTANCE_MAX);
 
                 if (DistanceChanged != null)
                     DistanceChanged.Invoke(this, EventArgs.Empty);
@@ -43,16 +50,15 @@ namespace ps2ls.Cameras
         public event EventHandler TargetChanged;
 
         public ArcBallCamera()
-            : base(Camera.Types.ArcBall)
         {
-            Yaw = MathHelper.DegreesToRadians(-45.0f);
-            Pitch = MathHelper.DegreesToRadians(45.0f);
-            distance = 10.0f;
+            Yaw = MathHelper.DegreesToRadians(YAW_DEFAULT);
+            Pitch = MathHelper.DegreesToRadians(PITCH_DEFAULT);
+            distance = DISTANCE_DEFAULT;
         }
 
         public override void Update()
         {
-            distance = Math.Max(Single.Epsilon, Distance);
+            distance = Utils.Clamp(distance, DISTANCE_MIN, DISTANCE_MAX);
 
             Matrix4 world = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
             Vector3 forward = Vector3.Transform(Vector3.UnitZ, world);
