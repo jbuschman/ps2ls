@@ -27,7 +27,6 @@ namespace ps2ls
         public static TextureManager Instance { get { return instance; } }
         #endregion
 
-
         private static List<int> textures = new List<int>();
 
         public int LoadFromStream(Stream stream)

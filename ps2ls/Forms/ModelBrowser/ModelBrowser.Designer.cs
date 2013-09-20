@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelBrowser));
-            ps2ls.Cameras.ArcBallCamera arcBallCamera1 = new ps2ls.Cameras.ArcBallCamera();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.modelsListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.modelContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -246,16 +245,6 @@
             // modelBrowserGLControl
             // 
             this.modelBrowserGLControl.BackColor = System.Drawing.Color.Black;
-            arcBallCamera1.AspectRatio = 0.4278261F;
-            arcBallCamera1.Distance = 10F;
-            arcBallCamera1.FarPlaneDistance = 65536F;
-            arcBallCamera1.FieldOfView = 1.291544F;
-            arcBallCamera1.NearPlaneDistance = 0.00390625F;
-            arcBallCamera1.Pitch = 0.7853982F;
-            arcBallCamera1.Position = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Position")));
-            arcBallCamera1.Target = ((OpenTK.Vector3)(resources.GetObject("arcBallCamera1.Target")));
-            arcBallCamera1.Yaw = -0.7853982F;
-            this.modelBrowserGLControl.Camera = arcBallCamera1;
             this.modelBrowserGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modelBrowserGLControl.DrawAxes = true;
             this.modelBrowserGLControl.Location = new System.Drawing.Point(0, 25);

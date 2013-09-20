@@ -20,6 +20,7 @@ namespace ps2ls.Forms
         bool assetsDirty = false;
 
         private Zone zone;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Zone Zone
         {
             get { return zone; }

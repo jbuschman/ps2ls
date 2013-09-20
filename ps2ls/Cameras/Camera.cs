@@ -19,12 +19,6 @@ namespace ps2ls.Cameras
         private const float NEAR_PLANE_DISTANCE_DEFAULT = 0.00390625f;
         private const float FAR_PLANE_DISTANCE_DEFAULT = 256.0f;
 
-        public enum Types
-        {
-            ArcBall,
-            Quake
-        };
-
         private Matrix4 view;
         public Matrix4 View
         {
@@ -169,6 +163,21 @@ namespace ps2ls.Cameras
                     YawChanged.Invoke(this, null);
             }
         }
+        private CameraController controller;
+        public CameraController Controller
+        {
+            get { return controller; }
+            set
+            {
+                if (controller == value)
+                    return;
+
+                controller = value;
+
+                if (ControllerChanged != null)
+                    ControllerChanged.Invoke(this, null);
+            }
+        }
 
         public event EventHandler ViewChanged;
         public event EventHandler ProjectionChanged;
@@ -179,12 +188,10 @@ namespace ps2ls.Cameras
         public event EventHandler PositionChanged;
         public event EventHandler PitchChanged;
         public event EventHandler YawChanged;
+        public event EventHandler ControllerChanged;
 
-        public Camera.Types CameraType { get; private set; }
-
-        protected Camera(Camera.Types type)
+        protected Camera()
         {
-            CameraType = type;
             FieldOfView = MathHelper.DegreesToRadians(FIELD_OF_VIEW_DEFAULT);
             NearPlaneDistance = NEAR_PLANE_DISTANCE_DEFAULT;
             FarPlaneDistance = FAR_PLANE_DISTANCE_DEFAULT;
@@ -194,8 +201,8 @@ namespace ps2ls.Cameras
         {
             Projection = Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearPlaneDistance, FarPlaneDistance);
             
-            Matrix4 worldRotation = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
-            Vector3 forward = Vector3.Transform(Vector3.UnitZ, worldRotation);
+            Matrix4 rotation = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);
+            Vector3 forward = Vector3.Transform(Vector3.UnitZ, rotation);
 
             View = Matrix4.LookAt(Position, Position + forward, Vector3.UnitY);
         }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using ps2ls.Assets.Pack;
+﻿using ps2ls.Assets.Pack;
 using ps2ls.Forms;
+using ps2ls.Graphics.Effects;
 using ps2ls.Graphics.Materials;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
-using lzhamNET;
+using System;
+using System.Windows.Forms;
 
 namespace ps2ls
 {
@@ -23,8 +20,8 @@ namespace ps2ls
 
             TextureManager.CreateInstance();
             AssetManager.CreateInstance();
-            AboutBox.CreateInstance();
             MaterialDefinitionLibrary.CreateInstance();
+            EffectDefinitionLibrary.CreateInstance();
 
             Application.Run(new MainForm());
         }

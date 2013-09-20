@@ -3,15 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace ps2ls.Graphics.Effects
 {
     public class EffectDefinition
     {
-        public string Name { get; private set; }
-        public string[] DiffuseMaps { get; private set; }
-        public string[] NormalMaps { get; private set; }
-        public string[] BumpMaps { get; private set; }
+        [XmlAttribute]
+        public string Name { get; set; }
+        [XmlElement]
+        public List<string> DiffuseMaps { get; set; }
+        [XmlElement]
+        public List<string> BumpMaps { get; set; }
+
+        public EffectDefinition()
+        {
+            DiffuseMaps = new List<string>();
+            DiffuseMaps.Add("BaseDiffuse");
+
+            BumpMaps = new List<string>();
+            DiffuseMaps.Add("Bump");
+        }
 
         public override string ToString()
         {

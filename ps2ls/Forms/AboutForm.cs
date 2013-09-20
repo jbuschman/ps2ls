@@ -11,22 +11,6 @@ namespace ps2ls
 {
     partial class AboutBox : Form
     {
-        #region Singleton
-        private static AboutBox instance = null;
-
-        public static void CreateInstance()
-        {
-            instance = new AboutBox();
-        }
-
-        public static void DeleteInstance()
-        {
-            instance = null;
-        }
-
-        public static AboutBox Instance { get { return instance; } }
-        #endregion
-
         public AboutBox()
         {
             InitializeComponent();

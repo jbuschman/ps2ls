@@ -108,9 +108,7 @@ namespace ps2ls.Graphics.Materials
                 VertexLayout vertexLayout = VertexLayout.LoadFromXPathNavigator(vertexLayouts.Current);
 
                 if (vertexLayout != null && false == VertexLayouts.ContainsKey(vertexLayout.NameHash))
-                {
                     VertexLayouts.Add(vertexLayout.NameHash, vertexLayout);
-                }
             }
         }
 
