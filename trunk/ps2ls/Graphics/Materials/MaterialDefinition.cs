@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
-using ps2ls.Cryptography;
 
 namespace ps2ls.Graphics.Materials
 {
@@ -35,11 +34,11 @@ namespace ps2ls.Graphics.Materials
 
             //name
             materialDefinition.Name = navigator.GetAttribute("Name", string.Empty);
-            materialDefinition.NameHash = Jenkins.OneAtATime(materialDefinition.Name);
+            materialDefinition.NameHash = Cryptography.JenkinsOneAtATime(materialDefinition.Name);
 
             //type
             materialDefinition.Type = navigator.GetAttribute("Type", string.Empty);
-            materialDefinition.TypeHash = Jenkins.OneAtATime(materialDefinition.Type);
+            materialDefinition.TypeHash = Cryptography.JenkinsOneAtATime(materialDefinition.Type);
 
             //draw styles
             XPathNodeIterator entries = navigator.Select("./Array[@Name='DrawStyles']/Object[@Class='DrawStyle']");

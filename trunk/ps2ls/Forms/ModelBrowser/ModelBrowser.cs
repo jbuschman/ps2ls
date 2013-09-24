@@ -1,25 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using OpenTK.Graphics.OpenGL;
-using OpenTK;
-using ps2ls.Cameras;
 using ps2ls.Assets.Dme;
 using ps2ls.Assets.Pack;
-using System.Diagnostics;
 using ps2ls.Graphics.Materials;
 using System.IO;
-using System.Xml;
-using System.Runtime.InteropServices;
 using ps2ls.Forms.Controls;
 using System.Text.RegularExpressions;
 using ps2ls.Assets.Dma;
-using ps2ls.Cryptography;
 
 namespace ps2ls.Forms
 {
@@ -300,7 +290,7 @@ namespace ps2ls.Forms
             AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out assets);
 
             Dictionary<string, List<string>> effectParameterNameLists = new Dictionary<string, List<String>>();
-            FileStream fileStream = new FileStream(@"C:\Users\Colin\Desktop\fxo_dump.txt", FileMode.OpenOrCreate);
+            FileStream fileStream = new FileStream(Directory.GetCurrentDirectory() + @"\fxo_dump.txt", FileMode.OpenOrCreate);
             StreamWriter streamWriter = new StreamWriter(fileStream);
 
             foreach (Asset asset in assets)
@@ -346,8 +336,8 @@ namespace ps2ls.Forms
                             while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length - wordLength)
                             {
                                 String word = new String(binaryReader.ReadChars(wordLength));
-                                uint wordHash = Jenkins.OneAtATime(word);
-                                uint wordHash2 = Jenkins.OneAtATime(word.ToLower());
+                                uint wordHash = Cryptography.JenkinsOneAtATime(word);
+                                uint wordHash2 = Cryptography.JenkinsOneAtATime(word.ToLower());
 
                                 for (int i = materialParametersNotFound.Count - 1; i >= 0; --i)
                                 {

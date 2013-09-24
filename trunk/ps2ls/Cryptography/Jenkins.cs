@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ps2ls.Cryptography
+namespace ps2ls
 {
-    public static class Jenkins
+    public static class Cryptography
     {
         //http://en.wikipedia.org/wiki/Jenkins_hash_function#one-at-a-time
-        public static uint OneAtATime(string key)
+        public static uint JenkinsOneAtATime(string key)
         {
             //[4:56:55 AM] Herbert Harrison: Yeah, you need to use signed ints (so Int32) inside the function and cast to uint on return
             //[4:57:45 AM] Herbert Harrison: And some places use uppercase for the hashes

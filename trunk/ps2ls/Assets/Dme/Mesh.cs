@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ps2ls.Graphics.Materials;
-using ps2ls.Cryptography;
 using OpenTK;
 
 namespace ps2ls.Assets.Dme

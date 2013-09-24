@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using ps2ls.Cryptography;
 using System.Xml.XPath;
 
 namespace ps2ls.Graphics.Materials
@@ -138,7 +137,7 @@ namespace ps2ls.Graphics.Materials
             vertexLayout.Name = navigator.GetAttribute("Name", String.Empty);
 
             //name hash
-            vertexLayout.NameHash = Jenkins.OneAtATime(vertexLayout.Name);
+            vertexLayout.NameHash = Cryptography.JenkinsOneAtATime(vertexLayout.Name);
 
             //entries
             XPathNodeIterator entries = navigator.Select("./Array[@Name='Entries']/Object[@Class='LayoutEntry']");
