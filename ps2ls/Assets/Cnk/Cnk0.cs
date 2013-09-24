@@ -81,7 +81,7 @@ namespace ps2ls.Assets.Cnk
                     Image image = asd2.LoadImageFromStream(memoryStream);
                     memoryStream.Close();
 
-                    asd.SaveImage(image, @"C:\Users\Colin\Desktop\" + tile.Index + ".dds");
+                    asd.SaveImage(image, Directory.GetCurrentDirectory() + @"\" + tile.Index + ".dds");
                 }
 
                 tile.LayerTextureCount = binaryReader.ReadUInt32();

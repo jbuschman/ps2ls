@@ -166,7 +166,7 @@ namespace ps2ls.Forms
             {
                 foreach (Asset asset in assets)
                 {
-                    if (asset.Name.IndexOf(searchBox.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (asset.Name.IndexOf(searchToolStripTextBox1.Text, 0, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         soundListBox.Items.Add(asset);
                     }
@@ -190,23 +190,6 @@ namespace ps2ls.Forms
             Application.Idle += onIdle;
         }
 
-        private void refreshTimer_Tick(object sender, EventArgs e)
-        {
-            if (searchBox.Text.Length > 0)
-            {
-                searchBox.BackColor = Color.Yellow;
-                SearchBoxClear.Enabled = true;
-            }
-            else
-            {
-                searchBox.BackColor = Color.White;
-                SearchBoxClear.Enabled = false;
-            }
-
-            refreshTimer.Stop();
-            refreshSoundListBox();
-        }
-
         public override void Refresh()
         {
             base.Refresh();
@@ -220,13 +203,7 @@ namespace ps2ls.Forms
 
         private void SearchBoxClear_Click(object sender, EventArgs e)
         {
-            searchBox.Clear();
-        }
-
-        private void searchBox_TextChanged(object sender, EventArgs e)
-        {
-            refreshTimer.Stop();
-            refreshTimer.Start();
+            searchToolStripTextBox1.Clear();
         }
            
         private void PlayPause_Click(object sender, EventArgs e)
@@ -294,6 +271,11 @@ namespace ps2ls.Forms
         }
 
         private void soundsMaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            refreshSoundListBox();
+        }
+
+        private void searchToolStripTextBox1_CustomTextChanged(object sender, EventArgs e)
         {
             refreshSoundListBox();
         }

@@ -24,10 +24,5 @@ namespace ps2ls.Graphics.Effects
             BumpMaps = new List<string>();
             DiffuseMaps.Add("Bump");
         }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
     }
 }

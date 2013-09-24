@@ -11,7 +11,6 @@ using ps2ls.Graphics.Materials;
 using ps2ls.Assets.Pack;
 using System.IO;
 using ps2ls.Assets.Dma;
-using ps2ls.Cryptography;
 
 namespace ps2ls.Forms
 {

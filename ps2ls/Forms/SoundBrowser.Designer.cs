@@ -31,8 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SoundBrowser));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.soundListBox = new ps2ls.Forms.Controls.CustomListBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.searchBox = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.searchTextTypeToolStripDrownDownButton1 = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
+            this.searchToolStripTextBox1 = new ps2ls.Forms.Controls.SearchToolStripTextBox();
             this.SearchBoxClear = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.soundsListed = new System.Windows.Forms.ToolStripStatusLabel();
@@ -40,9 +43,6 @@
             this.PlayPause = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
             this.refreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.soundListBox = new ps2ls.Forms.Controls.CustomListBox();
-            this.searchTextTypeToolStripDrownDownButton1 = new ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -73,13 +73,31 @@
             this.splitContainer1.SplitterDistance = 250;
             this.splitContainer1.TabIndex = 0;
             // 
+            // soundListBox
+            // 
+            this.soundListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.soundListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
+            this.soundListBox.Items.AddRange(new object[] {
+            "default",
+            "default",
+            "default",
+            "default",
+            "default",
+            "Input a search term to continue"});
+            this.soundListBox.Location = new System.Drawing.Point(0, 25);
+            this.soundListBox.Name = "soundListBox";
+            this.soundListBox.Size = new System.Drawing.Size(250, 553);
+            this.soundListBox.TabIndex = 0;
+            this.soundListBox.SelectedIndexChanged += new System.EventHandler(this.soundListBox_SelectedIndexChanged);
+            // 
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.searchTextTypeToolStripDrownDownButton1,
-            this.searchBox,
+            this.searchToolStripTextBox1,
             this.SearchBoxClear});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -87,12 +105,32 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // searchBox
+            // toolStripLabel1
             // 
-            this.searchBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(100, 25);
-            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
+            this.toolStripLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripLabel1.Image = global::ps2ls.Properties.Resources.magnifier;
+            this.toolStripLabel1.Margin = new System.Windows.Forms.Padding(3, 1, 3, 2);
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(16, 22);
+            this.toolStripLabel1.Text = "toolStripLabel1";
+            // 
+            // searchTextTypeToolStripDrownDownButton1
+            // 
+            this.searchTextTypeToolStripDrownDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.searchTextTypeToolStripDrownDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("searchTextTypeToolStripDrownDownButton1.Image")));
+            this.searchTextTypeToolStripDrownDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.searchTextTypeToolStripDrownDownButton1.Name = "searchTextTypeToolStripDrownDownButton1";
+            this.searchTextTypeToolStripDrownDownButton1.SearchTextType = ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual;
+            this.searchTextTypeToolStripDrownDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.searchTextTypeToolStripDrownDownButton1.Text = "Textual";
+            // 
+            // searchToolStripTextBox1
+            // 
+            this.searchToolStripTextBox1.BackColor = System.Drawing.Color.White;
+            this.searchToolStripTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.searchToolStripTextBox1.Name = "searchToolStripTextBox1";
+            this.searchToolStripTextBox1.Size = new System.Drawing.Size(100, 25);
+            this.searchToolStripTextBox1.CustomTextChanged += new System.EventHandler(this.searchToolStripTextBox1_CustomTextChanged);
             // 
             // SearchBoxClear
             // 
@@ -114,10 +152,10 @@
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // filesListed
+            // soundsListed
             // 
             this.soundsListed.Image = global::ps2ls.Properties.Resources.music;
-            this.soundsListed.Name = "filesListed";
+            this.soundsListed.Name = "soundsListed";
             this.soundsListed.Size = new System.Drawing.Size(40, 17);
             this.soundsListed.Text = "0/0";
             // 
@@ -133,6 +171,7 @@
             // 
             // PlayPause
             // 
+            this.PlayPause.Image = global::ps2ls.Properties.Resources.control;
             this.PlayPause.Location = new System.Drawing.Point(199, 143);
             this.PlayPause.Name = "PlayPause";
             this.PlayPause.Size = new System.Drawing.Size(75, 23);
@@ -150,44 +189,6 @@
             this.StatusLabel.TabIndex = 0;
             this.StatusLabel.Text = "No Song 0:00:00 / 0:00:00";
             this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // refreshTimer
-            // 
-            this.refreshTimer.Interval = 500;
-            this.refreshTimer.Tick += new System.EventHandler(this.refreshTimer_Tick);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripLabel1.Image = global::ps2ls.Properties.Resources.magnifier;
-            this.toolStripLabel1.Margin = new System.Windows.Forms.Padding(3, 1, 3, 2);
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(16, 22);
-            this.toolStripLabel1.Text = "toolStripLabel1";
-            // 
-            // soundListBox
-            // 
-            this.soundListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.soundListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
-            this.soundListBox.Items.AddRange(new object[] {
-            "default",
-            "Input a search term to continue"});
-            this.soundListBox.Location = new System.Drawing.Point(0, 25);
-            this.soundListBox.Name = "soundListBox";
-            this.soundListBox.Size = new System.Drawing.Size(250, 553);
-            this.soundListBox.TabIndex = 0;
-            this.soundListBox.SelectedIndexChanged += new System.EventHandler(this.soundListBox_SelectedIndexChanged);
-            // 
-            // searchTextTypeToolStripDrownDownButton1
-            // 
-            this.searchTextTypeToolStripDrownDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.searchTextTypeToolStripDrownDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("searchTextTypeToolStripDrownDownButton1.Image")));
-            this.searchTextTypeToolStripDrownDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.searchTextTypeToolStripDrownDownButton1.Name = "searchTextTypeToolStripDrownDownButton1";
-            this.searchTextTypeToolStripDrownDownButton1.SearchTextType = ps2ls.Forms.Controls.SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual;
-            this.searchTextTypeToolStripDrownDownButton1.Size = new System.Drawing.Size(29, 22);
-            this.searchTextTypeToolStripDrownDownButton1.Text = "Textual";
             // 
             // SoundBrowser
             // 
@@ -218,7 +219,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel soundsListed;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripTextBox searchBox;
         private System.Windows.Forms.ToolStripButton SearchBoxClear;
         private System.Windows.Forms.Label StatusLabel;
         private System.Windows.Forms.Timer refreshTimer;
@@ -226,5 +226,6 @@
         private System.Windows.Forms.Button PlayPause;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton1;
+        private Controls.SearchToolStripTextBox searchToolStripTextBox1;
     }
 }

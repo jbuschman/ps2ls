@@ -7,7 +7,6 @@ using System.Globalization;
 using OpenTK;
 using ps2ls.Assets.Dma;
 using ps2ls.Graphics.Materials;
-using ps2ls.Cryptography;
 
 namespace ps2ls.Assets.Dme
 {

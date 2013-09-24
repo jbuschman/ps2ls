@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.XPath;
-using ps2ls.Cryptography;
 
 namespace ps2ls.Graphics.Materials
 {
@@ -33,14 +32,14 @@ namespace ps2ls.Graphics.Materials
 
             //name
             drawStyle.Name = navigator.GetAttribute("Name", String.Empty);
-            drawStyle.NameHash = Jenkins.OneAtATime(drawStyle.Name);
+            drawStyle.NameHash = Cryptography.JenkinsOneAtATime(drawStyle.Name);
 
             //effect
             drawStyle.Effect = navigator.GetAttribute("Effect", String.Empty);
 
             //input layout
             string vertexLayout = navigator.GetAttribute("InputLayout", String.Empty);
-            drawStyle.VertexLayoutNameHash = Jenkins.OneAtATime(vertexLayout);
+            drawStyle.VertexLayoutNameHash = Cryptography.JenkinsOneAtATime(vertexLayout);
 
             return drawStyle;
         }

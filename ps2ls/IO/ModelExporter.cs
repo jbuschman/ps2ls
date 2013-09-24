@@ -19,14 +19,14 @@ namespace ps2ls.IO
         public static Axes Resolve(Axes axis1, Axes axis2)
         {
             if (axis1 == axis2)
-                throw new ArgumentException("Canot resolve duplicate axes.");
+                throw new ArgumentException("Cannot resolve duplicate axes.");
 
             if ((axis1 == Axes.X || axis1 == Axes.Y) && (axis2 == Axes.X || axis2 == Axes.Y))
                 return Axes.Z;
             else if ((axis1 == Axes.X || axis1 == Axes.Z) && (axis2 == Axes.X || axis2 == Axes.Z))
-                return Axes.Z;
+                return Axes.Y;
             else
-                return Axes.Z;
+                return Axes.X;
         }
     }
 
@@ -38,12 +38,7 @@ namespace ps2ls.IO
         {
             get
             {
-                if (LeftAxis != Axes.X && UpAxis != Axes.X)
-                    return Axes.X;
-                else if (LeftAxis != Axes.Y && UpAxis != Axes.Y)
-                    return Axes.Y;
-
-                return Axes.Z;
+                return AxisResolver.Resolve(UpAxis, LeftAxis);
             }
         }
         public bool Normals;
