@@ -9,17 +9,19 @@ namespace ps2ls.Cameras
 {
     public abstract class CameraController : ICameraController
     {
+        public abstract Camera Camera { get; }
+
         protected CameraController()
         {
         }
-
-        public abstract Camera Camera { get; }
 
         public abstract void OnMouseDown(object sender, MouseEventArgs e);
         public abstract void OnMouseUp(object sender, MouseEventArgs e);
         public abstract void OnMouseMove(object sender, MouseEventArgs e);
         public abstract void OnKeyDown(object sender, KeyEventArgs e);
         public abstract void OnKeyUp(object sender, KeyEventArgs e);
+
+        public abstract void Update();
     }
 
     public interface ICameraController : IInputHandler

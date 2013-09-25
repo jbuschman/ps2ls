@@ -148,12 +148,13 @@
     </Compile>
     <Compile Include="Graphics\Effects\EffectDefinition.cs" />
     <Compile Include="Graphics\Effects\EffectDefinitionLibrary.cs" />
+    <Compile Include="Graphics\Models\ModelInstance.cs" />
     <Compile Include="IO\ModelExporter.cs" />
     <Compile Include="Assets\Pack\AssetManager.cs" />
     <Compile Include="Forms\Controls\CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Cryptography\Jenkins.cs" />
+    <Compile Include="Cryptography.cs" />
     <Compile Include="Assets\Dma\Dma.cs" />
     <Compile Include="Graphics\Materials\DrawStyle.cs" />
     <Compile Include="Graphics\Materials\MaterialDefinitionLibrary.cs" />
@@ -306,6 +307,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Shaders\normals.frag" />
+    <None Include="Shaders\normals.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\box-zipper.png" />
@@ -392,6 +395,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ps2ls.ico" />
+    <Content Include="Resources\EffectDefinitions.xml" />
     <None Include="Resources\materials_3.xml" />
     <None Include="Resources\exclamation.png" />
     <None Include="Resources\cross-circle.png" />
@@ -453,6 +457,7 @@
       <Name>lzhamNET</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(SolutionDir)devil-net\Libs\$(Platform)\*.dll" .

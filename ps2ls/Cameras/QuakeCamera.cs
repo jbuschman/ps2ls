@@ -8,10 +8,14 @@ namespace ps2ls.Cameras
 {
     public class QuakeCamera : Camera
     {
-        //Vector3 LocalVelocity;
+        private const float YAW_DEFAULT = -45.0f;
+        private const float PITCH_DEFAULT = 45.0f;
 
         public QuakeCamera()
         {
+            Pitch = PITCH_DEFAULT;
+            Yaw = YAW_DEFAULT;
+            Position = new Vector3(10, 10, 10);
         }
 
         public override void Update()
