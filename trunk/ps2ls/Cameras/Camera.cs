@@ -20,6 +20,16 @@ namespace ps2ls.Cameras
         private const float FAR_PLANE_DISTANCE_DEFAULT = 256.0f;
 
         private Matrix4 view;
+        private Matrix4 projection;
+        private float aspectRatio;
+        private float fieldOfView;
+        private float nearPlaneDistance;
+        private float farPlaneDistance;
+        private Vector3 position;
+        private float pitch;
+        private float yaw;
+        private CameraController controller;
+
         public Matrix4 View
         {
             get { return view; }
@@ -31,10 +41,9 @@ namespace ps2ls.Cameras
                 view = value;
 
                 if (ViewChanged != null)
-                    ViewChanged.Invoke(this, null);
+                    ViewChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private Matrix4 projection;
         public Matrix4 Projection
         {
             get { return projection; }
@@ -46,10 +55,9 @@ namespace ps2ls.Cameras
                 projection = value;
 
                 if (ProjectionChanged != null)
-                    ProjectionChanged.Invoke(this, null);
+                    ProjectionChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float aspectRatio;
         public float AspectRatio
         {
             get { return aspectRatio; }
@@ -61,10 +69,9 @@ namespace ps2ls.Cameras
                 aspectRatio = value;
 
                 if (AspectRatioChanged != null)
-                    AspectRatioChanged.Invoke(this, null);
+                    AspectRatioChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float fieldOfView;
         public float FieldOfView
         {
             get { return fieldOfView; }
@@ -76,10 +83,9 @@ namespace ps2ls.Cameras
                 fieldOfView = Utils.Clamp(value, MathHelper.DegreesToRadians(FIELD_OF_VIEW_MIN), MathHelper.DegreesToRadians(FIELD_OF_VIEW_MAX));
 
                 if(FieldOfViewChanged != null)
-                    FieldOfViewChanged.Invoke(this, null);
+                    FieldOfViewChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float nearPlaneDistance;
         public float NearPlaneDistance
         {
             get
@@ -94,10 +100,9 @@ namespace ps2ls.Cameras
                 nearPlaneDistance = value;
 
                 if(NearPlaneDistanceChanged != null)
-                    NearPlaneDistanceChanged.Invoke(this, null);
+                    NearPlaneDistanceChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float farPlaneDistance;
         public float FarPlaneDistance
         {
             get
@@ -112,10 +117,9 @@ namespace ps2ls.Cameras
                 farPlaneDistance = value;
 
                 if(FarPlaneDistanceChanged != null)
-                    FarPlaneDistanceChanged.Invoke(this, null);
+                    FarPlaneDistanceChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private Vector3 position;
         public Vector3 Position
         {
             get
@@ -130,10 +134,9 @@ namespace ps2ls.Cameras
                 position = value;
 
                 if (PositionChanged != null)
-                    PositionChanged.Invoke(this, null);
+                    PositionChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float pitch;
         public float Pitch
         {
             get { return pitch; }
@@ -142,13 +145,12 @@ namespace ps2ls.Cameras
                 if (pitch == value)
                     return;
 
-                pitch = Utils.Clamp(value, PITCH_MIN, PITCH_MAX);
+                pitch = Utils.Clamp(value, MathHelper.DegreesToRadians(PITCH_MIN), MathHelper.DegreesToRadians(PITCH_MAX));
 
                 if(PitchChanged != null)
-                    PitchChanged.Invoke(this, null);
+                    PitchChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private float yaw;
         public float Yaw
         {
             get { return yaw; }
@@ -160,10 +162,9 @@ namespace ps2ls.Cameras
                 yaw = value;
 
                 if(YawChanged != null)
-                    YawChanged.Invoke(this, null);
+                    YawChanged.Invoke(this, EventArgs.Empty);
             }
         }
-        private CameraController controller;
         public CameraController Controller
         {
             get { return controller; }
@@ -175,7 +176,7 @@ namespace ps2ls.Cameras
                 controller = value;
 
                 if (ControllerChanged != null)
-                    ControllerChanged.Invoke(this, null);
+                    ControllerChanged.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -199,6 +200,9 @@ namespace ps2ls.Cameras
 
         public virtual void Update()
         {
+            if (Controller != null)
+                Controller.Update();
+
             Projection = Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearPlaneDistance, FarPlaneDistance);
             
             Matrix4 rotation = Matrix4.CreateRotationX(Pitch) * Matrix4.CreateRotationY(Yaw);

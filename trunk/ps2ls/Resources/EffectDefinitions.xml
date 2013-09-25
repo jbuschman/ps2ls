@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EffectDefinitions>
+  <EffectDefinition Name="Foliage.fxo"        DiffuseMap="BaseDiffuse" SpecularMap="Spec" BumpMap="Bump" />
+  <EffectDefinition Name="TwoSided_rsm.fxo"   DiffuseMap="BaseDiffuse" />
+  <EffectDefinition Name="PickFoliage.fxo"    DiffuseMap="BaseDiffuse" BumpMap="Bump" SpecularMap="Spec" />
+  <EffectDefinition Name="structure_rsm.fxo"  DiffuseMap="BaseDiffuse" BumpMap="Bump" />
+  <EffectDefinition Name="bumpRigid.fxo"      DiffuseMap="BaseDiffuse" BumpMap="BumpMap" />
+  <EffectDefinition Name="Foliage.fxo"        DiffuseMap="BaseDiffuse" SpecularMap="Spec" BumpMap="Bump" />
+  <!-- tons more -->
+</EffectDefinitions>

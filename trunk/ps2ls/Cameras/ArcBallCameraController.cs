@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ps2ls.Cameras
 {
-    public class ArcBallCameraController : CameraController, IDisposable
+    public class ArcBallCameraController : CameraController
     {
         private Point location;
         private ArcBallCamera camera;
@@ -104,9 +104,8 @@ namespace ps2ls.Cameras
             inputType = InputTypes.None;
         }
 
-        public void Dispose()
+        public override void Update()
         {
-            throw new NotImplementedException();
         }
     }
 }

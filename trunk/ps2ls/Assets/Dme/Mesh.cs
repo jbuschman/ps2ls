@@ -117,13 +117,14 @@ namespace ps2ls.Assets.Dme
         public uint VertexCount { get; private set; }
         public uint IndexCount { get; private set; }
         public uint IndexSize { get; private set; }
+        public int Texture { get; private set; }
 
         private Mesh(Model model)
         {
             this.Model = model;
         }
 
-        public static Mesh LoadFromStream(Model model, Stream stream, ICollection<Dma.Material> materials)
+        public static Mesh LoadFromStream(Model model, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
 
@@ -155,6 +156,9 @@ namespace ps2ls.Assets.Dme
 
             // read indices
             mesh.IndexData = binaryReader.ReadBytes((int)mesh.IndexCount * (int)mesh.IndexSize);
+
+            MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.GetMaterialDefinitionFromHash(model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash);
+            string effectName = materialDefinition.DrawStyles[0].Effect;
 
             return mesh;
         }

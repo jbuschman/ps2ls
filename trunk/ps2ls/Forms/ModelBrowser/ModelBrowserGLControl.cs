@@ -130,16 +130,29 @@ namespace ps2ls.Forms
         {
             ArcBallCamera arcBallCamera = new ArcBallCamera();
             arcBallCamera.Controller = new ArcBallCameraController(arcBallCamera);
+            arcBallCamera.ViewChanged += camera_ViewChanged;
             Camera = arcBallCamera;
 
             InitializeComponent();
 
             KeyDown += ModelBrowserGLControl_KeyDown;
+            KeyUp += ModelBrowserGLControl_KeyUp;
             MouseDown += ModelBrowserGLControl_MouseDown;
             MouseUp += ModelBrowserGLControl_MouseUp;
             MouseMove += ModelBrowserGLControl_MouseMove;
             MouseEnter += ModelBrowserGLControl_MouseEnter;
             ModelChanged += ModelBrowserGLControl_ModelChanged;
+        }
+
+        void ModelBrowserGLControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (Camera.Controller != null)
+                Camera.Controller.OnKeyUp(sender, e);
+        }
+
+        void camera_ViewChanged(object sender, EventArgs e)
+        {
+            Invalidate();
         }
 
         void ModelBrowserGLControl_ModelChanged(object sender, EventArgs e)
@@ -190,21 +203,22 @@ namespace ps2ls.Forms
 
             //TODO: Use external shader source files.
             string vertexShaderSource = @"
+varying vec4 color;
+
 void main(void)
 {
     gl_Position = ftransform();
 
-    gl_TexCoord[0] = gl_MultiTexCoord0;
+    color.xyz = (-gl_Normal * 0.5) + 0.5;
+    color.w = 1.0;
 }
 ";
             string fragmentShaderSource = @"
-uniform sampler2D colorMap;
+varying vec4 color;
 
 void main(void)
 {
-   vec4 col = texture2D(colorMap, gl_TexCoord[0].st);
-   if(col.a <= 0) discard;
-   gl_FragColor = texture2D(colorMap, gl_TexCoord[0].st);
+    gl_FragColor = color;
 }
 ";
 
@@ -344,7 +358,7 @@ void main(void)
                 GL.End();
             }
 
-            if (Model != null && Model.Version == 4)
+            if (Model != null)
             {
                 GL.PushMatrix();
 
