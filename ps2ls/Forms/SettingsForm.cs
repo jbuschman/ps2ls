@@ -31,13 +31,29 @@ namespace ps2ls.Forms
                     "This could mean that a PlanetSide 2 installation does not exist or that PlanetSide 2 is installed in a non-standard way.",
                     GenericDialog.Types.Warning);
             }
-
-            assetDirectoryTextBox.Text = assetsDirectory;
+            else
+            {
+                assetDirectoryTextBox.Text = assetsDirectory;
+            }
         }
 
         private void assetDirectoryBrowseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            folderBrowserDialog.SelectedPath = assetDirectoryTextBox.Text;
+
+            DialogResult dialogResult = folderBrowserDialog.ShowDialog();
+
+            switch (dialogResult)
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                    {
+                        assetDirectoryTextBox.Text = folderBrowserDialog.SelectedPath;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void SettingsForm_Load(object sender, EventArgs e)
