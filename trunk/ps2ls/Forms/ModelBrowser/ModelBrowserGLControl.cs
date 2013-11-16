@@ -309,6 +309,9 @@ void main(void)
 
         public override void Render()
         {
+            if (DesignMode)
+                return;
+
             MakeCurrent();
 
             GL.Viewport(0, 0, ClientSize.Width, ClientSize.Height);
