@@ -92,6 +92,7 @@
     <Compile Include="Cameras\CameraController.cs" />
     <Compile Include="Cameras\QuakeCamera.cs" />
     <Compile Include="Cameras\QuakeCameraController.cs" />
+    <Compile Include="Cryptography.cs" />
     <Compile Include="Forms\Controls\SearchTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -154,7 +155,6 @@
     <Compile Include="Forms\Controls\CustomListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Cryptography.cs" />
     <Compile Include="Assets\Dma\Dma.cs" />
     <Compile Include="Graphics\Materials\DrawStyle.cs" />
     <Compile Include="Graphics\Materials\MaterialDefinitionLibrary.cs" />
