@@ -231,6 +231,9 @@ namespace ps2ls.Assets.Cnk
             Lzham.ZInflate(zStream, (int)Lzham.ZFlush.Finish);
             Lzham.ZInflateEnd(zStream);
 
+            inputBufferGCHandle.Free();
+            outputBufferGCHandle.Free();
+
             MemoryStream memoryStream = new MemoryStream(outputBuffer);
             binaryReader = new BinaryReader(memoryStream);
 
