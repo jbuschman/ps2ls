@@ -30,10 +30,8 @@ namespace ps2ls.Assets.Pack
         public static AssetManager Instance { get { return instance; } }
         #endregion
 
+        public Dictionary<int, Pack> Packs { get; private set; }
         public Dictionary<Asset.Types, List<Asset>> AssetsByType { get; private set; }
-
-        // Internal cache to check whether a pack has already been loaded
-        public Dictionary<int, Pack> Packs = new Dictionary<int, Pack>();
 
         private GenericLoadingForm loadingForm;
         private List<BackgroundWorker> backgroundWorkers = new List<BackgroundWorker>();
@@ -42,6 +40,7 @@ namespace ps2ls.Assets.Pack
 
         private AssetManager()
         {
+            Packs = new Dictionary<int, Pack>();
             AssetsByType = new Dictionary<Asset.Types, List<Asset>>();
         }
 

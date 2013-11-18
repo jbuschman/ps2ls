@@ -60,8 +60,6 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.filesMaxComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.exportAssetListToCsvButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.fileCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.packFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -313,9 +311,7 @@
             this.clearSearchButton,
             this.toolStripSeparator2,
             this.toolStripLabel2,
-            this.filesMaxComboBox,
-            this.toolStripSeparator4,
-            this.exportAssetListToCsvButton});
+            this.filesMaxComboBox});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(596, 25);
@@ -389,20 +385,6 @@
             this.filesMaxComboBox.Name = "filesMaxComboBox";
             this.filesMaxComboBox.Size = new System.Drawing.Size(75, 25);
             this.filesMaxComboBox.SelectedIndexChanged += new System.EventHandler(this.filesMaxComboBox_SelectedIndexChanged);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // exportAssetListToCsvButton
-            // 
-            this.exportAssetListToCsvButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.exportAssetListToCsvButton.Image = ((System.Drawing.Image)(resources.GetObject("exportAssetListToCsvButton.Image")));
-            this.exportAssetListToCsvButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.exportAssetListToCsvButton.Name = "exportAssetListToCsvButton";
-            this.exportAssetListToCsvButton.Size = new System.Drawing.Size(23, 22);
-            this.exportAssetListToCsvButton.Text = "Export Asset List to *.CSV";
             // 
             // statusStrip1
             // 
@@ -494,8 +476,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton exportAssetListToCsvButton;
         private System.Windows.Forms.SaveFileDialog exportAssetFileToCsvSaveFileDialog;
     }
 }

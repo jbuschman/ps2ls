@@ -64,15 +64,15 @@ namespace ps2ls.Assets.Pack
             asset.Crc32 = reader.ReadInt32();
 
             //determine asset type from file extension
-            string fileExtension = Path.GetExtension(asset.Name).Substring(1);
+            string extension = Path.GetExtension(asset.Name).Substring(1);
             Types assetType = Types.Unknown;
-            GetTypeFromFileExtension(fileExtension, ref assetType);
+            GetTypeFromExtension(extension, ref assetType);
             asset.Type = assetType;
 
             return asset;
         }
 
-        public static void GetTypeFromFileExtension(string extension, ref Asset.Types type)
+        public static void GetTypeFromExtension(string extension, ref Asset.Types type)
         {
             try
             {

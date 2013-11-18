@@ -32,7 +32,8 @@ namespace ps2ls.Assets.Zone
             BadHeader,
             BadEco,
             BadFlora,
-            BadCnk
+            BadCnk,
+            BadActor
         };
 
         private Zone()
@@ -107,48 +108,63 @@ namespace ps2ls.Assets.Zone
                 zone.Floras[i] = flora;
             }
 
-            //todo: invisible walls
+            //invisible walls
+            uint invisibleWallCount = binaryReader.ReadUInt32();
+            for (uint i = 0; i < invisibleWallCount; ++i)
+            {
+                 binaryReader.ReadUInt32();
+            }
+
             //todo: runtime objects (actors)
+
+            //actors
+            uint actorCount = binaryReader.ReadUInt32();
+            zone.Actors = new Actor[actorCount];
+
+            for (uint i = 0; i < actorCount; ++i)
+            {
+                Actor actor;
+                if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
+                {
+                    zone = null;
+                    return LoadError.BadActor;
+                }
+
+                zone.Actors[i] = actor;
+            }
+
             //todo: lights
-
-            ////actors
-            //uint actorCount = binaryReader.ReadUInt32();
-            //zone.Actors = new Actor[actorCount];
-
-            //for (uint i = 0; i < actorCount; ++i)
-            //{
-            //    Actor actor;
-            //    if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
-            //    {
-            //        zone = null;
-            //        return LoadError.BadFlora;
-            //    }
-
-            //    zone.Actors[i] = actor;
-            //}
 
             zone.Cnk0s = new Cnk0[32, 32];
 
             //cnk0s
             int z = 0;
-            int w = 0;
-            for (int x = zone.StartX; x <= -zone.StartX; x += 4)
+
+            for (int x = zone.StartX; x < -zone.StartX; x += 4)
             {
-                for (int y = zone.StartY; y <= -zone.StartY; y += 4)
+                int w = 0;
+
+                for (int y = zone.StartY; y < -zone.StartY; y += 4)
                 {
                     string cnk0FileName = string.Format("{0}_{1}_{2}.cnk0", name, x, y);
 
-                    Cnk0 cnk0;
+                    Cnk0 cnk0 = null;
                     MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(cnk0FileName);
-                    Cnk0.LoadError loadError = Cnk0.LoadFromStream(memoryStream, out cnk0);
 
-                    if (loadError != Cnk0.LoadError.None)
+                    if (memoryStream != null)
                     {
-                        zone = null;
-                        return LoadError.BadCnk;
+                        Cnk0.LoadError loadError = Cnk0.LoadFromStream(memoryStream, out cnk0);
+
+                        if (loadError != Cnk0.LoadError.None)
+                        {
+                            zone = null;
+                            return LoadError.BadCnk;
+                        }
                     }
 
                     zone.Cnk0s[z, w++] = cnk0;
+
+                    memoryStream.Close();
                 }
 
                 z++;
