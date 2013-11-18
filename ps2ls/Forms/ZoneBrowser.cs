@@ -69,6 +69,7 @@ namespace ps2ls.Forms
         private void refreshZonesListBox()
         {
             Cursor.Current = Cursors.WaitCursor;
+
             zonesListBox.BeginUpdate();
 
             zonesListBox.Items.Clear();
@@ -85,6 +86,7 @@ namespace ps2ls.Forms
             }
 
             zonesListBox.EndUpdate();
+
             Cursor.Current = Cursors.Default;
         }
 

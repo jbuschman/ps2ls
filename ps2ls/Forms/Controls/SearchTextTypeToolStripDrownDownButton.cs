@@ -53,16 +53,16 @@ namespace ps2ls.Forms.Controls
             this.Text = searchTextTypeNames[(int)searchTextType];
             this.Image = searchTextTypeImages[(int)searchTextType];
 
-            this.DropDownItems.Add(searchTextTypeNames[0], searchTextTypeImages[0], TextualOnClickHandler);
-            this.DropDownItems.Add(searchTextTypeNames[1], searchTextTypeImages[1], RegularExpressionOnClickHandler);
+            this.DropDownItems.Add(searchTextTypeNames[0], searchTextTypeImages[0], TextualOnClick);
+            this.DropDownItems.Add(searchTextTypeNames[1], searchTextTypeImages[1], RegularExpressionOnClick);
         }
 
-        private void TextualOnClickHandler(object sender, EventArgs args)
+        private void TextualOnClick(object sender, EventArgs args)
         {
             this.SearchTextType = SearchTextTypes.Textual;
         }
 
-        private void RegularExpressionOnClickHandler(object sender, EventArgs args)
+        private void RegularExpressionOnClick(object sender, EventArgs args)
         {
             this.SearchTextType = SearchTextTypes.RegularExpression;
         }

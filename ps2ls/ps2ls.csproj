@@ -462,7 +462,8 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(SolutionDir)devil-net\Libs\$(Platform)\*.dll" .
 xcopy /Y "$(SolutionDir)fmodNET\*.dll" .
-xcopy /Y "$(SolutionDir)lzhamNET\bin\Debug\*.dll" .</PostBuildEvent>
+xcopy /Y "$(SolutionDir)lzhamNET\bin\Debug\*.dll" .
+xcopy /Y "$(SolutionDir)lzhamNET\*.dll" .</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
