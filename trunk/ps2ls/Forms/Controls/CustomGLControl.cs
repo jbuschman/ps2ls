@@ -48,11 +48,6 @@ namespace ps2ls.Forms.Controls
             }
         }
 
-        private void ModelBrowserControl_Load(object sender, EventArgs e)
-        {
-            Application.Idle += Application_Idle;
-        }
-
         public abstract void Tick();
         public abstract void Render();
     }
