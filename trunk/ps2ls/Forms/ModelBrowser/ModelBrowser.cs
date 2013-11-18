@@ -102,6 +102,7 @@ namespace ps2ls.Forms
         private void refreshModelsListBox()
         {
             Cursor.Current = Cursors.WaitCursor;
+
             modelsListBox.BeginUpdate();
 
             int modelsMax = 0;
@@ -168,6 +169,7 @@ namespace ps2ls.Forms
             modelsCountToolStripStatusLabel.Text = count + "/" + max;
 
             modelsListBox.EndUpdate();
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -284,103 +286,109 @@ namespace ps2ls.Forms
             refreshModelsListBox();
         }
 
+        /// <summary>
+        /// This is debugging code used to extact valid parameter names out of
+        /// shader files in a wildly inefficient and brute force manner. :)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            List<Asset> assets;
-            AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out assets);
+            //List<Asset> assets;
+            //AssetManager.Instance.AssetsByType.TryGetValue(Asset.Types.DME, out assets);
 
-            Dictionary<string, List<string>> effectParameterNameLists = new Dictionary<string, List<String>>();
-            FileStream fileStream = new FileStream(Directory.GetCurrentDirectory() + @"\fxo_dump.txt", FileMode.OpenOrCreate);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
+            //Dictionary<string, List<string>> effectParameterNameLists = new Dictionary<string, List<String>>();
+            //FileStream fileStream = new FileStream(Directory.GetCurrentDirectory() + @"\fxo_dump.txt", FileMode.OpenOrCreate);
+            //StreamWriter streamWriter = new StreamWriter(fileStream);
 
-            foreach (Asset asset in assets)
-            {
-                MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(asset.Name);
-                Model model = Model.LoadFromStream(asset.Name, memoryStream);
+            //foreach (Asset asset in assets)
+            //{
+            //    MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(asset.Name);
+            //    Model model = Model.LoadFromStream(asset.Name, memoryStream);
 
-                if (model == null)
-                    continue;
+            //    if (model == null)
+            //        continue;
 
-                foreach (Material material in model.Materials)
-                {
-                    MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.GetMaterialDefinitionFromHash(material.MaterialDefinitionHash);
+            //    foreach (Material material in model.Materials)
+            //    {
+            //        MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.GetMaterialDefinitionFromHash(material.MaterialDefinitionHash);
 
-                    foreach (DrawStyle drawStyle in materialDefinition.DrawStyles)
-                    {
-                        if (!effectParameterNameLists.ContainsKey(drawStyle.Effect))
-                        {
-                            List<string> parameterNames = new List<string>();
-                            effectParameterNameLists.Add(drawStyle.Effect, parameterNames);
-                        }
+            //        foreach (DrawStyle drawStyle in materialDefinition.DrawStyles)
+            //        {
+            //            if (!effectParameterNameLists.ContainsKey(drawStyle.Effect))
+            //            {
+            //                List<string> parameterNames = new List<string>();
+            //                effectParameterNameLists.Add(drawStyle.Effect, parameterNames);
+            //            }
 
-                        MemoryStream effectMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(drawStyle.Effect);
+            //            MemoryStream effectMemoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(drawStyle.Effect);
 
-                        if (effectMemoryStream == null)
-                            continue;
+            //            if (effectMemoryStream == null)
+            //                continue;
 
-                        BinaryReader binaryReader = new BinaryReader(effectMemoryStream, Encoding.ASCII);
+            //            BinaryReader binaryReader = new BinaryReader(effectMemoryStream, Encoding.ASCII);
 
-                        StringBuilder stringBuilder = new StringBuilder();
-                        List<string> words = new List<string>();
+            //            StringBuilder stringBuilder = new StringBuilder();
+            //            List<string> words = new List<string>();
 
-                        const int MINIMUM_WORD_LENGTH = 3;
-                        const int MAXUMUM_WORD_LENGTH = 32;
+            //            const int MINIMUM_WORD_LENGTH = 3;
+            //            const int MAXUMUM_WORD_LENGTH = 32;
 
-                        List<Material.Parameter> materialParametersNotFound = new List<Material.Parameter>();
-                        materialParametersNotFound.AddRange(material.Parameters);
+            //            List<Material.Parameter> materialParametersNotFound = new List<Material.Parameter>();
+            //            materialParametersNotFound.AddRange(material.Parameters);
 
-                        for (int wordLength = MINIMUM_WORD_LENGTH; wordLength <= MAXUMUM_WORD_LENGTH; ++wordLength)
-                        {
-                            effectMemoryStream.Position = 0;
+            //            for (int wordLength = MINIMUM_WORD_LENGTH; wordLength <= MAXUMUM_WORD_LENGTH; ++wordLength)
+            //            {
+            //                effectMemoryStream.Position = 0;
 
-                            while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length - wordLength)
-                            {
-                                String word = new String(binaryReader.ReadChars(wordLength));
-                                uint wordHash = Cryptography.JenkinsOneAtATime(word);
-                                uint wordHash2 = Cryptography.JenkinsOneAtATime(word.ToLower());
+            //                while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length - wordLength)
+            //                {
+            //                    String word = new String(binaryReader.ReadChars(wordLength));
+            //                    uint wordHash = Cryptography.JenkinsOneAtATime(word);
+            //                    uint wordHash2 = Cryptography.JenkinsOneAtATime(word.ToLower());
 
-                                for (int i = materialParametersNotFound.Count - 1; i >= 0; --i)
-                                {
-                                    if ((materialParametersNotFound[i].Type == Material.Parameter.D3DXParameterType.Texture) &&
-                                        wordHash == materialParametersNotFound[i].NameHash ||
-                                        wordHash2 == materialParametersNotFound[i].NameHash)
-                                    {
-                                        if (!effectParameterNameLists[drawStyle.Effect].Contains(word))
-                                            effectParameterNameLists[drawStyle.Effect].Add(word);
+            //                    for (int i = materialParametersNotFound.Count - 1; i >= 0; --i)
+            //                    {
+            //                        if ((materialParametersNotFound[i].Type == Material.Parameter.D3DXParameterType.Texture) &&
+            //                            wordHash == materialParametersNotFound[i].NameHash ||
+            //                            wordHash2 == materialParametersNotFound[i].NameHash)
+            //                        {
+            //                            if (!effectParameterNameLists[drawStyle.Effect].Contains(word))
+            //                                effectParameterNameLists[drawStyle.Effect].Add(word);
 
-                                        materialParametersNotFound.RemoveAt(i);
-                                        break;
-                                    }
-                                }
+            //                            materialParametersNotFound.RemoveAt(i);
+            //                            break;
+            //                        }
+            //                    }
 
-                                binaryReader.BaseStream.Position -= (wordLength - 1);
+            //                    binaryReader.BaseStream.Position -= (wordLength - 1);
 
-                                if (materialParametersNotFound.Count == 0)
-                                    break;
-                            }
+            //                    if (materialParametersNotFound.Count == 0)
+            //                        break;
+            //                }
 
-                            if (materialParametersNotFound.Count == 0)
-                                break;
-                        }
+            //                if (materialParametersNotFound.Count == 0)
+            //                    break;
+            //            }
 
-                        effectMemoryStream.Close();
-                    }
-                }
-            }
+            //            effectMemoryStream.Close();
+            //        }
+            //    }
+            //}
 
-            foreach(KeyValuePair<string, List<string>> effectParameterNameList in effectParameterNameLists)
-            {
-                streamWriter.WriteLine(string.Format("[{0}]", effectParameterNameList.Key));
+            //foreach(KeyValuePair<string, List<string>> effectParameterNameList in effectParameterNameLists)
+            //{
+            //    streamWriter.WriteLine(string.Format("[{0}]", effectParameterNameList.Key));
 
-                foreach (string parameterName in effectParameterNameList.Value)
-                {
-                    streamWriter.WriteLine(parameterName);
-                }
+            //    foreach (string parameterName in effectParameterNameList.Value)
+            //    {
+            //        streamWriter.WriteLine(parameterName);
+            //    }
 
-                streamWriter.WriteLine();
-            }
+            //    streamWriter.WriteLine();
+            //}
 
-            streamWriter.Close();
+            //streamWriter.Close();
         }
     }
 }
