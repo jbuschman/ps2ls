@@ -16,13 +16,14 @@ namespace ps2ls.Forms.Controls
             this.DrawItem += new DrawItemEventHandler(this.CustomListBox_DrawItem);
 
             DrawMode = DrawMode.OwnerDrawFixed;
-
-            this.Items.Add("default");
         }
 
         private void CustomListBox_DrawItem(object sender, DrawItemEventArgs e)
         {
             e.DrawBackground();
+
+            if (((ListBox)sender).Items.Count == 0)
+                return;
 
             string text = ((ListBox)sender).Items[e.Index].ToString();
             Point point = new Point(0, e.Bounds.Y);
