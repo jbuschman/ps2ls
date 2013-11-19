@@ -25,6 +25,8 @@ namespace ps2ls.Forms
 
             texturesListBox.Items.Clear();
 
+            texturesMaxComboBox.SelectedIndex = 3;
+
             Dock = DockStyle.Fill;
 
             AssetManager.Instance.AssetsChanged += new EventHandler(onAssetsChanged);
@@ -38,6 +40,7 @@ namespace ps2ls.Forms
         private void refreshTexturesListBox()
         {
             Cursor.Current = Cursors.WaitCursor;
+
             texturesListBox.BeginUpdate();
 
             texturesListBox.Items.Clear();
@@ -92,6 +95,7 @@ namespace ps2ls.Forms
             texturesCountLabel.Text = textureCount + "/" + texturesMax;
 
             texturesListBox.EndUpdate();
+
             Cursor.Current = Cursors.WaitCursor;
         }
 
