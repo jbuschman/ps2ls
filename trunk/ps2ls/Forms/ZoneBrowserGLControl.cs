@@ -1,4 +1,5 @@
-﻿using ps2ls.Forms.Controls;
+﻿using OpenTK.Graphics;
+using ps2ls.Forms.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,14 @@ namespace ps2ls.Forms
 
         public override void Render()
         {
+            if (DesignMode)
+                return;
+
+            MakeCurrent();
+
+            GL.Viewport(0, 0, ClientSize.Width, ClientSize.Height);
+
+            SwapBuffers();
         }
     }
 }

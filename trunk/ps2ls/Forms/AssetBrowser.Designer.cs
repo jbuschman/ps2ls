@@ -39,8 +39,6 @@
             this.extractPacksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.addPacksButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.packCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.assetsDataGridView = new System.Windows.Forms.DataGridView();
@@ -137,9 +135,7 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addPacksButton,
-            this.toolStripSeparator3,
-            this.toolStripButton1});
+            this.addPacksButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(200, 25);
@@ -155,20 +151,6 @@
             this.addPacksButton.Size = new System.Drawing.Size(23, 22);
             this.addPacksButton.Text = "Add Packs...";
             this.addPacksButton.Click += new System.EventHandler(this.addPacksButton_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::ps2ls.Properties.Resources.clipboard_list;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // statusStrip2
             // 
@@ -473,8 +455,6 @@
         private System.Windows.Forms.StatusStrip statusStrip2;
         private System.Windows.Forms.ToolStripStatusLabel packCountLabel;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
         private Controls.SearchTextTypeToolStripDrownDownButton searchTextTypeToolStripDrownDownButton1;
         private System.Windows.Forms.SaveFileDialog exportAssetFileToCsvSaveFileDialog;
     }

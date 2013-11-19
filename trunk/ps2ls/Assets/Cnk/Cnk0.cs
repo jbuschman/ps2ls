@@ -74,14 +74,14 @@ namespace ps2ls.Assets.Cnk
                     tile.ImageSize = binaryReader.ReadUInt32();
                     tile.ImageData = binaryReader.ReadBytes((int)tile.ImageSize);
 
-                    MemoryStream memoryStream = new MemoryStream(tile.ImageData);
+                    //MemoryStream memoryStream = new MemoryStream(tile.ImageData);
 
-                    ImageExporter asd = new DevIL.ImageExporter();
-                    ImageImporter asd2 = new DevIL.ImageImporter();
-                    Image image = asd2.LoadImageFromStream(memoryStream);
-                    memoryStream.Close();
+                    //ImageExporter asd = new DevIL.ImageExporter();
+                    //ImageImporter asd2 = new DevIL.ImageImporter();
+                    //Image image = asd2.LoadImageFromStream(memoryStream);
+                    //memoryStream.Close();
 
-                    asd.SaveImage(image, Directory.GetCurrentDirectory() + @"\" + tile.Index + ".dds");
+                    //asd.SaveImage(image, Directory.GetCurrentDirectory() + @"\" + tile.Index + ".dds");
                 }
 
                 tile.LayerTextureCount = binaryReader.ReadUInt32();

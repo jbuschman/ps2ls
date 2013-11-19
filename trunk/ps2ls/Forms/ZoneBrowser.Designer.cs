@@ -111,16 +111,6 @@
             this.zonesListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.zonesListBox.FormattingEnabled = true;
             this.zonesListBox.Image = global::ps2ls.Properties.Resources.map_medium;
-            this.zonesListBox.Items.AddRange(new object[] {
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default"});
             this.zonesListBox.Location = new System.Drawing.Point(0, 25);
             this.zonesListBox.Name = "zonesListBox";
             this.zonesListBox.Size = new System.Drawing.Size(300, 103);
@@ -160,16 +150,6 @@
             this.customListBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.customListBox1.FormattingEnabled = true;
             this.customListBox1.Image = global::ps2ls.Properties.Resources.map_medium;
-            this.customListBox1.Items.AddRange(new object[] {
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default"});
             this.customListBox1.Location = new System.Drawing.Point(0, 25);
             this.customListBox1.Name = "customListBox1";
             this.customListBox1.Size = new System.Drawing.Size(300, 399);
