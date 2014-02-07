@@ -92,9 +92,15 @@ namespace ps2ls.Forms
         {
             base.Refresh();
 
+            if (!MaterialDefinitionLibrary.Instance.IsLoaded)
+            {
+                MaterialDefinitionLibrary.Instance.Load();
+            }
+
             if (assetsDirty)
             {
                 refreshModelsListBox();
+
                 assetsDirty = false;
             }
         }
@@ -105,16 +111,9 @@ namespace ps2ls.Forms
 
             modelsListBox.BeginUpdate();
 
-            int modelsMax = 0;
+            int modelsMax = Int32.MaxValue;
 
-            try
-            {
-                modelsMax = Int32.Parse(modelsMaxComboBox.Items[modelsMaxComboBox.SelectedIndex].ToString());
-            }
-            catch (FormatException)
-            {
-                modelsMax = Int32.MaxValue;
-            }
+            Int32.TryParse(modelsMaxComboBox.Items[modelsMaxComboBox.SelectedIndex].ToString(), out modelsMax);
 
             modelsListBox.Items.Clear();
 

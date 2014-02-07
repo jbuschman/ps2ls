@@ -50,11 +50,11 @@ namespace ps2ls.Forms.Controls
 
         public SearchTextTypeToolStripDrownDownButton()
         {
-            this.Text = searchTextTypeNames[(int)searchTextType];
-            this.Image = searchTextTypeImages[(int)searchTextType];
+            Text = searchTextTypeNames[(int)searchTextType];
+            Image = searchTextTypeImages[(int)searchTextType];
 
-            this.DropDownItems.Add(searchTextTypeNames[0], searchTextTypeImages[0], TextualOnClick);
-            this.DropDownItems.Add(searchTextTypeNames[1], searchTextTypeImages[1], RegularExpressionOnClick);
+            DropDownItems.Add(searchTextTypeNames[0], searchTextTypeImages[0], TextualOnClick);
+            DropDownItems.Add(searchTextTypeNames[1], searchTextTypeImages[1], RegularExpressionOnClick);
         }
 
         private void TextualOnClick(object sender, EventArgs args)

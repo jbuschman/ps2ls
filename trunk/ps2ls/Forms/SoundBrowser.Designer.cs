@@ -78,13 +78,6 @@
             this.soundListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.soundListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.soundListBox.Image = global::ps2ls.Properties.Resources.music;
-            this.soundListBox.Items.AddRange(new object[] {
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "Input a search term to continue"});
             this.soundListBox.Location = new System.Drawing.Point(0, 25);
             this.soundListBox.Name = "soundListBox";
             this.soundListBox.Size = new System.Drawing.Size(250, 553);

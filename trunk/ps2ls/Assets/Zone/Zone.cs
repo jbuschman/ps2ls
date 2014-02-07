@@ -83,6 +83,7 @@ namespace ps2ls.Assets.Zone
             for (uint i = 0; i < ecoCount; ++i)
             {
                 Eco eco;
+
                 if (Eco.LoadFromStream(stream, out eco) != Eco.LoadError.None)
                 {
                     zone = null;
@@ -99,6 +100,7 @@ namespace ps2ls.Assets.Zone
             for (uint i = 0; i < floraCount; ++i)
             {
                 Flora flora;
+
                 if(Flora.LoadFromStream(stream, out flora) != Flora.LoadError.None)
                 {
                     zone = null;
@@ -124,6 +126,7 @@ namespace ps2ls.Assets.Zone
             for (uint i = 0; i < actorCount; ++i)
             {
                 Actor actor;
+
                 if (Actor.LoadFromStream(stream, out actor) != Actor.LoadError.None)
                 {
                     zone = null;

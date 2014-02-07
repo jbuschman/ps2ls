@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using ps2ls.Assets.Pack;
 
 namespace ps2ls.Graphics.Materials
 {
@@ -16,9 +17,6 @@ namespace ps2ls.Graphics.Materials
         public static void CreateInstance()
         {
             instance = new MaterialDefinitionLibrary();
-
-            StringReader stringReader = new StringReader(Properties.Resources.materials_3);
-            instance.loadFromStringReader(stringReader);
         }
 
         public static void DeleteInstance()
@@ -29,13 +27,36 @@ namespace ps2ls.Graphics.Materials
         public static MaterialDefinitionLibrary Instance { get { return instance; } }
         #endregion
 
+        public static string MaterialDefinitionFileName = "materials_3.xml";
+
+        public bool IsLoaded { get; private set; }
         public Dictionary<uint, MaterialDefinition> MaterialDefinitions { get; private set; }
         public Dictionary<uint, VertexLayout> VertexLayouts { get; private set; }
 
         MaterialDefinitionLibrary()
         {
+            IsLoaded = false;
             MaterialDefinitions = new Dictionary<uint, MaterialDefinition>();
             VertexLayouts = new Dictionary<uint, VertexLayout>();
+        }
+
+        public bool Load()
+        {
+            MemoryStream memoryStream = AssetManager.Instance.CreateAssetMemoryStreamByName(MaterialDefinitionFileName);
+
+            if (memoryStream == null)
+            {
+                return false;
+            }
+
+            StreamReader streamReader = new StreamReader(memoryStream);
+            StringReader stringReader = new StringReader(streamReader.ReadToEnd());
+
+            loadFromStringReader(stringReader);
+
+            IsLoaded = true;
+
+            return true;
         }
 
         private void loadFromStringReader(StringReader stringReader)
@@ -82,7 +103,7 @@ namespace ps2ls.Graphics.Materials
             {
                 MaterialDefinition materialDefinition = MaterialDefinition.LoadFromXPathNavigator(materialDefinitions.Current);
 
-                if (materialDefinition != null && false == MaterialDefinitions.ContainsKey(materialDefinition.NameHash))
+                if (materialDefinition != null && !MaterialDefinitions.ContainsKey(materialDefinition.NameHash))
                 {
                     MaterialDefinitions.Add(materialDefinition.NameHash, materialDefinition);
                 }
@@ -108,24 +129,10 @@ namespace ps2ls.Graphics.Materials
                 VertexLayout vertexLayout = VertexLayout.LoadFromXPathNavigator(vertexLayouts.Current);
 
                 if (vertexLayout != null && false == VertexLayouts.ContainsKey(vertexLayout.NameHash))
+                {
                     VertexLayouts.Add(vertexLayout.NameHash, vertexLayout);
+                }
             }
-        }
-
-        public MaterialDefinition GetMaterialDefinitionFromHash(uint materialDefinitionHash)
-        {
-            MaterialDefinition materialDefinition = null;
-
-            try
-            {
-                MaterialDefinitions.TryGetValue(materialDefinitionHash, out materialDefinition);
-            }
-            catch (Exception)
-            {
-                throw new Exception("Material definition could not be found.");
-            }
-
-            return materialDefinition;
         }
     }
 }

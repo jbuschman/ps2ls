@@ -127,7 +127,6 @@ namespace ps2ls.Assets.Dme
         public static Mesh LoadFromStream(Model model, Stream stream)
         {
             BinaryReader binaryReader = new BinaryReader(stream);
-
             uint bytesPerVertex = 0;
             uint vertexStreamCount = 0;
 
@@ -147,17 +146,25 @@ namespace ps2ls.Assets.Dme
             for (int j = 0; j < vertexStreamCount; ++j)
             {
                 bytesPerVertex = binaryReader.ReadUInt32();
+
                 byte[] buffer = binaryReader.ReadBytes((int)mesh.VertexCount * (int)bytesPerVertex);
                 VertexStream vertexStream = new VertexStream((int)bytesPerVertex, buffer);
 
                 if (vertexStream != null)
+                {
                     mesh.VertexStreams[j] = vertexStream;
+                }
             }
 
             // read indices
             mesh.IndexData = binaryReader.ReadBytes((int)mesh.IndexCount * (int)mesh.IndexSize);
 
-            MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.GetMaterialDefinitionFromHash(model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash);
+            uint materialDefinitionHash = model.Materials[(int)mesh.MaterialIndex].MaterialDefinitionHash;
+
+            MaterialDefinition materialDefinition = null;
+
+            MaterialDefinitionLibrary.Instance.MaterialDefinitions.TryGetValue(materialDefinitionHash, out materialDefinition);
+
             string effectName = materialDefinition.DrawStyles[0].Effect;
 
             return mesh;
@@ -166,8 +173,11 @@ namespace ps2ls.Assets.Dme
         public VertexLayout GetVertexLayout(int drawStyleIndex)
         {
             MaterialDefinition materialDefinition = MaterialDefinitionLibrary.Instance.MaterialDefinitions[Model.Materials[(int)MaterialIndex].MaterialDefinitionHash];
+
             if (materialDefinition == null)
+            {
                 return null;
+            }
 
             return MaterialDefinitionLibrary.Instance.VertexLayouts[materialDefinition.DrawStyles[0].VertexLayoutNameHash];
         }
@@ -177,18 +187,25 @@ namespace ps2ls.Assets.Dme
             positions = null;
 
             VertexLayout vertexLayout = GetVertexLayout(0);
+
             if (vertexLayout == null)
+            {
                 return false;
+            }
 
             VertexLayout.Entry.DataTypes dataType;
             int streamOffset;
             int streamIndex;
 
             bool positionExists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Position, usageIndex, out dataType, out streamIndex, out streamOffset);
+
             if (!positionExists)
+            {
                 return false;
+            }
 
             positions = new List<Vector3>((int)VertexCount);
+
             Mesh.VertexStream vertexStream = VertexStreams[streamIndex];
 
             switch (dataType)
@@ -210,18 +227,25 @@ namespace ps2ls.Assets.Dme
             texCoords = null;
 
             VertexLayout vertexLayout = GetVertexLayout(0);
+
             if (vertexLayout == null)
+            {
                 return false;
+            }
 
             VertexLayout.Entry.DataTypes dataType;
             int streamOffset;
             int streamIndex;
 
             bool texcoordExists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Texcoord, usageIndex, out dataType, out streamIndex, out streamOffset);
+
             if (!texcoordExists)
+            {
                 return false;
+            }
 
             texCoords = new Vector2[VertexCount];
+
             Mesh.VertexStream vertexStream = VertexStreams[streamIndex];
 
             switch (dataType)
@@ -248,8 +272,11 @@ namespace ps2ls.Assets.Dme
             normals = null;
 
             VertexLayout vertexLayout = GetVertexLayout(0);
+
             if (vertexLayout == null)
+            {
                 return false;
+            }
 
             VertexLayout.Entry.DataTypes dataType;
             int streamOffset;
@@ -257,10 +284,14 @@ namespace ps2ls.Assets.Dme
 
             //todo: if normal does not exist, we can determine it from the tangent and binormal, if it exists
             bool normalExists = vertexLayout.GetEntryInfo(VertexLayout.Entry.DataUsages.Normal, usageIndex, out dataType, out streamIndex, out streamOffset);
+
             if (!normalExists)
+            {
                 return false;
+            }
 
             normals = new Vector3[VertexCount];
+
             Mesh.VertexStream vertexStream = VertexStreams[streamIndex];
 
             switch (dataType)

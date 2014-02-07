@@ -111,6 +111,7 @@ namespace ps2ls.Forms
         private static FMOD.RESULT SEEKCALLBACK(IntPtr handle, int pos, IntPtr userdata)
         {
             ms.Seek(pos, SeekOrigin.Begin);
+
             return FMOD.RESULT.OK;
         }
 
@@ -148,6 +149,7 @@ namespace ps2ls.Forms
         private void refreshSoundListBox()
         {
             Cursor.Current = Cursors.WaitCursor;
+
             soundListBox.BeginUpdate();
 
             soundListBox.Items.Clear();
@@ -176,10 +178,11 @@ namespace ps2ls.Forms
             int soundCount = soundListBox.Items.Count;
             int soundsMax = assets != null ? assets.Count : 0;
 
-            soundsListed.Text = soundCount + "/" + soundsMax;
-
             soundListBox.EndUpdate();
+
             Cursor.Current = Cursors.Default;
+
+            soundsListed.Text = String.Format("{0}/{1}", soundCount, soundsMax);
 
         }
 
