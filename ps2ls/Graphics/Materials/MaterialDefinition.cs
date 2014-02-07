@@ -26,7 +26,9 @@ namespace ps2ls.Graphics.Materials
         public static MaterialDefinition LoadFromXPathNavigator(XPathNavigator navigator)
         {
             if (navigator == null)
+            {
                 return null;
+            }
 
             MaterialDefinition materialDefinition = new MaterialDefinition();
 
@@ -46,7 +48,9 @@ namespace ps2ls.Graphics.Materials
                 DrawStyle drawStyle = DrawStyle.LoadFromXPathNavigator(entries.Current);
 
                 if (drawStyle != null)
+                {
                     materialDefinition.DrawStyles.Add(drawStyle);
+                }
             }
 
             return materialDefinition;

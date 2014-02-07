@@ -138,13 +138,13 @@
     <Compile Include="Forms\SoundExportForm.Designer.cs">
       <DependentUpon>SoundExportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ZoneBrowser.cs">
+    <Compile Include="Forms\ZoneBrowser\ZoneBrowser.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\ZoneBrowser.Designer.cs">
+    <Compile Include="Forms\ZoneBrowser\ZoneBrowser.Designer.cs">
       <DependentUpon>ZoneBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ZoneBrowserGLControl.cs">
+    <Compile Include="Forms\ZoneBrowser\ZoneBrowserGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Graphics\Effects\EffectDefinition.cs" />
@@ -283,7 +283,7 @@
     <EmbeddedResource Include="Forms\TextureExportForm.resx">
       <DependentUpon>TextureExportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ZoneBrowser.resx">
+    <EmbeddedResource Include="Forms\ZoneBrowser\ZoneBrowser.resx">
       <DependentUpon>ZoneBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

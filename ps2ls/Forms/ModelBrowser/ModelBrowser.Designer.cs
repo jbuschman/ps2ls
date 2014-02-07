@@ -96,28 +96,6 @@
             this.modelsListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.modelsListBox.FormattingEnabled = true;
             this.modelsListBox.Image = global::ps2ls.Properties.Resources.tree_small;
-            this.modelsListBox.Items.AddRange(new object[] {
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "default",
-            "CustomListBox"});
             this.modelsListBox.Location = new System.Drawing.Point(0, 25);
             this.modelsListBox.Name = "modelsListBox";
             this.modelsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
@@ -248,7 +226,6 @@
             this.modelBrowserGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.modelBrowserGLControl.DrawAxes = true;
             this.modelBrowserGLControl.Location = new System.Drawing.Point(0, 25);
-            this.modelBrowserGLControl.Model = null;
             this.modelBrowserGLControl.Name = "modelBrowserGLControl";
             this.modelBrowserGLControl.RenderMode = ps2ls.Forms.ModelBrowserGLControl.RenderModes.Smooth;
             this.modelBrowserGLControl.Size = new System.Drawing.Size(246, 575);
@@ -262,7 +239,6 @@
             this.modelBrowserModelStats.Location = new System.Drawing.Point(246, 25);
             this.modelBrowserModelStats.MaximumSize = new System.Drawing.Size(250, 1024);
             this.modelBrowserModelStats.MinimumSize = new System.Drawing.Size(250, 0);
-            this.modelBrowserModelStats.Model = null;
             this.modelBrowserModelStats.Name = "modelBrowserModelStats";
             this.modelBrowserModelStats.Size = new System.Drawing.Size(250, 575);
             this.modelBrowserModelStats.TabIndex = 3;
