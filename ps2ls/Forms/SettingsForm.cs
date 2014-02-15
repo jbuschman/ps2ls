@@ -59,13 +59,15 @@ namespace ps2ls.Forms
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             assetDirectoryTextBox.Text = Properties.Settings.Default.AssetDirectory;
-            loadAssetsOnStartCheckBox.Checked = Properties.Settings.Default.LoadAssetsOnStartup;
+            loadAssetsOnStartCheckBox.Checked = Properties.Settings.Default.ShouldLoadAssetsOnStart;
+            promptLoadAssetsOnStart.Checked = Properties.Settings.Default.PromptLoadAssetsOnStart;
         }
 
         private void save()
         {
             Properties.Settings.Default.AssetDirectory = assetDirectoryTextBox.Text;
-            Properties.Settings.Default.LoadAssetsOnStartup = loadAssetsOnStartCheckBox.Checked;
+            Properties.Settings.Default.ShouldLoadAssetsOnStart = loadAssetsOnStartCheckBox.Checked;
+            Properties.Settings.Default.PromptLoadAssetsOnStart = promptLoadAssetsOnStart.Checked;
             Properties.Settings.Default.Save();
         }
 
@@ -89,7 +91,18 @@ namespace ps2ls.Forms
         private void noButton_Click(object sender, EventArgs e)
         {
             save();
+
             Hide();
+        }
+
+        private void loadAssetsOnStartCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            promptLoadAssetsOnStart.Enabled = !loadAssetsOnStartCheckBox.Checked;
+
+            if (loadAssetsOnStartCheckBox.Checked)
+            {
+                promptLoadAssetsOnStart.Checked = false;
+            }
         }
     }
 }

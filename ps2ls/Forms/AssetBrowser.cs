@@ -19,6 +19,8 @@ namespace ps2ls.Forms
     {
         private bool assetsDirty = false;
 
+        private const int AssetOpenStabilityThreshold = 100;
+
         public AssetBrowser()
         {
             InitializeComponent();
@@ -136,32 +138,37 @@ namespace ps2ls.Forms
 
         private void PackBrowserUserControl_Load(object sender, EventArgs e)
         {
+            //TODO: figure out better way to set to infinity as indices are subject to change
             filesMaxComboBox.SelectedIndex = 3; //infinity
 
-            if (Properties.Settings.Default.AssetDirectory != string.Empty)
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.AssetDirectory))
             {
-                if (Properties.Settings.Default.LoadAssetsOnStartup)
+                if (Properties.Settings.Default.ShouldLoadAssetsOnStart)
                 {
                     AssetManager.Instance.LoadFromDirectory(Properties.Settings.Default.AssetDirectory);
                 }
-                else
+                else if(Properties.Settings.Default.PromptLoadAssetsOnStart)
                 {
                     bool optionChecked;
 
                     DialogResult dialogResult = GenericDialog.ShowGenericDialog(
                         "ps2ls",
-                        "ps2ls has detected your PlanetSide 2 assets directory." +
-                        System.Environment.NewLine + System.Environment.NewLine +
                         "Would you like to load all asset (*.pak) files found in " + Properties.Settings.Default.AssetDirectory + " ?",
                         GenericDialog.Types.Default,
                         GenericDialog.Buttons.YesNo,
-                        "Always perform this action (recommended)",
+                        "Always perform this action (can be changed in Settings)",
                         false,
                         out optionChecked);
 
                     if (optionChecked)
                     {
-                        Properties.Settings.Default.LoadAssetsOnStartup = optionChecked;
+                        Properties.Settings.Default.ShouldLoadAssetsOnStart = optionChecked;
+
+                        if (optionChecked)
+                        {
+                            Properties.Settings.Default.PromptLoadAssetsOnStart = false;
+                        }
+
                         Properties.Settings.Default.Save();
                     }
 
@@ -181,16 +188,13 @@ namespace ps2ls.Forms
 
             ListBox.SelectedObjectCollection packs = packsListBox.SelectedItems;
 
-            int rowMax = 0;
+            int rowMax = Int32.MaxValue;
 
             try
             {
                 rowMax = Int32.Parse(filesMaxComboBox.Items[filesMaxComboBox.SelectedIndex].ToString());
             }
-            catch (FormatException)
-            {
-                rowMax = Int32.MaxValue;
-            }
+            catch (FormatException) { }
 
             int totalFileCount = 0;
 
@@ -215,14 +219,18 @@ namespace ps2ls.Forms
                     {
                         case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.Textual:
                             {
-                                if (!asset.Name.ToLower().Contains(searchTextBox.Text.ToLower()))
+                                if (!asset.Name.Contains(searchTextBox.Text.ToLower()))
+                                {
                                     continue;
+                                }
                             }
                             break;
                         case SearchTextTypeToolStripDrownDownButton.SearchTextTypes.RegularExpression:
                             {
                                 if (regex == null || !regex.IsMatch(asset.Name))
+                                {
                                     continue;
+                                }
                             }
                             break;
                     }
@@ -238,11 +246,15 @@ namespace ps2ls.Forms
                     rowsToBeAdded.Add(row);
 
                     if (rowsToBeAdded.Count >= rowMax)
+                    {
                         break;
+                    }
                 }
 
                 if (rowsToBeAdded.Count >= rowMax)
+                {
                     break;
+                }
             }
 
             assetsDataGridView.Rows.AddRange(rowsToBeAdded.ToArray());
@@ -273,13 +285,18 @@ namespace ps2ls.Forms
             if (packsListBox.SelectedItems.Count == 0)
             {
                 e.Cancel = true;
+
                 return;
             }
 
             if (packsListBox.SelectedItems.Count == 1)
+            {
                 extractPacksToolStripMenuItem.Text = "Extract...";
+            }
             else
+            {
                 extractPacksToolStripMenuItem.Text = "Extract " + packsListBox.SelectedItems.Count + "...";
+            }
         }
 
         private void extractPacksToolStripMenuItem_Click(object sender, EventArgs e)
@@ -295,7 +312,9 @@ namespace ps2ls.Forms
             packsListBox.Items.Clear();
 
             foreach (Pack pack in AssetManager.Instance.Packs.Values)
+            {
                 packsListBox.Items.Add(pack);
+            }
 
             packsListBox.EndUpdate();
         }
@@ -307,6 +326,7 @@ namespace ps2ls.Forms
             if (assetsDirty)
             {
                 refreshPacksListBox();
+
                 assetsDirty = false;
             }
         }
@@ -321,17 +341,23 @@ namespace ps2ls.Forms
         private void assetsDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
+            {
                 return;
+            }
 
             DataGridViewRow row = assetsDataGridView.Rows[e.RowIndex];
 
             if (row == null)
+            {
                 return;
+            }
 
             Asset asset = (Asset)row.Tag;
 
-            if(asset != null)
+            if (asset != null)
+            {
                 asset.Pack.CreateTemporaryFileAndOpen(asset.Name);
+            }
         }
 
         private void assetContextMenuStrip_Opening(object sender, CancelEventArgs e)
@@ -339,6 +365,7 @@ namespace ps2ls.Forms
             if(assetsDataGridView.SelectedRows.Count == 0)
             {
                 e.Cancel = true;
+
                 return;
             }
 
@@ -361,7 +388,7 @@ namespace ps2ls.Forms
 
         private void openSelectedAssets()
         {
-            if (assetsDataGridView.SelectedRows.Count >= 100)
+            if (assetsDataGridView.SelectedRows.Count >= AssetOpenStabilityThreshold)
             {
                 DialogResult dialogResult = GenericDialog.ShowGenericDialog(
                     "Warning",
@@ -372,13 +399,17 @@ namespace ps2ls.Forms
                     GenericDialog.Buttons.YesNo);
 
                 if (dialogResult != DialogResult.Yes)
+                {
                     return;
+                }
             }
 
             foreach (DataGridViewRow row in assetsDataGridView.SelectedRows)
             {
                 if (row == null)
+                {
                     return;
+                }
 
                 Asset asset = (Asset)row.Tag;
 

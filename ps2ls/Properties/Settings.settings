@@ -17,8 +17,11 @@
     <Setting Name="AssetDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LoadAssetsOnStartup" Type="System.Boolean" Scope="User">
+    <Setting Name="ShouldLoadAssetsOnStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PromptLoadAssetsOnStart" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

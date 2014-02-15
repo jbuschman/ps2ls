@@ -62,7 +62,9 @@ namespace ps2ls.Graphics.Materials
         private void loadFromStringReader(StringReader stringReader)
         {
             if (stringReader == null)
+            {
                 return;
+            }
 
             XPathDocument document = null;
 
