@@ -28,7 +28,7 @@ namespace ps2ls.Graphics.Effects
         public static EffectDefinitionLibrary Instance { get { return instance; } }
         #endregion
 
-        [XmlElement]
+        [XmlArray("EffectDefinitions"), XmlArrayItem(typeof(string), ElementName = "EffectDefinition")]
         public List<EffectDefinition> EffectsDefinitions { get; private set; }
 
         EffectDefinitionLibrary()

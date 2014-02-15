@@ -11,18 +11,13 @@ namespace ps2ls.Graphics.Effects
     {
         [XmlAttribute]
         public string Name { get; set; }
-        [XmlElement]
-        public List<string> DiffuseMaps { get; set; }
-        [XmlElement]
-        public List<string> BumpMaps { get; set; }
+        [XmlAttribute]
+        public string DiffuseMaps { get; set; }
+        [XmlAttribute]
+        public string BumpMaps { get; set; }
 
         public EffectDefinition()
         {
-            DiffuseMaps = new List<string>();
-            DiffuseMaps.Add("BaseDiffuse");
-
-            BumpMaps = new List<string>();
-            DiffuseMaps.Add("Bump");
         }
     }
 }
